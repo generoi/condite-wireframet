@@ -1,0 +1,3089 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tuotteet ja haku — Condite</title>
+<meta name="description" content="Selaa Conditen ammattivalikoimaa: mausteet, täytteet, suklaat ja leivonta-aineet. Suodata ominaisuuden, brändin ja pakkauskoon mukaan ja löydä oikea raaka-aine tuotantoon.">
+<!--
+  CONDITE — Tuotehaku / Tuotelistaus (forkattu Feelian listaustemplatesta).
+  Peritty: komponentit, tilamalli (A overview / B (ala)kategoria / C haku), fasettimoottori,
+  hash-router, karuselli, vertailu, i18n. Muutettu: token-arvot → Condite DS (pehmeä sininen),
+  data → Condite-tuotteet, + Condite-kerros (kaksitasoinen kategorianavi, Makupaja, login, pääsytasot).
+  Tila D (kuratoitu) jätetty pois prototyypistä (CURATED_PAGES tyhjä, laajennusvara koodissa).
+
+  Alkuperäinen Feelia-template:
+  Yksi listausnäkymä, jonka rajaus määräytyy URL:n perusteella.
+
+  URL-rakenne (hash-pohjainen proto-router, vastaa WP:n /tuotteet/* polkua):
+    #/                              → koko valikoima
+    #/?dieta=Gluteeniton            → koko valikoima, suodatettu
+    #/kastikkeet-ja-padat/          → kategoriasivu
+    #/kastikkeet-ja-padat/?dieta=…  → kategoriasivu + suodatin
+    #/haku/?q=tomaatti              → hakutulos
+    #/gluteenittomat-kastikkeet/    → kuratoitu laskeutumissivu
+
+  WordPress-toteutuksessa hash-router korvataan oikealla URL-polulla:
+    is_post_type_archive('tuote'), is_tax(), is_search()
+-->
+<style>
+  :root {
+    --c-bg: #ffffff;
+    --c-bg-soft: #f7f7f7;
+    --c-bg-tint: #eef6fb;
+    --c-text: #1d1d1f;
+    --c-text-2: #555555;
+    --c-text-muted: #6f6f6f;        /* AA valkoisella — ei vaaleampaa */
+    --c-border: #e3e3e3;
+    --c-border-strong: #cfcfcf;
+    --c-divider: #d8d8d8;
+    --c-placeholder-bg: #ececec;
+    --c-placeholder-border: #c8c8c8;
+    /* Korostus — kanoninen Condite DS (pehmeä tonaalinen sininen). Korvaa Feelian vihreän. */
+    --c-accent: #7fc8ec;            /* täytöt, aktiiviset, viivat */
+    --c-accent-ink: #0a6e9b;        /* linkit, eyebrow, ikonit, accent-teksti valkoisella */
+    --c-on-accent: #0a4f72;         /* tumma teksti sinisen täytön päällä */
+    --c-accent-soft: #e3f2fb;       /* pehmeä tausta, tintit, chipit */
+    --c-suits-border: #b7def4;
+    --c-accent-hover: #6cbde6;      /* napin hover — tummempi sininen täyttö */
+    /* Tila- ja merkkivärit */
+    --c-tulossa-bg: #fff4cc; --c-tulossa-border: #f0d885; --c-tulossa-text: #6b4d00;
+
+    --r-sm: 4px;
+    --r-md: 8px;
+    /* Container skaalautuu: oletus 1600px (mukava luettavuusraja), pienemmillä näytöillä
+       täyttää 100% padding huomioiden. Estää redundantin valkoisen tilan reunoilla
+       modernilla 1440-1920 px näytöllä, mutta säilyttää rivipituuden hallinnan. */
+    --container: 1600px;
+    --pad: 24px;
+    --gap-8: 8px;
+    --gap-16: 16px;
+    --gap-24: 24px;
+    --gap-32: 32px;
+    --gap-48: 48px;
+    --gap-64: 64px;
+    --fs-body: 16px;
+    --fs-small: 14px;
+    --fs-tiny: 12px;
+    --fs-eyebrow: 12px;
+    --fs-h1: 32px;
+    --fs-h2: 22px;
+    --fs-h3: 16px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
+    font-size: var(--fs-body);
+    line-height: 1.55;
+    color: var(--c-text);
+    background: var(--c-bg);
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  .container { max-width: var(--container); margin: 0 auto; padding-left: var(--pad); padding-right: var(--pad); }
+
+  /* Globaali navigaatio */
+  .nav-wrap { border-bottom: 1px solid var(--c-border); background: #fff; }
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    min-height: 64px; gap: var(--gap-32);
+  }
+  .logo-box {
+    width: 100px; height: 32px;
+    background: var(--c-placeholder-bg); border: 1px dashed var(--c-placeholder-border);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--c-text-muted); font-size: var(--fs-tiny); border-radius: var(--r-sm);
+  }
+  .nav-list { list-style: none; margin: 0; padding: 0; display: flex; gap: 4px; }
+  .nav-list a {
+    text-decoration: none; padding: 8px 12px;
+    border-radius: var(--r-sm); font-weight: 500; color: var(--c-text);
+    font-size: var(--fs-small);
+  }
+  .nav-list a[aria-current="page"] {
+    color: var(--c-accent-ink); font-weight: 600;
+    border-bottom: 2px solid var(--c-accent-ink); border-radius: 0;
+    padding-bottom: 6px;
+  }
+
+  /* Nav-vertailuindikaattori — jaettu /vertaa-sivun + tuotekortin kanssa
+     (ostoskori-metafora, localStorage-avain feelia_vertailu_v1). */
+  .nav-compare {
+    display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
+    text-decoration: none; font-size: var(--fs-small); font-weight: 600;
+    color: var(--c-accent-ink);
+    border: 1.5px solid var(--c-suits-border); background: var(--c-accent-soft);
+    padding: 7px 12px; border-radius: 999px;
+  }
+  .nav-compare:hover { border-color: var(--c-accent-ink); }
+  .nav-compare:focus-visible { outline: 2px solid var(--c-accent-ink); outline-offset: 2px; }
+  .nav-compare svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .nav-compare.is-empty {
+    color: var(--c-text-2); background: transparent; border-color: var(--c-border);
+  }
+  .nav-compare-count {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 20px; height: 20px; padding: 0 5px;
+    background: var(--c-accent-ink); color: #fff; border-radius: 999px;
+    font-size: var(--fs-tiny); font-weight: 700; line-height: 1;
+  }
+  .nav-compare.is-empty .nav-compare-count { background: var(--c-text-muted); }
+
+  /* Lang-switcher (T8) — kompakti 3-painikkeinen kielenvaihtaja navin oikealla */
+  .lang-switcher {
+    display: flex; gap: 4px;
+  }
+  .lang-switcher button {
+    width: 30px; height: 30px;
+    border: 1px solid var(--c-border-strong);
+    background: #fff;
+    font-size: var(--fs-tiny);
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: var(--r-sm);
+    font-family: inherit;
+    color: var(--c-text-2);
+    padding: 0;
+  }
+  .lang-switcher button.is-active {
+    background: var(--c-accent-ink);
+    border-color: var(--c-accent-ink);
+    color: #fff;
+  }
+  .lang-switcher button:hover:not(.is-active) {
+    border-color: var(--c-accent-ink);
+    color: var(--c-text);
+  }
+
+  /* Murupolku */
+  .crumbs-wrap { background: var(--c-bg-soft); border-bottom: 1px solid var(--c-border); }
+  .crumbs {
+    padding-block: 10px;
+    font-size: var(--fs-small); color: var(--c-text-2);
+  }
+  .crumbs a { text-decoration: none; color: var(--c-text-2); }
+  .crumbs a:hover { text-decoration: underline; }
+  .crumbs .sep { color: var(--c-text-muted); margin: 0 6px; }
+  .crumbs .current { color: var(--c-text); }
+
+  /* Hero — H1 + intro wrapatty kategoriapohjaiseen containeriin.
+     Tausta tulee kategoriavärisävystä (sama paletti kuin .card-image-fallback).
+     Tila A:lle neutraali sävy. */
+  .hero {
+    margin: 0 0 var(--gap-24);
+    border-radius: var(--r-md);
+    background: var(--c-bg-soft);
+    overflow: hidden;
+    position: relative;
+  }
+  /* Hero-inner: tekstin max-width säilyy ~720px luettavuuden vuoksi vaikka
+     container venyy. Pehmustaa reilusti, ettei teksti tunkeudu reunoille. */
+  .hero-inner {
+    padding: var(--gap-32) var(--gap-32);
+    max-width: 720px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Hero-search-form poistettu — haku siirtynyt .result-search-formiin (tulospalkkiin)
+     jotta se on konsistentti kaikilla tiloilla, ei vain Tila A:ssa. */
+  .hero .page-title { margin-bottom: var(--gap-16); }
+  /* Tila A: ei kategoriaa → neutraali sävy varmistettu yllä */
+  /* Tila B/D: kategoria-spesifinen sävy data-cat-attribuutista (sama paletti kuin korteilla) */
+  .hero[data-cat="mausteet"]                       { background: #fdecdc; }
+  .hero[data-cat="paprika-ja-chili"]               { background: #fde2dc; }
+  .hero[data-cat="mausteseokset"]                  { background: #fdecdc; }
+  .hero[data-cat="yrtit"]                          { background: #e9f1e4; }
+  .hero[data-cat="taytteet-ja-koristeet"]          { background: #fdeef4; }
+  .hero[data-cat="kinuski-ja-toffeetaytteet"]      { background: #f7ecda; }
+  .hero[data-cat="hedelmataytteet"]                { background: #fde6ee; }
+  .hero[data-cat="suklaakoristeet"]                { background: #ece2da; }
+  .hero[data-cat="suklaat-kaakaot-ja-kuorrutteet"] { background: #efe6dc; }
+  .hero[data-cat="tumma-suklaa"]                   { background: #ece2da; }
+  .hero[data-cat="kuorrutteet"]                    { background: #efe6dc; }
+  .hero[data-cat="leivonta-aineet"]                { background: #f3eede; }
+  .hero[data-cat="leivinjauheet"]                  { background: #f3eede; }
+  .hero[data-cat="hiivat-ja-entsyymit"]            { background: #f1ecdf; }
+  .hero[data-cat="viljatuotteet"]                  { background: #f1ecdf; }
+  /* Iso initial-merkki kategoriasävyn päällä — visuaalinen koriste, ei tekstiä */
+  .hero::after {
+    content: attr(data-initial);
+    position: absolute;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 200px;
+    font-weight: 700;
+    line-height: 1;
+    color: rgba(0,0,0,0.06);
+    pointer-events: none;
+    user-select: none;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  .hero[data-cat=""]::after { content: ""; }
+
+  /* SEO Vaihe 1 + 3 — Intro-copy (Tila B kategoria + Tila D kuratoitu) */
+  .curated-hero {
+    padding: 0;
+    margin: 0;
+    border: 0;
+  }
+  .curated-intro {
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--c-text);
+    max-width: 720px;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+    /* Vakaa korkeus: aina tasan 3 rivin tila varattuna.
+       Estää layout-shiftin kun siirtyy lyhyemmän intron kategoriasta pidempään.
+       18px × 1.6 line-height × 3 lines = 86.4px */
+    min-height: calc(18px * 1.6 * 3);
+  }
+  /* Lue lisää: leikkaa intro 3 riviin, koko teksti säilyy DOM:ssa (SEO + AI näkee).
+     CSS-only clamp; JS lisää is-clamped vain jos teksti todella ylittää 3 riviä. */
+  .curated-intro.is-clamped {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  /* Lue lisää -nappi: aina sloti varattuna (visibility-pohjainen näyttö),
+     jotta layout ei hypi pidempien ja lyhyempien introtekstien välillä. */
+  .curated-intro-toggle {
+    display: inline-block;
+    visibility: hidden;
+    margin-top: 8px;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: var(--c-accent-ink);
+    font-size: var(--fs-small);
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    text-decoration: underline;
+  }
+  .curated-intro-toggle:hover { text-decoration: none; }
+  .curated-intro-toggle.is-visible { visibility: visible; }
+
+  /* SEO Vaihe 4 — FAQ-lohko (Tila B + D, GEO/AI-haku).
+     Full-width, oman lohkon tyylittely vastaa .end-cta-listing-blokkia
+     (border + radius + padding + bg-tint) → visuaalisesti yhtenäinen
+     "footer-alueen" käyttäjäpolku: ensin FAQ, sitten yhteydenotto. */
+  .faq-section {
+    margin-top: var(--gap-48);
+    padding: var(--gap-32);
+    background: var(--c-bg-tint);
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-md);
+  }
+  .faq-section[hidden] { display: none; }
+  .faq-section h2 {
+    font-size: var(--fs-h2);
+    margin: 0 0 var(--gap-24);
+    font-weight: 700;
+  }
+  .faq-item {
+    border-top: 1px solid var(--c-divider);
+  }
+  .faq-item:last-child {
+    border-bottom: 1px solid var(--c-divider);
+  }
+  .faq-item > summary {
+    list-style: none;
+    cursor: pointer;
+    padding: var(--gap-16) 0;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--gap-16);
+    user-select: none;
+  }
+  .faq-item > summary::-webkit-details-marker { display: none; }
+  .faq-item > summary::marker { display: none; }
+  .faq-item > summary .chevron {
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+    color: var(--c-text-2);
+    transition: transform 200ms ease;
+  }
+  .faq-item[open] > summary .chevron {
+    transform: rotate(180deg);
+  }
+  .faq-answer {
+    padding: 0 0 var(--gap-16);
+    color: var(--c-text-2);
+    max-width: 720px;
+    line-height: 1.6;
+  }
+
+  /* Globaali .search-bar-wrap + .search-form -tyylit poistettu.
+     Haku on nyt yhdessä ja vain yhdessä paikassa: tulospalkin
+     .result-search-formissa (CSS yllä result-bar-osiossa). */
+
+  /* Main */
+  main { padding: var(--gap-24) 0 var(--gap-64); }
+
+  /* Sivun otsikko + alaotsikko */
+  .page-title { font-size: var(--fs-h1); margin: 0 0 var(--gap-8); line-height: 1.2; font-weight: 700; }
+  .page-sub { color: var(--c-text-2); margin: 0 0 var(--gap-32); font-size: var(--fs-body); }
+  /* Piilota tyhjä page-sub jotta ei vie 32px ylimääräistä tilaa */
+  .page-sub:empty { display: none; }
+
+  /* Listauksen layout — filter vasen, sisältö oikea.
+     Filter-palstan leveys nousee leveämmillä näytöillä, ettei tulokset venyisi
+     liian harvaksi suhteessa palkkiin. Sisältö täyttää loput tilasta.
+
+     TÄRKEÄ: minmax(0, 1fr) (ei pelkkä 1fr) — pakottaa oikean sarakkeen perustumaan
+     käytettävissä olevaan tilaan, ei sisältöön. Ilman tätä carousel-trackin
+     intrinsic min-content size (8 × 260px ≈ 2080px) räjäyttäisi gridin oikealle. */
+  .listing-layout {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: var(--gap-32);
+    align-items: start;
+  }
+  @media (min-width: 1400px) {
+    .listing-layout { grid-template-columns: 300px minmax(0, 1fr); }
+  }
+  /* Listing-main-saraketta ei saa antaa venyä lapsen sisällön mukaan.
+     Samalla periaatteella pidetään carousel kurissa gridin oikeassa sarakkeessa. */
+  .listing-main { min-width: 0; }
+  .filter-panel {
+    /* Ei sticky — scrollautuu listauksen mukana */
+  }
+
+  /* Mobiilin drawer-nappi (näkyy vain mobiilissa) */
+  .filter-drawer-toggle {
+    display: none;
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--c-bg-soft);
+    border: 1px solid var(--c-border-strong);
+    border-radius: var(--r-sm);
+    font-size: var(--fs-small);
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: var(--gap-24);
+    text-align: left;
+    color: var(--c-text);
+  }
+
+  /* Partial-paikkamerkit (T2:n placeholderit) */
+  .partial-placeholder {
+    border: 1px dashed var(--c-placeholder-border);
+    background: var(--c-placeholder-bg);
+    border-radius: var(--r-md);
+    padding: var(--gap-16);
+    color: var(--c-text-muted);
+    font-size: var(--fs-small);
+  }
+  .partial-placeholder .partial-label {
+    display: block;
+    font-size: var(--fs-tiny);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--c-text-2);
+    margin-bottom: 6px;
+  }
+  .partial-placeholder .partial-hint {
+    font-style: italic;
+    font-size: var(--fs-tiny);
+  }
+  .partial-placeholder.tall { min-height: 240px; }
+  .partial-placeholder + .partial-placeholder { margin-top: var(--gap-16); }
+
+  /* Results section */
+  .results { margin-top: var(--gap-24); }
+
+  /* Empty state — näkyvissä kun listaus on tyhjä */
+  .empty-state { display: none; }
+  .is-empty .empty-state { display: block; }
+  .is-empty .results-grid,
+  .is-empty .results-carousel { display: none; }
+
+  /* ============================================================
+     T3 — Tuotekortti (product-card)
+     - Jaettu komponentti propseilla
+     - Ehdolliset kentät piilotetaan, ei näytetä tyhjinä
+     - Kuvafallback: kategoriapohjainen, EI faviconia
+     - Linkittää tuotesivulle; ei FERP-tilausta kortilla
+     ============================================================ */
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--gap-24);
+    margin-top: var(--gap-16);
+  }
+
+  /* Horisontaalinen carousel — käytössä vain Tila A:ssa (Tuotehaku-overview).
+     - Korttileveys vakio ~260px → kuva pysyy luettavissa.
+     - Scroll-snap kortin alkuun → "klätsähtää" paikoilleen scrollatessa.
+     - Fade-out oikealla → visuaalinen vihje "lisää tällä suunnalla".
+     - Nuolinapit overlay-positiossa → näkyvät vain kun scroll on mahdollinen. */
+  .results-carousel {
+    position: relative;
+    margin-top: var(--gap-16);
+  }
+  .carousel-track {
+    display: flex;
+    gap: var(--gap-24);
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scroll-padding: 4px;
+    padding: 4px 4px var(--gap-16);   /* alapadding ottaa kortin hover-shadown huomioon */
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--c-border-strong) transparent;
+  }
+  .carousel-track::-webkit-scrollbar { height: 6px; }
+  .carousel-track::-webkit-scrollbar-track { background: transparent; }
+  .carousel-track::-webkit-scrollbar-thumb {
+    background: var(--c-border-strong);
+    border-radius: 3px;
+  }
+  .carousel-track .product-card {
+    flex: 0 0 260px;
+    scroll-snap-align: start;
+  }
+  /* Fade-out -gradientit reunoilla — viestii että scrollia on lisää */
+  .results-carousel::before,
+  .results-carousel::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: var(--gap-16);
+    width: 48px;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 200ms ease;
+  }
+  .results-carousel::before {
+    left: 0;
+    background: linear-gradient(to right, #fff, rgba(255,255,255,0));
+  }
+  .results-carousel::after {
+    right: 0;
+    background: linear-gradient(to left, #fff, rgba(255,255,255,0));
+  }
+  .results-carousel.has-prev::before { opacity: 1; }
+  .results-carousel.has-next::after { opacity: 1; }
+
+  .carousel-arrow {
+    position: absolute;
+    top: 40%;
+    transform: translateY(-50%);
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1px solid var(--c-border-strong);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    cursor: pointer;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--c-text);
+    font-family: inherit;
+    font-size: 18px;
+    line-height: 1;
+    transition: opacity 150ms ease, transform 100ms ease;
+  }
+  .carousel-arrow:hover {
+    border-color: var(--c-accent-ink);
+    color: var(--c-accent-ink);
+  }
+  .carousel-arrow:active { transform: translateY(-50%) scale(0.95); }
+  .carousel-arrow[hidden] { display: none; }
+  .carousel-arrow.is-prev { left: -8px; }
+  .carousel-arrow.is-next { right: -8px; }
+  .product-card {
+    display: flex; flex-direction: column;
+    text-decoration: none; color: inherit;
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-md);
+    background: #fff;
+    overflow: hidden;
+    transition: border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+  }
+  .product-card:hover {
+    border-color: var(--c-border-strong);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  }
+  .product-card:focus-visible {
+    outline: 2px solid var(--c-accent-ink);
+    outline-offset: 2px;
+  }
+
+  .card-image {
+    position: relative;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+    background: var(--c-placeholder-bg);
+  }
+  .card-image img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .card-image-fallback {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    width: 100%; height: 100%;
+    text-align: center;
+    padding: var(--gap-16);
+  }
+  .card-image-fallback .initial {
+    font-size: 56px; font-weight: 700;
+    line-height: 1;
+    color: var(--c-text);
+    opacity: 0.6;
+  }
+  .card-image-fallback .label {
+    font-size: var(--fs-tiny);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--c-text-2);
+    margin-top: 8px;
+  }
+
+  /* Kategoriapohjaiset fallback-väritykset (10 kategoriaa, handoff §12).
+     Sama kategoria = sama sävy → käyttäjä tunnistaa visuaalisesti. */
+  .card-image-fallback[data-cat="paprika-ja-chili"]               { background: #fde2dc; }
+  .card-image-fallback[data-cat="mausteseokset"]                  { background: #fdecdc; }
+  .card-image-fallback[data-cat="yrtit"]                          { background: #e9f1e4; }
+  .card-image-fallback[data-cat="kinuski-ja-toffeetaytteet"]      { background: #f7ecda; }
+  .card-image-fallback[data-cat="hedelmataytteet"]                { background: #fde6ee; }
+  .card-image-fallback[data-cat="suklaakoristeet"]                { background: #ece2da; }
+  .card-image-fallback[data-cat="tumma-suklaa"]                   { background: #ece2da; }
+  .card-image-fallback[data-cat="kuorrutteet"]                    { background: #efe6dc; }
+  .card-image-fallback[data-cat="leivinjauheet"]                  { background: #f3eede; }
+  .card-image-fallback[data-cat="hiivat-ja-entsyymit"]            { background: #f1ecdf; }
+  .card-image-fallback[data-cat="viljatuotteet"]                  { background: #f1ecdf; }
+
+  .card-status {
+    position: absolute;
+    top: 12px; right: 12px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: var(--fs-tiny);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    background: var(--c-accent);
+    color: var(--c-on-accent);
+  }
+  .card-status[data-status="phasing-out"] {
+    background: var(--c-tulossa-bg);
+    color: var(--c-tulossa-text);
+    border: 1px solid var(--c-tulossa-border);
+  }
+
+  .card-body {
+    padding: var(--gap-16);
+    display: flex; flex-direction: column; gap: 6px;
+    flex: 1;
+  }
+  .card-category {
+    font-size: var(--fs-tiny);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--c-text-2);
+    font-weight: 600;
+  }
+  .card-name {
+    font-size: var(--fs-body);
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.3;
+    color: var(--c-text);
+  }
+  .card-diets {
+    display: flex; flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .card-diet-chip {
+    font-size: var(--fs-tiny);
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: var(--c-accent-soft);
+    border: 1px solid var(--c-suits-border);
+    color: var(--c-accent-ink);
+    font-weight: 500;
+  }
+  /* "+X" -pilleri ylivuotaville chippejä — neutraali sävy erottuu listan jatkona */
+  .card-diet-chip.is-more {
+    background: var(--c-bg-soft);
+    border-color: var(--c-border-strong);
+    color: var(--c-text-2);
+    cursor: help;
+  }
+
+  /* ============================================================
+     T4 — Layout-partials
+     - filter-panel (sticky, fasettiryhmät)
+     - result-bar (tulosmäärä + lajittelu)
+     - SUODATA-blockin "Tyhjennä kaikki (N)" header-toiminto
+     - group-heading (ryhmäotsikko)
+     - empty-state (3 polkua + yhteydenotto)
+     - end-cta (yhteydenotto-kortti)
+     Ei fasettilogiikkaa vielä — vain rakenne ja propsit.
+     ============================================================ */
+
+  /* filter-panel — kaksi lohkoa (§2 + §3)
+     KATEGORIAT-block: navigaatio, aina näkyvissä, oma kortti.
+     SUODATA-block: attribuuttifasetit, oma kortti.
+     Lohkojen välissä vahva visuaalinen erotin. */
+  .category-block,
+  .filter-block {
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-md);
+    padding: var(--gap-24);
+    background: #fff;
+  }
+  .block-title {
+    font-size: var(--fs-h3);
+    font-weight: 700;
+    margin: 0 0 var(--gap-16);
+    padding-bottom: var(--gap-8);
+    border-bottom: 1px solid var(--c-border);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  /* SUODATA-blockin header: title vasemmalla, "Tyhjennä kaikki (N)" oikealla.
+     Proximity (Gestalt): toiminto siellä missä se vaikuttaa. */
+  .filter-block-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--gap-8);
+    margin-bottom: var(--gap-16);
+    padding-bottom: var(--gap-8);
+    border-bottom: 1px solid var(--c-border);
+  }
+  .filter-block-header .block-title {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .filter-clear-all {
+    background: none;
+    border: 0;
+    padding: 0;
+    font-family: inherit;
+    font-size: var(--fs-small);
+    font-weight: 500;
+    color: var(--c-accent-ink);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    white-space: nowrap;
+  }
+  .filter-clear-all:hover { text-decoration: none; }
+  .filter-clear-all[hidden] { display: none; }
+  .filter-clear-count {
+    margin-left: 4px;
+    font-variant-numeric: tabular-nums;
+    color: var(--c-accent-ink);
+    opacity: 0.7;
+  }
+  /* Vahva visuaalinen erotin lohkojen välissä — tila pystysuunnassa + viiva */
+  .block-separator {
+    height: 1px;
+    background: var(--c-border-strong);
+    margin: var(--gap-24) 0;
+  }
+  /* Säilytä taaksepäin yhteensopivuus jos jossain viitataan vielä .filter-panel-inneriin tai .filter-titleen */
+  .filter-panel-inner { padding: 0; background: transparent; border: 0; }
+  .filter-title { display: none; }
+  .facet-group { margin-bottom: var(--gap-24); }
+  .facet-group:last-child { margin-bottom: 0; }
+  .facet-group-title {
+    font-size: var(--fs-tiny);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0 0 var(--gap-8);
+    color: var(--c-text);
+  }
+  /* Aalto 2: ohjeellinen teksti AND-logiikkafasetille (Erityisruokavalio) */
+  .facet-note {
+    font-size: var(--fs-tiny);
+    color: var(--c-text-muted);
+    font-style: italic;
+    margin: -4px 0 8px;
+    line-height: 1.4;
+  }
+  .facet-list {
+    list-style: none; margin: 0; padding: 0;
+  }
+  .facet-list li { margin-bottom: 2px; }
+  .facet-list label {
+    display: flex; align-items: center; gap: 8px;
+    font-size: var(--fs-small);
+    cursor: pointer;
+    padding: 4px 0;
+  }
+  .facet-list input[type="checkbox"] {
+    margin: 0;
+    accent-color: var(--c-accent-ink);
+  }
+  .facet-list .count {
+    margin-left: auto;
+    color: var(--c-text-muted);
+    font-size: var(--fs-tiny);
+    font-variant-numeric: tabular-nums;
+  }
+  /* Nollatuloiset fasetit himmennetään ja disabloidaan (paitsi valitut, jotka voi poistaa) */
+  .facet-list li.is-zero label { opacity: 0.4; cursor: not-allowed; }
+  .facet-list li.is-zero input { cursor: not-allowed; }
+
+  /* Pitkän fasettiryhmän katkaisu (esim. Brändi, 173 kpl).
+     Ylimääräiset rivit piiloon kunnes ryhmä on laajennettu "Näytä kaikki" -napilla. */
+  .facet-list li.is-overflow { display: none; }
+  .facet-group.is-expanded .facet-list li.is-overflow { display: block; }
+  .facet-toggle {
+    margin-top: var(--gap-8);
+    padding: 0;
+    background: none; border: none;
+    color: var(--c-accent-ink);
+    font: inherit; font-size: var(--fs-small); font-weight: 600;
+    cursor: pointer;
+  }
+  .facet-toggle:hover { text-decoration: underline; }
+  .facet-toggle .ft-less { display: none; }
+  .facet-group.is-expanded .facet-toggle .ft-more { display: none; }
+  .facet-group.is-expanded .facet-toggle .ft-less { display: inline; }
+
+  /* §6A TURVALLISUUSKRIITTINEN — Allergeenit (poissulkeva, "ei saa sisältää")
+     Visuaalisesti erotettu inklusiivisista (Erityisruokavalio) jotta käyttäjä
+     ei sekoita "haluan gluteenitonta" ja "EI saa sisältää gluteenia".
+     Värimaailma: lämmin oranssi-punainen — varoittaa ilman pelottelua. */
+  .facet-group.is-exclusive {
+    background: #fff5f0;
+    border: 1px solid #f3d3c1;
+    border-radius: var(--r-sm);
+    padding: var(--gap-16);
+    margin-top: var(--gap-16);
+  }
+  .facet-group.is-exclusive .facet-group-title {
+    color: #c84a1f;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .facet-group.is-exclusive .facet-group-title::before {
+    content: '⊘';
+    font-size: 14px;
+    line-height: 1;
+  }
+  .facet-group.is-exclusive .facet-note {
+    color: #8a3a18;
+    font-style: normal;
+  }
+  .facet-group.is-exclusive input[type="checkbox"] {
+    accent-color: #c84a1f;
+  }
+  .facet-group.is-exclusive .facet-list label:hover {
+    color: #c84a1f;
+  }
+
+  /* DEMO-fasetti — Aalto 3, data ei vielä rakenteistettu (terveysvaatimukset).
+     Pieni "DEMO"-merkintä otsikon vieressä signaloi prototyyppiluonnetta. */
+  .facet-group.is-demo .facet-group-title::after {
+    content: 'DEMO';
+    margin-left: 8px;
+    font-size: 10px;
+    padding: 1px 6px;
+    background: var(--c-bg-soft);
+    color: var(--c-text-muted);
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+  }
+
+  /* Kategoria-navigaatio (Tila B, handoff §6 — mode="nav" vs muiden tilojen mode="facet")
+     Korvaa hyödyttömän "yhden vaihtoehdon checkbox" -näkymän siskokategoria-navigaatiolla. */
+  .category-nav { list-style: none; margin: 0; padding: 0; }
+  .category-nav > li { border-bottom: 0; }
+  /* Yhteinen rivi (pää + ala): koko rivi reagoi hoveriin (rounded fill) */
+  .category-nav .paa-head,
+  .category-nav .sub-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 10px; border-radius: var(--r-sm);
+    transition: background 120ms ease, box-shadow 120ms ease;
+  }
+  .category-nav .paa-head:hover,
+  .category-nav .sub-row:hover { background: var(--c-bg-soft); }
+  /* Nimi (linkki tai aktiivinen) + lukumäärä */
+  .category-nav .cat-link,
+  .category-nav .cat-current {
+    flex: 1; min-width: 0; display: flex; align-items: center;
+    text-decoration: none; font-size: var(--fs-small); color: var(--c-text);
+  }
+  .category-nav .cat-link:hover { color: var(--c-accent-ink); }
+  .category-nav .cat-current { color: var(--c-accent-ink); font-weight: 700; cursor: default; }
+  .category-nav .count { color: var(--c-text-muted); font-size: var(--fs-tiny); font-variant-numeric: tabular-nums; flex-shrink: 0; }
+  /* Johtava disclosure-kärki — pelkkä ikoni: viestii heti että rivillä on alakategorioita */
+  .category-nav .cat-toggle {
+    flex-shrink: 0; width: 22px; height: 22px; padding: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 0; background: transparent; color: var(--c-text-muted);
+    cursor: pointer; border-radius: var(--r-sm);
+  }
+  .category-nav .cat-toggle:hover { color: var(--c-accent-ink); background: var(--c-accent-soft); }
+  .category-nav .cat-toggle:focus-visible { outline: 2px solid var(--c-accent-ink); outline-offset: 2px; }
+  .category-nav .cat-toggle svg { width: 15px; height: 15px; transition: transform 160ms ease; }
+  .category-nav .cat-toggle-spacer { width: 22px; flex-shrink: 0; }
+  /* Aktiivinen rivi — hienovarainen: vain lihavoitu accent-ink-teksti (.cat-current).
+     Ei täyttöä eikä reunusviivaa (vältetään geneerinen tinted-box + colored-border -korostus). */
+  /* Alakategoriat — sisennetty ryhmä vasemmalla ohjuriviivalla; näkyy kun haara auki */
+  .category-nav .subcat-list { list-style: none; margin: 2px 0 8px 25px; padding: 0; border-left: 2px solid var(--c-accent-soft); display: none; }
+  .category-nav .subcat-list li { border-bottom: 0; }
+  .category-nav .subcat-list .cat-link,
+  .category-nav .subcat-list .cat-current { font-size: var(--fs-tiny); }
+  .category-nav .paa-row.is-open > .subcat-list { display: block; }
+  .category-nav .paa-row.is-open > .paa-head .cat-toggle svg { transform: rotate(90deg); }
+
+  /* result-bar — haku (vasen, flex-grow) + lajittelu (oikea).
+     Konsistentti sijoittelu kaikissa tiloissa (A/B/C/D). */
+  .result-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0 0 var(--gap-16);
+    gap: var(--gap-24);
+    flex-wrap: wrap;
+  }
+  .result-search-form {
+    display: flex;
+    flex: 1 1 320px;
+    min-width: 240px;
+    max-width: 640px;
+  }
+  .result-search-form input {
+    flex: 1;
+    padding: 10px 14px;
+    font-size: var(--fs-small);
+    border: 1px solid var(--c-border-strong);
+    border-right: 0;
+    border-radius: var(--r-sm) 0 0 var(--r-sm);
+    background: #fff;
+    font-family: inherit;
+    outline: none;
+    color: var(--c-text);
+    min-width: 0;
+  }
+  .result-search-form input:focus {
+    border-color: var(--c-accent-ink);
+    box-shadow: 0 0 0 3px rgba(10,110,155,0.18);
+    position: relative;
+    z-index: 1;
+  }
+  .result-search-form button {
+    padding: 0 16px;
+    background: var(--c-accent);
+    color: var(--c-on-accent);
+    border: 1px solid var(--c-accent);
+    border-radius: 0 var(--r-sm) var(--r-sm) 0;
+    cursor: pointer;
+    font-family: inherit;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 150ms ease;
+  }
+  .result-search-form button:hover { background: var(--c-accent-hover); border-color: var(--c-accent-hover); }
+  .result-search-form svg { width: 18px; height: 18px; display: block; }
+
+  /* Tulosmäärä — pieni secondary info, alle result-barin */
+  .result-meta {
+    padding: var(--gap-8) 0 var(--gap-16);
+    border-bottom: 1px solid var(--c-border);
+    margin-bottom: var(--gap-8);
+  }
+  .result-count {
+    font-size: var(--fs-small);
+    color: var(--c-text-2);
+    font-variant-numeric: tabular-nums;
+  }
+  .result-sort {
+    display: flex; align-items: center; gap: 8px;
+    font-size: var(--fs-small);
+    white-space: nowrap;
+  }
+  .result-sort select {
+    padding: 8px 10px;
+    border: 1px solid var(--c-border-strong);
+    border-radius: var(--r-sm);
+    font-size: var(--fs-small);
+    background: #fff;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  /* Cross-category-banneri poistettu — sama uloskäynti hoituu KATEGORIAT-lohkon
+     "Kaikki tuotteet" -rivillä, joka säilyttää aktiiviset filtterit. */
+
+  /* active-filters-chip-rivi poistettu — NN/g #8 + Proximity:
+     Aktiiviset valinnat näkyvät rastitetuissa checkboxeissa itsessään,
+     "Tyhjennä kaikki" siirtyi SUODATA-blockin headeriin. */
+
+  /* group-heading + result-group (T6) */
+  .result-group {
+    margin-bottom: var(--gap-48);
+  }
+  .result-group:last-of-type {
+    margin-bottom: 0;
+  }
+  /* Otsikkorivi: nimi+lukumäärä vasemmalla, "Näytä kaikki →" oikealla.
+     Kun ryhmässä on enemmän kuin compact-määrä, näytä kaikki -linkki vie
+     ko. kategoriasivulle (Tila B) säilyttäen aktiiviset filtterit. */
+  .group-heading {
+    display: flex; align-items: baseline; gap: var(--gap-8);
+    margin-top: var(--gap-32);
+    margin-bottom: var(--gap-16);
+    padding-bottom: var(--gap-8);
+    border-bottom: 1px solid var(--c-border);
+  }
+  .result-group:first-child .group-heading {
+    margin-top: var(--gap-16);
+  }
+  .group-heading h2 {
+    font-size: var(--fs-h2);
+    font-weight: 700;
+    margin: 0;
+  }
+  .group-heading h2 a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .group-heading h2 a:hover {
+    color: var(--c-accent-ink);
+  }
+  .group-count {
+    color: var(--c-text-muted);
+    font-size: var(--fs-small);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+  .group-see-all {
+    margin-left: auto;
+    font-size: var(--fs-small);
+    font-weight: 600;
+    color: var(--c-accent-ink);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .group-see-all:hover {
+    text-decoration: underline;
+  }
+
+  /* empty-state */
+  .empty-state {
+    text-align: center;
+    padding: var(--gap-48) var(--gap-32);
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-md);
+    background: var(--c-bg-soft);
+  }
+  .empty-state h2 {
+    font-size: var(--fs-h2);
+    margin: 0 0 var(--gap-8);
+  }
+  .empty-state p {
+    color: var(--c-text-2);
+    margin: 0 auto var(--gap-24);
+    max-width: 480px;
+  }
+  .empty-paths {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 10px;
+    max-width: 360px; margin-left: auto; margin-right: auto;
+  }
+  .empty-paths a {
+    display: block;
+    padding: 12px 16px;
+    background: #fff;
+    border: 1px solid var(--c-border-strong);
+    border-radius: var(--r-sm);
+    text-decoration: none;
+    color: var(--c-text);
+    font-weight: 500;
+    font-size: var(--fs-small);
+    transition: border-color 150ms ease, color 150ms ease;
+  }
+  .empty-paths a:hover {
+    border-color: var(--c-accent-ink);
+    color: var(--c-accent-ink);
+  }
+  .empty-paths a[aria-disabled="true"] {
+    cursor: default;
+    color: var(--c-text-2);
+    pointer-events: none;
+  }
+  .empty-clear {
+    display: block; width: 100%;
+    padding: 12px 16px;
+    background: var(--c-accent);
+    border: 1px solid var(--c-accent);
+    border-radius: var(--r-sm);
+    color: var(--c-on-accent); font-weight: 600;
+    font-size: var(--fs-small);
+    cursor: pointer; font-family: inherit;
+    text-align: center;
+  }
+  .empty-clear:hover { background: var(--c-accent-hover); border-color: var(--c-accent-hover); }
+
+  /* end-cta-listing */
+  .end-cta-listing {
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-md);
+    padding: var(--gap-32);
+    background: var(--c-bg-tint);
+    text-align: center;
+  }
+  .end-cta-listing h2 {
+    font-size: var(--fs-h2);
+    margin: 0 0 var(--gap-8);
+  }
+  .end-cta-listing p {
+    color: var(--c-text-2);
+    margin: 0 auto var(--gap-24);
+    max-width: 520px;
+  }
+  .end-cta-buttons {
+    display: flex;
+    gap: var(--gap-16);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* Buttons (jaettu) */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 20px;
+    border-radius: var(--r-sm);
+    font-weight: 600;
+    font-size: var(--fs-body);
+    text-decoration: none;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    background: var(--c-accent);
+    color: var(--c-on-accent);
+    font-family: inherit;
+  }
+  .btn:hover { background: var(--c-accent-hover); }
+  .btn-secondary {
+    background: #fff;
+    color: var(--c-accent-ink);
+    border-color: var(--c-accent-ink);
+  }
+  .btn-secondary:hover { background: var(--c-accent-soft); }
+
+  /* Empty-tilan piilotusvaikutukset (laajennettu T2:sta) */
+  .is-empty .group-heading { display: none; }
+
+  /* End-CTA */
+  .end-cta-section { margin-top: var(--gap-48); }
+
+  /* Footer */
+  footer {
+    background: var(--c-bg-soft);
+    border-top: 1px solid var(--c-border);
+    padding: var(--gap-32) 0;
+    margin-top: var(--gap-48);
+  }
+  .footer-inner {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: var(--fs-small); color: var(--c-text-2);
+    flex-wrap: wrap; gap: var(--gap-16);
+  }
+  .footer-links { display: flex; gap: var(--gap-16); }
+  .footer-links a { text-decoration: none; color: var(--c-text-2); }
+
+  /* ============================================================
+     MOBILE (<768 px)
+     ============================================================ */
+  @media (max-width: 767px) {
+    .container { padding-left: 16px; padding-right: 16px; }
+    .nav { min-height: 56px; gap: var(--gap-16); }
+    .nav-list a { padding: 6px 10px; font-size: var(--fs-tiny); }
+    .page-title { font-size: 24px; }
+
+    /* Hero — kapeampi padding, pienempi initial-koriste mobiilissa */
+    .hero-inner { padding: var(--gap-24) var(--gap-16); }
+    .hero::after { font-size: 140px; right: 8px; }
+
+    /* Result-bar pinottu — haku omalla rivillä, sort sen alla */
+    .result-bar { flex-direction: column; align-items: stretch; }
+    .result-search-form { max-width: none; flex: 1 1 100%; }
+    .result-sort { justify-content: flex-end; }
+
+    /* Carousel mobiilissa — kortti hieman kapeampi, nuolet piiloon (peukaloscroll luonteva) */
+    .carousel-track .product-card { flex: 0 0 220px; }
+    .carousel-arrow { display: none; }
+
+    .listing-layout {
+      grid-template-columns: 1fr;
+      gap: var(--gap-16);
+    }
+    /* Filter panel piilotetaan oletuksena mobiilissa, näkyy kun drawer auki */
+    .filter-panel {
+      position: static;
+      display: none;
+    }
+    .filter-panel.is-open { display: block; }
+    .filter-drawer-toggle { display: block; }
+    .wf-note .container { gap: var(--gap-8); }
+    .view-switch { margin-left: 0; width: 100%; flex-wrap: wrap; }
+  }
+
+  /* ============================================================
+     CONDITE-KERROS — lisäykset Feelian templateen
+     ============================================================ */
+  /* §2.1 Kaksitasoinen kategorianavi — tyylit category-nav-lohkossa (paa-head/cat-toggle/subcat-list). */
+
+  /* §2.4 Vertailu-toggle kortilta poistettu (Olli: pois tästä näkymästä). Nav-vertailukori jää. */
+
+  /* Pääsytaso-merkki (tier) — funktionaalinen wireframe-annotaatio, ei brändiväri */
+  .tier { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: .3px; text-transform: uppercase; color: var(--c-text-2); }
+  .tier .tdot { width: 9px; height: 9px; border-radius: 50%; }
+  .tier-lead .tdot { background: #7a6553; }
+  .tier-login .tdot { background: #586a82; }
+
+  /* §3F End-CTA: Makupaja + yhteydenotto (liidi) + kirjaudu-vihje (login) */
+  .end-cta-tiers { display: flex; gap: var(--gap-16); justify-content: center; flex-wrap: wrap; margin-bottom: var(--gap-16); }
+  .end-cta-login-hint { margin-top: var(--gap-16); padding-top: var(--gap-16); border-top: 1px solid var(--c-border); font-size: var(--fs-small); color: var(--c-text-2); display: flex; align-items: center; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .end-cta-login-hint a { color: var(--c-accent-ink); font-weight: 600; text-decoration: none; }
+  .end-cta-login-hint a:hover { text-decoration: underline; }
+
+  /* Wireframe-huomautus + pääsytaso-näkymänvaihtaja (handoff, ei osa sivua) */
+  .wf-note { background: #2b2b30; color: #e9e9ee; font-size: 12.5px; }
+  .wf-note .container { display: flex; gap: var(--gap-16); align-items: center; padding-top: 9px; padding-bottom: 9px; flex-wrap: wrap; }
+  .wf-note strong { color: #fff; }
+  .wf-note .legend { display: inline-flex; align-items: center; gap: 5px; }
+  .wf-note .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+  .view-switch { display: inline-flex; align-items: center; gap: var(--gap-8); margin-left: auto; }
+  .view-switch .vs-label { color: #b9b9c0; }
+  .seg-btns { display: inline-flex; background: #1d1d21; border: 1px solid #3a3a40; border-radius: 999px; padding: 3px; }
+  .seg-btns button { border: 0; background: transparent; color: #cfcfd5; font: inherit; font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 999px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+  .seg-btns button .vdot { width: 8px; height: 8px; border-radius: 50%; }
+  .seg-btns button[aria-pressed="true"] { background: #fff; color: #1a1a1c; }
+  [data-view="login"] .show-anon { display: none; }
+  [data-view="anon"] .show-login { display: none; }
+
+</style>
+</head>
+<body data-view="anon">
+
+<!-- Wireframe-huomautus + pääsytaso-näkymänvaihtaja (handoff-konteksti, EI osa sivua) -->
+<div class="wf-note" role="note">
+  <div class="container">
+    <span><strong>Kiillotettu wireframe</strong> · forkattu Feelian listaustemplatesta · Condite-tokenit (pehmeä sininen).</span>
+    <span class="legend"><span class="dot" style="background:#5d7a6a"></span>Avoin</span>
+    <span class="legend"><span class="dot" style="background:#7a6553"></span>Liidi</span>
+    <span class="legend"><span class="dot" style="background:#586a82"></span>Login</span>
+    <div class="view-switch" role="group" aria-label="Wireframe-demo: vaihda pääsytasoa (ei oikea kirjautuminen)">
+      <span class="vs-label" aria-hidden="true">Demo-näkymä:</span>
+      <div class="seg-btns">
+        <button type="button" data-setview="anon" aria-pressed="true"><span class="vdot" style="background:#5d7a6a" aria-hidden="true"></span>Anonyymi</button>
+        <button type="button" data-setview="login" aria-pressed="false"><span class="vdot" style="background:#586a82" aria-hidden="true"></span>Kirjautunut</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Globaali navigaatio -->
+<div class="nav-wrap">
+  <div class="container nav">
+    <div class="logo-box">Condite</div>
+    <nav aria-label="Päänavigaatio">
+      <ul class="nav-list">
+        <li><a href="#" aria-current="page">Tuotteet</a></li>
+        <li><a href="#">Toimialat</a></li>
+        <li><a href="#">Reseptit</a></li>
+        <li><a href="#">Tuotekehitys</a></li>
+        <li><a href="#">Yritys</a></li>
+        <li><a href="#">Yhteys</a></li>
+      </ul>
+    </nav>
+    <!-- Vertailukori — jaettu tila /vertaa-sivun + tuotekortin kanssa
+         (localStorage-avain feelia_vertailu_v1, max 3 tuotetta).
+         Klikkaus vie vertaa-sivulle, laskuri päivittyy reaaliajassa. -->
+    <a href="condite_vertaa_wireframe.html" class="nav-compare is-empty" id="navCompare"
+       aria-label="Vertailu, 0 tuotetta">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="3" y="4" width="7" height="16" rx="1"></rect>
+        <rect x="14" y="4" width="7" height="16" rx="1"></rect>
+      </svg>
+      Vertailu
+      <span class="nav-compare-count" id="navCompareCount" aria-live="polite">0</span>
+    </a>
+    <div class="lang-switcher" role="group" aria-label="Vaihda kieli">
+      <button type="button" data-lang="fi" class="is-active" aria-label="Suomi">FI</button>
+      <button type="button" data-lang="sv" aria-label="Svenska">SV</button>
+      <button type="button" data-lang="en" aria-label="English">EN</button>
+    </div>
+  </div>
+</div>
+
+<!-- Murupolku — sisältö vaihtuu tilan mukaan -->
+<div class="crumbs-wrap">
+  <div class="container crumbs" id="crumbs">
+    <!-- Renderöidään JS:llä -->
+  </div>
+</div>
+
+<!-- Globaali hakupalkki poistettu — haku siirtynyt tulospalkkiin (result-bar),
+     näkyy konsistentisti kaikilla tiloilla listausalueen yläosassa. -->
+
+<main class="container">
+
+  <!-- Hero — H1 + introteksti wrapatty kategoriapohjaiseen "kortti"-containeriin.
+       Taustalla näkyy valitun kategorian värisävy (sama paletti kuin tuotekorteilla).
+       Tila A: neutraali sävy. Tila B/D: kategoria-spesifinen. Tila C: hero piilossa. -->
+  <section class="hero" id="hero" data-cat="">
+    <div class="hero-inner">
+      <h1 class="page-title" id="page-title">Tuotehaku</h1>
+      <div class="curated-hero" id="curated-hero" hidden>
+        <!-- intro + Lue lisää -nappi renderöidään JS:llä -->
+      </div>
+    </div>
+  </section>
+  <p class="page-sub" id="page-sub" hidden></p>
+
+  <!-- Mobiilin filter-drawer-nappi -->
+  <button class="filter-drawer-toggle" type="button" id="filter-toggle" aria-expanded="false" aria-controls="filter-panel" data-i18n="filter_mobile">
+    Suodata tuotteita
+  </button>
+
+  <div class="listing-layout" id="listing-layout">
+
+    <!-- ===== Vasen palsta: Filter panel ===== -->
+    <!-- §2 + §3: Kaksi erillistä lohkoa.
+         (1) KATEGORIAT — navigaatio, AINA näkyvissä, "Kaikki tuotteet" ensin.
+         (2) Vahva visuaalinen erotin.
+         (3) SUODATA — attribuuttifasetit (EI kategoriaa).
+         Kategoria on navigaatio, ei koskaan checkbox-fasetti. -->
+    <aside class="filter-panel" id="filter-panel" aria-label="Kategoriat ja suodattimet">
+      <!-- Lohko 1: Kategoriat (navigaatio) -->
+      <nav class="category-block" id="category-block" aria-label="Kategoriat">
+        <h2 class="block-title" data-i18n="block_categories">Kategoriat</h2>
+        <ul class="category-nav" id="category-nav-list">
+          <!-- Renderöidään renderCategoryNav():lla -->
+        </ul>
+      </nav>
+
+      <!-- Vahva visuaalinen erotin lohkojen välissä -->
+      <div class="block-separator" aria-hidden="true"></div>
+
+      <!-- Lohko 2: Suodata (attribuuttifasetit)
+           Header sisältää: title + "Tyhjennä kaikki (N)" -toiminnon (näkyy vain kun N>0).
+           Proximity (Gestalt): toiminto on lähellä fasetteja joihin se vaikuttaa. -->
+      <div class="filter-block" id="filter-block">
+        <div class="filter-block-header">
+          <h2 class="block-title" data-i18n="filter">Suodata</h2>
+          <button class="filter-clear-all" type="button" id="clear-all-btn"
+                  hidden aria-live="polite">
+            <span data-i18n="clear_all">Tyhjennä kaikki</span>
+            <span class="filter-clear-count" id="filter-clear-count" aria-hidden="true">(0)</span>
+          </button>
+        </div>
+        <div class="filter-panel-inner" id="filter-panel-inner">
+          <!-- Fasettiryhmät renderöidään JS:llä SAMPLE_PRODUCTS-datasta -->
+        </div>
+      </div>
+    </aside>
+
+    <!-- ===== Oikea palsta: tulokset ===== -->
+    <div class="listing-main">
+
+      <!-- Tulospalkki (result-bar): haku + lajittelu + tulosmäärä.
+           Konsistentti sijoittelu kaikissa tiloissa → ei "hyppi paikasta toiseen".
+           Haku vasemmalla (primary action), lajittelu oikealla. Tulosmäärä alapuolella. -->
+      <div class="result-bar">
+        <form class="result-search-form" id="search-form" role="search">
+          <input type="search" id="search-input"
+                 placeholder="Etsi tuotteita, tuotenumeroa tai brändiä"
+                 aria-label="Etsi tuotteita, tuotenumeroa tai brändiä" autocomplete="off">
+          <button type="submit" aria-label="Hae">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.3-4.3"></path>
+            </svg>
+          </button>
+        </form>
+        <div class="result-sort">
+          <label for="sort-select" data-i18n="sort_label">Järjestä:</label>
+          <select id="sort-select" aria-label="Lajittelu">
+            <option value="name-asc" data-i18n="sort_name_asc">Nimi A→Z</option>
+            <option value="name-desc" data-i18n="sort_name_desc">Nimi Z→A</option>
+            <option value="newest" data-i18n="sort_newest">Uusimmat ensin</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Tulosmäärä — pieni, secondary info, säilyttää NN/g #1 Visibility of system status.
+           aria-live="polite" → screen reader saa ilmoituksen kun määrä muuttuu. -->
+      <div class="result-meta" aria-live="polite">
+        <span class="result-count" id="result-count">— tuotetta</span>
+      </div>
+
+      <!-- Aktiiviset suodattimet näkyvät checkboxeissa itsessään (NN/g #8 + Proximity).
+           "Tyhjennä kaikki" -toiminto on SUODATA-blockin headerissa. -->
+
+
+      <!-- Tulokset -->
+      <div class="results">
+
+        <!-- T6: ryhmittelyä per tila. JS renderöi result-group-elementit
+             group-heading (linkki kategoriasivulle) + results-grid (max 4 korttia) per ryhmä. -->
+        <div id="groups-container">
+          <!-- Renderöidään JS:llä — yksi result-group per ryhmä -->
+        </div>
+
+        <!-- Empty state (Partial: empty-state) — T7 renderöi sisällön per konteksti
+             (haku vs filter vs ei mitään) -->
+        <div class="empty-state" id="empty-state">
+          <!-- Renderöidään renderEmptyState():lla -->
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- FAQ-lohko — SEO Vaihe 4 (Tila B + D, GEO/AI-haku).
+       Full-width listausgridin alapuolella, samaan tyyliin kuin end-CTA-blokki.
+       Ennen end-CTA:ta: ensin sisältö (vastaukset), sitten kutsu yhteydenottoon. -->
+  <section class="faq-section" id="faq-section" hidden>
+    <!-- Renderöidään JS:llä per tila -->
+  </section>
+
+  <!-- End-CTA — Miro #3: full-width, listausgridin (.listing-layout) alapuolella.
+       Aiemmin oli .listing-mainin sisällä (rajoittunut oikeaan sarakkeeseen).
+       Nyt täyttää koko containerin leveydeltä. -->
+  <div class="end-cta-section">
+    <div class="end-cta-listing">
+      <h2>Etkö löytänyt etsimääsi?</h2>
+      <p>Makupaja-tiimimme auttaa löytämään tai kehittämään oikean ratkaisun tuotantoosi.</p>
+      <div class="end-cta-tiers">
+        <span class="tier tier-lead"><span class="tdot" aria-hidden="true"></span>Liidi</span>
+      </div>
+      <div class="end-cta-buttons">
+        <a href="/tuotekehitys/makupaja/" class="btn">Varaa Makupaja</a>
+        <a href="/yhteys/" class="btn btn-secondary">Ota yhteyttä</a>
+      </div>
+      <p class="end-cta-login-hint">
+        <span class="show-anon"><span class="tier tier-login"><span class="tdot" aria-hidden="true"></span>Login</span> Kirjaudu nähdäksesi asiakaskohtaiset hinnat ja tilataksesi. <a href="/kirjaudu/">Kirjaudu →</a></span>
+        <span class="show-login"><span class="tier tier-login"><span class="tdot" aria-hidden="true"></span>Login</span> Olet kirjautuneena — hinnat ja saatavuus näkyvät tuotekortilla. <a href="/kirjaudu/">Siirry verkkokauppaan →</a></span>
+      </p>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="container footer-inner">
+    <div>© 2026 Condite Oy · Osa Orkla Food Ingredientsia</div>
+    <div class="footer-links">
+      <a href="/kirjaudu/">Kirjaudu verkkokauppaan</a>
+      <a href="/tietosuoja/">Tietosuoja</a>
+      <a href="/yhteys/">Yhteystiedot</a>
+      <a href="/yhteys/laskutusohjeet/">Laskutusohjeet</a>
+      <a href="https://ura.condite.fi" target="_blank" rel="noopener" aria-label="Avoimet työpaikat (avautuu ura.condite.fi)">Avoimet työpaikat</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ============================================================
+     Listaustemplate — T2 (reititys) + T3 (kortti) + T4 (partials) + T5 (fasettimoottori)
+
+     T5: Fasettimoottori, Aalto 1
+       - Fasettien VÄLILLÄ: AND
+       - Fasetin SISÄLLÄ:  OR (poikkeus: Erityisruokavalio = AND, allergeeniturvallisuus)
+       - URL-parametrisynkka, browser back/forward toimii
+       - Active-filters chipsit + "Tyhjennä kaikki"
+       - Contextual counts: OR-fasetin counts EI riipu sen omasta selectiosta
+
+     WordPress-vastaavuus reititykselle (URL-polku → WP-template-tarkistus):
+       /tuotteet/                   ←  is_post_type_archive('tuote')
+       /tuotteet/{slug}/            ←  is_tax('tuotekategoria')
+       /tuotteet/haku/              ←  is_search() && get_query_var('post_type') === 'tuote'
+
+     Proto käyttää hash-routeria (#/-pohjainen) staattisessa HTML:ssä.
+     ============================================================ */
+  (function () {
+
+    /* ============================================================
+       DATA — SAMPLE_PRODUCTS (lähde: feelia_tuotelistaus_sample_data.json)
+       ============================================================ */
+    /* Aalto 2 -mock: rikastettu data — diets 4→8, purposes 4→7, lisätty structure */
+        /* ============================================================
+       CONDITE — taksonomia (kaksitasoinen) + tuotedata
+       Lähde: Condite_tuotteet.xlsx (630 tuotetta / 173 brändiä) — mock-otos.
+       Oikea pää/ala-taksonomia tulee verkkokaupasta; tässä siemen (brief §4/§9). ===== */
+    var CATEGORIES = [
+      { name: 'Mausteet',                        subs: ['Paprika ja chili', 'Mausteseokset', 'Yrtit'] },
+      { name: 'Täytteet ja koristeet',           subs: ['Kinuski- ja toffeetäytteet', 'Hedelmätäytteet', 'Suklaakoristeet'] },
+      { name: 'Suklaat, kaakaot ja kuorrutteet', subs: ['Tumma suklaa', 'Kuorrutteet'] },
+      { name: 'Leivonta-aineet',                 subs: ['Hiivat ja entsyymit', 'Leivinjauheet'] },
+      { name: 'Viljatuotteet',                   subs: [] }
+    ];
+
+    /* Tuotekortti = avoin (ei hintaa/saatavuutta). parent = pääkategoria, category = alakategoria.
+       special_order → Tilaustuote (xlsx-boolean). Kaikki linkittävät Feelia-systeemin tuotekortille. */
+    var TK = 'condite_tuotekortti_feelia_wireframe.html';
+    var SAMPLE_PRODUCTS = [
+      { sku:'PRO-7803', name:'Promix Kinuskitäyte 5 kg',            brand:'Promix',    parent:'Täytteet ja koristeet', category:'Kinuski- ja toffeetäytteet', package_size:5,   package_unit:'kg', variants:[{size:1,unit:'kg'}], diets:['Gluteeniton'],            special_order:false, status:'available',   url:TK },
+      { sku:'CRE-2210', name:'Credin Toffee-täyte 6 kg',           brand:'Credin',    parent:'Täytteet ja koristeet', category:'Kinuski- ja toffeetäytteet', package_size:6,   package_unit:'kg', variants:[],                  diets:[],                        special_order:false, status:'available',   url:TK },
+      { sku:'PRO-7820', name:'Promix Maitokinuski 5 kg',           brand:'Promix',    parent:'Täytteet ja koristeet', category:'Kinuski- ja toffeetäytteet', package_size:5,   package_unit:'kg', variants:[],                  diets:['Gluteeniton'],            special_order:false, status:'available',   url:TK },
+      { sku:'CRE-2240', name:'Credin Fudge-täyte 6 kg',            brand:'Credin',    parent:'Täytteet ja koristeet', category:'Kinuski- ja toffeetäytteet', package_size:6,   package_unit:'kg', variants:[],                  diets:['Gluteeniton'],            special_order:false, status:'phasing-out', url:TK },
+      { sku:'CRE-2255', name:'Credin Hedelmätäyte, mansikka 6 kg', brand:'Credin',    parent:'Täytteet ja koristeet', category:'Hedelmätäytteet',           package_size:6,   package_unit:'kg', variants:[],                  diets:['Gluteeniton'],            special_order:false, status:'available',   url:TK },
+      { sku:'SON-3120', name:'Sonneveld Omenatäyte 10 kg',         brand:'Sonneveld', parent:'Täytteet ja koristeet', category:'Hedelmätäytteet',           package_size:10,  package_unit:'kg', variants:[],                  diets:['Vegaaninen','Gluteeniton'], special_order:false, status:'available',   url:TK },
+      { sku:'DOB-3340', name:'Dobla Suklaakoristeet, lastut 1 kg', brand:'Dobla',     parent:'Täytteet ja koristeet', category:'Suklaakoristeet',           package_size:1,   package_unit:'kg', variants:[],                  diets:['Gluteeniton','Vegaaninen'], special_order:false, status:'new',         url:TK },
+      { sku:'DOB-3360', name:'Dobla Karamellikoristeet 1 kg',      brand:'Dobla',     parent:'Täytteet ja koristeet', category:'Suklaakoristeet',           package_size:1,   package_unit:'kg', variants:[],                  diets:['Vegaaninen'],             special_order:false, status:'available',   url:TK },
+      { sku:'CAP-1042', name:'Capsi Savustettu paprikajauhe 600 g',brand:'Capsi',     parent:'Mausteet',              category:'Paprika ja chili',          package_size:600, package_unit:'g',  variants:[],                  diets:['Gluteeniton','Vegaaninen'], special_order:false, status:'available',   url:TK },
+      { sku:'CAP-1080', name:'Capsi Chiliöljy 1 l',                brand:'Capsi',     parent:'Mausteet',              category:'Paprika ja chili',          package_size:1,   package_unit:'l',  variants:[],                  diets:['Gluteeniton','Vegaaninen','Luomu'], special_order:false, status:'available', url:TK },
+      { sku:'CAP-1115', name:'Capsi Grillimauste 800 g',           brand:'Capsi',     parent:'Mausteet',              category:'Mausteseokset',             package_size:800, package_unit:'g',  variants:[],                  diets:['Gluteeniton','Vegaaninen'], special_order:true,  status:'available',   url:TK },
+      { sku:'CAP-1130', name:'Capsi Valkosipulirouhe 800 g',       brand:'Capsi',     parent:'Mausteet',              category:'Mausteseokset',             package_size:800, package_unit:'g',  variants:[],                  diets:['Gluteeniton','Vegaaninen'], special_order:false, status:'available',   url:TK },
+      { sku:'CAP-1210', name:'Capsi Basilika rouhittu 250 g',      brand:'Capsi',     parent:'Mausteet',              category:'Yrtit',                     package_size:250, package_unit:'g',  variants:[],                  diets:['Gluteeniton','Vegaaninen','Luomu'], special_order:false, status:'available', url:TK },
+      { sku:'DOB-3401', name:'Dobla Tumma suklaa 70 % 2,5 kg',     brand:'Dobla',     parent:'Suklaat, kaakaot ja kuorrutteet', category:'Tumma suklaa',    package_size:2.5, package_unit:'kg', variants:[],                  diets:['Vegaaninen','Gluteeniton'], special_order:false, status:'available',   url:TK },
+      { sku:'PRO-5500', name:'Promix Kuorrute, maitosuklaa 5 kg',  brand:'Promix',    parent:'Suklaat, kaakaot ja kuorrutteet', category:'Kuorrutteet',     package_size:5,   package_unit:'kg', variants:[],                  diets:['Gluteeniton'],            special_order:true,  status:'available',   url:TK },
+      { sku:'SON-9001', name:'Sonneveld Leivinjauhe, gluteeniton 3 kg', brand:'Sonneveld', parent:'Leivonta-aineet',  category:'Leivinjauheet',             package_size:3,   package_unit:'kg', variants:[],                  diets:['Gluteeniton'],            special_order:false, status:'available',   url:TK },
+      { sku:'PRO-6005', name:'Promix Kuivahiiva 0,5 kg',           brand:'Promix',    parent:'Leivonta-aineet',       category:'Hiivat ja entsyymit',       package_size:0.5, package_unit:'kg', variants:[],                  diets:['Vegaaninen'],             special_order:false, status:'available',   url:TK },
+      { sku:'SON-2200', name:'Sonneveld Vehnäjauho erikois 25 kg', brand:'Sonneveld', parent:'Viljatuotteet',         category:'Viljatuotteet',             package_size:25,  package_unit:'kg', variants:[],                  diets:['Vegaaninen'],             special_order:false, status:'available',   url:TK },
+      /* Brändikirjon laajennus — havainnollistaa "Näytä kaikki" -fasettia (katalogissa 173 brändiä) */
+      { sku:'NIC-4410', name:'NIC Sokerikoristeet, kukat 0,5 kg',  brand:'NIC',       parent:'Täytteet ja koristeet', category:'Suklaakoristeet',           package_size:0.5, package_unit:'kg', variants:[],                  diets:['Gluteeniton','Vegaaninen'], special_order:false, status:'available',   url:TK },
+      { sku:'IDU-5120', name:'Idun Vaniljatäyte 6 kg',             brand:'Idun',      parent:'Täytteet ja koristeet', category:'Hedelmätäytteet',           package_size:6,   package_unit:'kg', variants:[],                  diets:['Gluteeniton'],            special_order:false, status:'available',   url:TK },
+      { sku:'ZEE-6300', name:'Zeelandia Leivontaseos, pulla 10 kg',brand:'Zeelandia', parent:'Leivonta-aineet',       category:'Leivinjauheet',             package_size:10,  package_unit:'kg', variants:[],                  diets:[],                        special_order:false, status:'available',   url:TK },
+      { sku:'PUR-7100', name:'Puratos Hapanjuuriaihio 15 kg',      brand:'Puratos',   parent:'Leivonta-aineet',       category:'Hiivat ja entsyymit',       package_size:15,  package_unit:'kg', variants:[],                  diets:['Vegaaninen'],             special_order:true,  status:'available',   url:TK },
+      { sku:'BAK-8200', name:'Bakels Kuorrute, valkosuklaa 5 kg',  brand:'Bakels',    parent:'Suklaat, kaakaot ja kuorrutteet', category:'Kuorrutteet',     package_size:5,   package_unit:'kg', variants:[],                  diets:['Gluteeniton'],            special_order:false, status:'available',   url:TK },
+      { sku:'MBR-9050', name:'Martin Braun Kaakaojauhe 5 kg',      brand:'Martin Braun', parent:'Suklaat, kaakaot ja kuorrutteet', category:'Tumma suklaa', package_size:5,   package_unit:'kg', variants:[],                  diets:['Vegaaninen','Gluteeniton'], special_order:false, status:'available',   url:TK },
+      { sku:'ORK-1500', name:'Odense Marsipaani 5 kg',             brand:'Odense',    parent:'Täytteet ja koristeet', category:'Suklaakoristeet',           package_size:5,   package_unit:'kg', variants:[],                  diets:['Gluteeniton'],            special_order:false, status:'available',   url:TK }
+    ];
+
+    /* FASETIT — datariippuvuudet (Olli/Miro-kommentit tuotehausta):
+       · "tätä ei saada ilman datan manipulointia": KÄYTTÖTARKOITUS-fasetti (workshopin toive
+         "suodattimet ostologiikan järjestyksessä: saatavuus, käyttötarkoitus, ominaisuudet,
+         pakkauskoko") EI ole johdettavissa nykyisestä tuotedatasta — vaatisi oman kentän ja
+         kertaluontoisen luokittelun 630 tuotteelle. Siksi sitä ei ole tässä fasettilistassa.
+       · BRÄNDI on datassa epäluotettava: joskus category ID:n takana, joskus tuotenimessä →
+         brändifasetti toimii vasta kun brändi on oma taksonomia ja tuotteet mapattu (ks. brändihub).
+       · Kategoria ei ole koskaan checkbox-fasetti: se on navigaatiota — paitsi hakutuloksessa,
+         jossa kategoria RAJAA hakua (?kat=, ks. buildSearchCatUrl). */
+    var FACET_DEFS = [
+      { key: 'diets',        urlKey: 'omin',   title: 'Ominaisuudet', andLogic: true,
+        note: 'Valitse kaikki tarvittavat — tuotteen pitää täyttää kaikki valinnat. Ominaisuustagit ovat avoimia.',
+        field: function (p) { return p.diets || []; } },
+      { key: 'brand',        urlKey: 'brandi', title: 'Brändi', collapseAfter: 8,
+        field: function (p) { return [p.brand]; } },
+      { key: 'package_size', urlKey: 'paku',   title: 'Pakkauskoko', collapseAfter: 8,
+        field: function (p) { return [p.package_size + ' ' + p.package_unit]; } },
+      { key: 'special',      urlKey: 'tilaus', title: 'Saatavuustyyppi',
+        field: function (p) { return [p.special_order ? 'Tilaustuote' : 'Varastotuote']; } }
+    ];
+
+    /* ============================================================
+       T8 — i18n FI/SV/EN
+       I18N        — UI-merkkijonojen sanakirja
+       FACET_VALUE_I18N — fasettiarvojen käännökset (kategoriat = ryhmäotsikot)
+       Brändit pysyvät käännättömiä (proper nouns).
+       ============================================================ */
+    var I18N = {
+      fi: {
+        nav_solutions: 'Ruokaratkaisut', nav_products: 'Tuotteet',
+        nav_responsibility: 'Vastuullisuus', nav_about: 'Meistä', nav_contact: 'Yhteystiedot',
+        filter: 'Suodata', filter_mobile: 'Suodata tuotteita', filter_mobile_close: 'Piilota suodattimet',
+        sort_label: 'Järjestä:', sort_name_asc: 'Nimi A→Z', sort_name_desc: 'Nimi Z→A', sort_newest: 'Uusimmat ensin',
+        no_filters: 'Ei aktiivisia suodattimia', clear_all: 'Tyhjennä kaikki',
+        remove_filter: 'Poista suodatin', show_less: 'Näytä vähemmän',
+        home: 'Etusivu', products: 'Tuotteet', page_search: 'Haku',
+        all_products: 'Kaikki tuotteet', search_results: 'Hakutulokset:',
+        no_search_results: 'Ei hakuosumia', no_filter_results: 'Ei tuotteita näillä suodattimilla',
+        no_products: 'Ei tuotteita', generic_intro: 'Kokeile alla olevia vaihtoehtoja.',
+        filter_intro: 'Yritä poistaa joitakin suodattimia tai etsi muulla tavalla.',
+        check_spelling: 'Tarkista hakusanan kirjoitusasu',
+        clear_filters: 'Tyhjennä suodattimet',
+        browse_categories: 'Selaa kategorioita',
+        show_all_products: 'Näytä koko valikoima',
+        contact_expert: 'Ota yhteyttä asiantuntijaan',
+        end_cta_heading: 'Etkö löytänyt etsimääsi?',
+        end_cta_body: 'Asiantuntijamme auttavat oikean tuotteen valinnassa — kerro tarpeesi ja saat suosituksia.',
+        contact: 'Ota yhteyttä',
+        facet_category: 'Kategoria', facet_package_size: 'Pakkauskoko',
+        facet_temp_class: 'Säilytys', facet_brand: 'Brändi',
+        facet_diets: 'Ominaisuudet', facet_special: 'Saatavuustyyppi', facet_purposes: 'Käyttötarkoitus',
+        facet_structure: 'Rakenne', facet_allergens: 'Ei saa sisältää', facet_status: 'Status',
+        facet_health_claim: 'Terveysvaatimus',
+        block_categories: 'Kategoriat', exclusion_prefix: 'Ei ', category_all: 'Kaikki tuotteet',
+        read_more: 'Lue lisää', read_less: 'Näytä vähemmän',
+        see_all: 'Näytä kaikki', total_suffix: 'kaikkiaan',
+        prev: 'Edellinen', next: 'Seuraava',
+        status_new: 'Uutuus', status_phasing_out: 'Poistuva',
+        footer_copy: '© Feelia · Sivuston vakio-footer',
+        footer_complaints: 'Reklamaatio', footer_privacy: 'Tietosuoja', footer_contact: 'Yhteystiedot',
+        products_unit: 'tuotetta'
+      },
+      sv: {
+        nav_solutions: 'Måltidslösningar', nav_products: 'Produkter',
+        nav_responsibility: 'Hållbarhet', nav_about: 'Om oss', nav_contact: 'Kontakt',
+        filter: 'Filtrera', filter_mobile: 'Filtrera produkter', filter_mobile_close: 'Dölj filter',
+        sort_label: 'Sortera:', sort_name_asc: 'Namn A→Z', sort_name_desc: 'Namn Z→A', sort_newest: 'Nyaste först',
+        no_filters: 'Inga aktiva filter', clear_all: 'Rensa alla',
+        remove_filter: 'Ta bort filter', show_less: 'Visa färre',
+        home: 'Hem', products: 'Produkter', page_search: 'Sök',
+        all_products: 'Produktsökning', search_results: 'Sökresultat:',
+        no_search_results: 'Inga sökträffar', no_filter_results: 'Inga produkter med dessa filter',
+        no_products: 'Inga produkter', generic_intro: 'Prova alternativen nedan.',
+        filter_intro: 'Försök att ta bort några filter eller sök på annat sätt.',
+        check_spelling: 'Kontrollera stavning',
+        clear_filters: 'Rensa filter',
+        browse_categories: 'Bläddra i kategorier',
+        show_all_products: 'Visa hela sortimentet',
+        contact_expert: 'Kontakta en expert',
+        end_cta_heading: 'Hittade du inte vad du sökte?',
+        end_cta_body: 'Våra experter hjälper dig att välja rätt produkt — berätta vad du behöver.',
+        contact: 'Kontakta oss',
+        facet_category: 'Kategori', facet_package_size: 'Förpackningsstorlek',
+        facet_temp_class: 'Förvaring', facet_brand: 'Varumärke',
+        facet_diets: 'Specialdiet', facet_purposes: 'Användningsändamål',
+        facet_structure: 'Konsistens', facet_allergens: 'Får inte innehålla', facet_status: 'Status',
+        facet_health_claim: 'Hälsopåstående',
+        block_categories: 'Kategorier', exclusion_prefix: 'Ingen ', category_all: 'Alla produkter',
+        read_more: 'Läs mer', read_less: 'Visa mindre',
+        see_all: 'Visa alla', total_suffix: 'totalt',
+        prev: 'Föregående', next: 'Nästa',
+        status_new: 'Nyhet', status_phasing_out: 'Utgår',
+        footer_copy: '© Feelia · Webbplatsens standardfooter',
+        footer_complaints: 'Reklamation', footer_privacy: 'Integritet', footer_contact: 'Kontakt',
+        products_unit: 'produkter'
+      },
+      en: {
+        nav_solutions: 'Meal solutions', nav_products: 'Products',
+        nav_responsibility: 'Sustainability', nav_about: 'About', nav_contact: 'Contact',
+        filter: 'Filter', filter_mobile: 'Filter products', filter_mobile_close: 'Hide filters',
+        sort_label: 'Sort:', sort_name_asc: 'Name A→Z', sort_name_desc: 'Name Z→A', sort_newest: 'Newest first',
+        no_filters: 'No active filters', clear_all: 'Clear all',
+        remove_filter: 'Remove filter', show_less: 'Show less',
+        home: 'Home', products: 'Products', page_search: 'Search',
+        all_products: 'Product search', search_results: 'Search results:',
+        no_search_results: 'No matches', no_filter_results: 'No products match these filters',
+        no_products: 'No products', generic_intro: 'Try the options below.',
+        filter_intro: 'Try removing some filters or searching differently.',
+        check_spelling: 'Check spelling',
+        clear_filters: 'Clear filters',
+        browse_categories: 'Browse categories',
+        show_all_products: 'Show full assortment',
+        contact_expert: 'Contact an expert',
+        end_cta_heading: 'Didn’t find what you were looking for?',
+        end_cta_body: 'Our experts help you choose the right product — tell us what you need.',
+        contact: 'Contact us',
+        facet_category: 'Category', facet_package_size: 'Package size',
+        facet_temp_class: 'Storage', facet_brand: 'Brand',
+        facet_diets: 'Special diet', facet_purposes: 'Use case',
+        facet_structure: 'Texture', facet_allergens: 'Must not contain', facet_status: 'Status',
+        facet_health_claim: 'Health claim',
+        block_categories: 'Categories', exclusion_prefix: 'No ', category_all: 'All products',
+        read_more: 'Read more', read_less: 'Show less',
+        see_all: 'See all', total_suffix: 'total',
+        prev: 'Previous', next: 'Next',
+        status_new: 'New', status_phasing_out: 'Phasing out',
+        footer_copy: '© Feelia · Standard site footer',
+        footer_complaints: 'Complaints', footer_privacy: 'Privacy', footer_contact: 'Contact',
+        products_unit: 'products'
+      }
+    };
+
+    /* Fasettiarvojen käännökset. Avain on FI-arvo (kuten datassa).
+       Uusi kategoriarakenne 7 (PDF "Kaksi Akselia"). */
+    var FACET_VALUE_I18N = {
+      category: {
+        'Keitot':                              { sv: 'Soppor',                  en: 'Soups' },
+        'Kastikkeet ja padat':                 { sv: 'Såser och grytor',        en: 'Sauces and stews' },
+        'Laatikot ja kiusaukset':              { sv: 'Lådor och frestelser',    en: 'Casseroles' },
+        'Pastat':                              { sv: 'Pastor',                  en: 'Pastas' },
+        'Perunat ja juurekset':                { sv: 'Potatis och rotfrukter',  en: 'Potatoes & root veg' },
+        'Välipalat ja puurot':                 { sv: 'Mellanmål och grötter',   en: 'Snacks & porridges' },
+        'Pyreet ja sosemaiset ruoat':          { sv: 'Puréer och mosrätter',    en: 'Purées & soft-textured' },
+        'Mehut':                               { sv: 'Juicer',                  en: 'Juices' },
+        'Automaattimehut':                     { sv: 'Automatjuicer',           en: 'Vending juices' },
+        'Non food':                            { sv: 'Non food',                en: 'Non food' }
+      },
+      temp_class: {
+        'Kylmä':          { sv: 'Kall',     en: 'Cold' },
+        'Pakaste':        { sv: 'Fryst',    en: 'Frozen' },
+        'Lämpötilavapaa': { sv: 'Hållbar',  en: 'Shelf-stable' }
+      },
+      structure: {
+        'Sileä':       { sv: 'Slät',   en: 'Smooth' },
+        'Karkea':      { sv: 'Grov',   en: 'Coarse' },
+        'Sosemainen':  { sv: 'Mosig',  en: 'Mashed' }
+      },
+      diets: {
+        'Vegaaninen':    { sv: 'Vegansk',     en: 'Vegan' },
+        'Kasvis':        { sv: 'Vegetarisk',  en: 'Vegetarian' },
+        'Gluteeniton':   { sv: 'Glutenfri',   en: 'Gluten-free' },
+        'Laktoositon':   { sv: 'Laktosfri',   en: 'Lactose-free' },
+        'Maidoton':      { sv: 'Mjölkfri',    en: 'Dairy-free' },
+        'Pähkinätön':    { sv: 'Nötfri',      en: 'Nut-free' },
+        'Vähäsuolainen': { sv: 'Saltfattig',  en: 'Low-salt' }
+      },
+      purposes: {
+        'Lounas':     { sv: 'Lunch',      en: 'Lunch' },
+        'Koulu':      { sv: 'Skola',      en: 'School' },
+        'Hoiva':      { sv: 'Vård',       en: 'Care' },
+        'Tapahtumat': { sv: 'Evenemang',  en: 'Events' },
+        'Päiväkoti':  { sv: 'Förskola',   en: 'Preschool' },
+        'Sairaala':   { sv: 'Sjukhus',    en: 'Hospital' },
+        'Buffet':     { sv: 'Buffé',      en: 'Buffet' }
+      },
+      status: {
+        'available':    { fi: 'Aktiivinen', sv: 'Aktiv',   en: 'Active' },
+        'new':          { fi: 'Uusi',       sv: 'Nyhet',   en: 'New' },
+        'phasing-out':  { fi: 'Poistuva',   sv: 'Utgår',   en: 'Phasing out' }
+      },
+      /* DEMO-fasetti — Aalto 3, kytketään myöhemmin */
+      health_claim: {
+        'Sydänmerkki':   { sv: 'Hjärtmärket', en: 'Heart Symbol' },
+        'Vähäsuolainen': { sv: 'Saltfattig',  en: 'Low-salt' },
+        'Vähärasvainen': { sv: 'Fettsnål',    en: 'Low-fat' }
+      }
+    };
+
+    function t(key) {
+      var dict = I18N[state.lang] || I18N.fi;
+      return dict[key] || I18N.fi[key] || key;
+    }
+    function translateValue(facetKey, value) {
+      var map = FACET_VALUE_I18N[facetKey];
+      if (!map || !map[value]) return value;
+      // FI-käännös voi olla eksplisiittinen (jos datan avain on englanniksi, esim. status)
+      if (state.lang === 'fi') return map[value].fi || value;
+      return map[value][state.lang] || value;
+    }
+    function catInfoBySlug(slug) {
+      if (!slug) return null;
+      for (var i = 0; i < CATEGORIES.length; i++) {
+        var paa = CATEGORIES[i];
+        if (categoryToSlug(paa.name) === slug) return { name: paa.name, isAla: false, paa: paa.name };
+        for (var j = 0; j < paa.subs.length; j++) {
+          if (categoryToSlug(paa.subs[j]) === slug) return { name: paa.subs[j], isAla: true, paa: paa.name };
+        }
+      }
+      return null;
+    }
+    function categoryFromSlug(slug) {
+      var info = catInfoBySlug(slug);
+      if (info) return info.name;
+      if (!slug) return null;
+      return slug.charAt(0).toUpperCase() + slug.slice(1);
+    }
+
+    /* ============================================================
+       T7 — Haku + synonyymilaajennus
+       Perushaku: name, brand, category, slug, diets, purposes.
+       Synonyymikartta on minimi-demo — tuotannossa voi käyttää
+       avainsanakirjastoa tai search-indeksin synonyymifilttereitä.
+       ============================================================ */
+    var SEARCH_SYNONYMS = {
+      'liha':   ['nauta', 'broileri', 'jauheliha', 'sika'],
+      'kasvis': ['kasvi', 'porkkana', 'sipuli'],
+      'puuro':  ['mannapuuro', 'kaurapuuro', 'ohrapuuro'],
+      'kala':   ['lohi', 'silakka'],
+      'pasta':  ['lasagne', 'spaghetti', 'makaroni']
+    };
+    function expandQuery(q) {
+      q = q.trim().toLowerCase();
+      if (!q) return [];
+      var expanded = [q];
+      if (SEARCH_SYNONYMS[q]) expanded = expanded.concat(SEARCH_SYNONYMS[q]);
+      return expanded;
+    }
+    function searchProducts(products, query) {
+      var queries = expandQuery(query);
+      if (queries.length === 0) return products;
+      return products.filter(function (p) {
+        var hay = [
+          p.name || '', p.brand || '', p.category || '', p.parent || '', p.sku || '', p.slug || '',
+          (p.diets || []).join(' ')
+        ].join(' ').toLowerCase();
+        return queries.some(function (q) { return hay.indexOf(q) !== -1; });
+      });
+    }
+
+    /* ============================================================
+       SEO Vaihe 3 — Kuratoidut laskeutumissivut (Tila D)
+       Korkean intention fasettiyhdistelmät, joilla oma URL, H1, intro
+       ja FAQ. Indeksoitava, canonical itseensä — toisin kuin
+       generoidut fasettiyhdistelmät jotka ovat noindex.
+       ============================================================ */
+    var CURATED_PAGES = {};  /* Tila D (kuratoitu) jätetty pois prototyypistä — laajennusvara säilyy. */
+
+    /* Geneerinen Tila A -intro (kaikki tuotteet -näkymä).
+       Aina näkyvissä → layout vakaa, ei jankia kun kategoria suodatetaan.
+       Vaihtuu kategoria-spesifiseksi kun käyttäjä valitsee tasan 1 kategorian. */
+    var TILA_A_INTRO = 'Conditen ammattivalikoima leipomoille, ravintoloille, teollisuudelle ja private labelille — mausteet, täytteet, suklaat, kuorrutteet ja leivonta-aineet. Suodata ominaisuuden, brändin tai pakkauskoon mukaan ja löydä oikea raaka-aine tuotantoon.';
+
+    /* SEO Vaihe 1 — Kategoriasivun intro-copy (Tila B)
+       Käsin kirjoitettu uniikki teksti per kategoria — SEO/GEO-pinta.
+       Avainsanat luontevasti, B2B-fokus, ~50-100 sanaa.
+       Vastaa "mitä nämä tuotteet ovat" -kysymykseen hakukoneen näkökulmasta. */
+    /* Alakategorioiden oma kuvausteksti (Olli/Miro: "tehdäänkö alakategorioille oma
+       kuvausteksti myös? kyllä → parempi SEO / ei → helpompi ylläpitää").
+       LINJAUS: molemmat — avain voi olla pää- TAI alakategoria. Oma teksti kirjoitetaan
+       niille alakategorioille, joilla on todellista hakukysyntää (esim. "paprika ja chili");
+       muut perivät pääkategorian tekstin automaattisesti (ks. renderIntro-fallback).
+       → SEO-hyöty siellä missä sillä on merkitystä, ei 60 tekstiä ylläpidettäväksi. */
+    var CATEGORY_INTRO = {
+      'Paprika ja chili': 'Savustetut ja makeat paprikajauheet, chilit ja chilijauheet ammattikäyttöön. Tasalaatuinen väri ja aromi erätuotantoon — dokumentoidut ominaisuudet, ammattikäytön pakkauskoot.',
+      'Mausteet': 'Conditen mausteet, mausteseokset ja maustekasvit ammattikeittiöön ja elintarviketeollisuuteen — paprikat ja chilit, yrtit sekä räätälöidyt seokset. Tasalaatuiset erät, dokumentoidut ominaisuudet, sopivat sarjatuotantoon.',
+      'Täytteet ja koristeet': 'Täytteet, kuorrutteet ja koristeet leivontaan ja konditoriaan: kinuski- ja toffeetäytteet, hedelmätäytteet sekä suklaakoristeet. Ammattikäyttöön mitoitetut pakkaukset, vakaa rakenne ja tasainen makuprofiili.',
+      'Suklaat, kaakaot ja kuorrutteet': 'Tummat ja maitosuklaat, kuvio- ja koristesuklaat sekä kuorrutteet konditoriaan. Hyvä sulatus- ja temperointikäyttäytyminen, ammattikäytön pakkauskoot.',
+      'Leivonta-aineet': 'Leivonta-aineet ammattileipomoon: hiivat ja entsyymit, leivinjauheet ja parannusaineet. Tukevat tasalaatuista lopputulosta sarjatuotannossa.',
+      'Viljatuotteet': 'Jauhot ja viljapohjaiset raaka-aineet ammattileipomoon ja teollisuuteen. Erikoisjauhot ja suuret pakkauskoot tuotannon tarpeisiin.'
+    };
+
+    /* SEO Vaihe 4 — Generic FAQ Tila B:lle (kategoriasivu) */
+    var CATEGORY_FAQ = [
+      { q: 'Näkyvätkö hinnat ja saatavuus tällä sivulla?', a: 'Eivät. Tämä sivu auttaa löytämään oikean tuotteen. Asiakaskohtaiset hinnat, varastosaldo ja tilaus näkyvät tuotekortilla kirjautumisen jälkeen (Sana Commerce -verkkokauppa).' },
+      { q: 'Mitä ominaisuustagit (gluteeniton, vegaaninen) tarkoittavat?', a: 'Ne ovat tuotteen dokumentoituja ominaisuuksia ja ostajan kehitystyökalu. Tagit ovat avoimia kaikille — voit suodattaa niillä ilman kirjautumista.' },
+      { q: 'Löydänkö korvaavan tuotteen loppuneelle?', a: 'Selaa saman kategorian tai brändin tuotteita ja vertaa ominaisuuksia. Jos et löydä sopivaa, Makupaja-tiimimme auttaa löytämään tai kehittämään vaihtoehdon.' },
+      { q: 'Miten pääsen tilaamaan?', a: 'Avaa tuote ja kirjaudu verkkokauppaan. Uutena asiakkaana ota yhteyttä tai varaa Makupaja — autamme alkuun.' }
+    ];
+
+    /* ============================================================
+       T6 — Ryhmittely + näkymä
+         COMPACT_PER_GROUP — montako korttia per ryhmä oletuksena
+         GROUP_CONFIG      — ryhmittelyakseli per tila (varaa molemmat,
+                             älä lukitse — A/C kategoria, B käyttötarkoitus)
+       ============================================================ */
+    var COMPACT_PER_GROUP = 4;
+
+    /* Handoff §6: Tila B — EI sisäryhmittelyä, suora tuoteruudukko.
+       flatList=true skippaa ryhmäotsikon ja näyttää tuotteet yhtenä ruudukkona. */
+    var GROUP_CONFIG = {
+      'tila-a':       { field: 'parent', isMulti: false, label: 'Pääkategoria' },
+      'tila-b':       { flatList: true,    label: '—' },
+      'tila-c':       { field: 'parent', isMulti: false, label: 'Pääkategoria' },
+      'tila-d':       { field: 'category', isMulti: false, label: 'Kategoria' }
+    };
+    function getGroupConfig() {
+      return GROUP_CONFIG[state.tila] || GROUP_CONFIG['tila-a'];
+    }
+
+    /* ============================================================
+       STATE
+       expandedGroups: { groupName: true } — käyttäjän laajentamat ryhmät
+       lang: 'fi' | 'sv' | 'en' (T8)
+       filterHistory: [{ key, val }] — viimeisin lisätty viimeisenä, mahdollistaa
+                      "Poista viimeisin suodatin" -toiminnon (handoff §7)
+       ============================================================ */
+    /* searchCat (Olli/Miro: "suodata kategoriaa myös?"): hakutuloksessa (Tila C) kategoria
+       RAJAA hakua sen sijaan että vaihtaisi sivua ja pudottaisi hakutermin. Kategoria pysyy
+       navigaationa — ei checkbox-fasettia — mutta hakutilassa se toimii rajaimena. */
+    var state = { tila: 'tila-a', param: null, searchCat: null, filters: {}, expandedGroups: {}, lang: 'fi', filterHistory: [] };
+    var expandedCats = {};   // §2.1 — käyttäjän laajentamat pääkategoriat (riippumaton aktiivisesta)
+    var expandedFacets = {}; // pitkät fasettiryhmät (esim. Brändi, 173 kpl) — "Näytä kaikki" -tila säilyy renderöinnin yli
+
+    /* ============================================================
+       UTILITIES
+       ============================================================ */
+    function esc(s) {
+      if (s == null) return '';
+      return String(s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+    function categoryToSlug(cat) {
+      return cat.toLowerCase()
+        .replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/å/g, 'a')
+        .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    }
+    function facetByKey(key) {
+      for (var i = 0; i < FACET_DEFS.length; i++) if (FACET_DEFS[i].key === key) return FACET_DEFS[i];
+      return null;
+    }
+    function facetByUrlKey(urlKey) {
+      for (var i = 0; i < FACET_DEFS.length; i++) if (FACET_DEFS[i].urlKey === urlKey) return FACET_DEFS[i];
+      return null;
+    }
+
+    /* ============================================================
+       URL — parse + write (history.replaceState — ei trigger hashchangea)
+       ============================================================ */
+    /* Hash-router siistillä URL-rakenteella:
+         #/                              → koko valikoima
+         #/{kategoria-slug}/             → kategoriasivu (tai kuratoitu jos slug matchaa)
+         #/haku/?q={hakutermi}           → hakutulos
+         #/{slug}/?{filtterit}@{kieli}   → yhdistelmä
+       Sisäinen state.tila pidetään koodin selkeyden vuoksi (routing-tunniste). */
+    function parseHash() {
+      var hash = location.hash.slice(1) || '/';
+
+      // Poimi @lang-suffiksi
+      var langMatch = hash.match(/@(fi|sv|en)/);
+      state.lang = langMatch ? langMatch[1] : 'fi';
+      hash = hash.replace(/@(fi|sv|en)/, '');
+
+      // Erottele reitti ja query
+      var qsIdx = hash.indexOf('?');
+      var route = qsIdx >= 0 ? hash.slice(0, qsIdx) : hash;
+      var qs = qsIdx >= 0 ? hash.slice(qsIdx + 1) : '';
+
+      // Normalisoi reitti — poista alku/loppuvinoviivat
+      route = route.replace(/^\/+|\/+$/g, '');
+
+      var oldTila = state.tila;
+      state.filters = {};
+      state.filterHistory = [];
+      state.searchCat = null;
+
+      // Reititä
+      if (route === '') {
+        state.tila = 'tila-a';
+        state.param = null;
+      } else if (route === 'haku' || route.indexOf('haku/') === 0) {
+        state.tila = 'tila-c';
+        state.param = route.indexOf('haku/') === 0 ? route.slice(5) : null;
+      } else {
+        // Yksittäinen slug — tarkista onko kuratoitu, muuten kategoriasivu
+        if (CURATED_PAGES[route]) {
+          state.tila = 'tila-d';
+          state.param = route;
+        } else {
+          state.tila = 'tila-b';
+          state.param = route;
+        }
+      }
+
+      // Nollaa ryhmäexpansiot kun reitti vaihtuu
+      if (oldTila !== state.tila) state.expandedGroups = {};
+
+      // Parsi filtterit (ja erikoistapauksena ?q= hakutermi)
+      if (qs) {
+        qs.split('&').forEach(function (pair) {
+          var eq = pair.indexOf('=');
+          if (eq < 0) return;
+          var k = pair.slice(0, eq);
+          var v = pair.slice(eq + 1);
+          // Hakutermi ?q= → state.param
+          if (k === 'q' && state.tila === 'tila-c') {
+            state.param = decodeURIComponent(v.replace(/\+/g, ' '));
+            return;
+          }
+          // Hakutuloksen kategoriarajaus ?kat=<slug> (vain Tila C)
+          if (k === 'kat' && state.tila === 'tila-c') {
+            state.searchCat = decodeURIComponent(v.replace(/\+/g, ' '));
+            return;
+          }
+          var facet = facetByUrlKey(k);
+          if (!facet) return;
+          var values = v.split(',').map(function (x) {
+            return decodeURIComponent(x.replace(/\+/g, ' '));
+          });
+          state.filters[facet.key] = values;
+          values.forEach(function (val) {
+            state.filterHistory.push({ key: facet.key, val: val });
+          });
+        });
+      }
+    }
+
+    function writeHash() {
+      // Rakenna reitti tila + paramista
+      var route = '/';
+      if (state.tila === 'tila-b' && state.param) {
+        route = '/' + state.param + '/';
+      } else if (state.tila === 'tila-c') {
+        route = '/haku/';
+      } else if (state.tila === 'tila-d' && state.param) {
+        route = '/' + state.param + '/';
+      }
+
+      // Lisää @lang vain jos ei oletus (FI)
+      var langSuffix = state.lang && state.lang !== 'fi' ? '@' + state.lang : '';
+
+      // Query string: hakutermi + fasetit
+      var parts = [];
+      if (state.tila === 'tila-c' && state.param) {
+        parts.push('q=' + encodeURIComponent(state.param));
+        if (state.searchCat) parts.push('kat=' + encodeURIComponent(state.searchCat));
+      }
+      Object.keys(state.filters).forEach(function (key) {
+        var values = state.filters[key];
+        if (!values || values.length === 0) return;
+        var facet = facetByKey(key);
+        if (!facet) return;
+        parts.push(facet.urlKey + '=' + values.map(encodeURIComponent).join(','));
+      });
+
+      var hash = '#' + route + langSuffix + (parts.length ? '?' + parts.join('&') : '');
+      if (location.hash !== hash) {
+        history.replaceState(null, '', hash);
+      }
+    }
+
+    /* ============================================================
+       FILTERING — fasettien VÄLILLÄ AND, SISÄLLÄ OR (paitsi diets AND)
+       ============================================================ */
+    function filterProducts(products, filters) {
+      return products.filter(function (p) {
+        for (var i = 0; i < FACET_DEFS.length; i++) {
+          var facet = FACET_DEFS[i];
+          var selected = filters[facet.key];
+          if (!selected || selected.length === 0) continue;
+          var productValues = facet.field(p);
+          var match;
+          if (facet.andLogic) {
+            // AND fasetin sisällä (Erityisruokavalio): kaikki valitut pitää löytyä tuotteesta
+            match = selected.every(function (s) { return productValues.indexOf(s) !== -1; });
+          } else if (facet.negativeAnd) {
+            // NEGATIVE AND (Allergeenit): tuote ei saa sisältää MITÄÄN valittua arvoa
+            // Graceful degradation: jos allergens-data puuttuu (undefined → []),
+            // tuote pidetään mukana — sitä ei suljeta pois epävarman datan vuoksi
+            match = !selected.some(function (s) { return productValues.indexOf(s) !== -1; });
+          } else {
+            // OR fasetin sisällä (oletus)
+            match = selected.some(function (s) { return productValues.indexOf(s) !== -1; });
+          }
+          if (!match) return false;
+        }
+        return true;
+      });
+    }
+
+    /* Contextual counts — OR-fasetille ohitetaan sen oma valinta,
+       AND-fasetille huomioidaan kaikki (intersection). */
+    function computeContextualCounts(baseProducts, filters) {
+      var result = {};
+      FACET_DEFS.forEach(function (facet) {
+        var ctx;
+        if (facet.andLogic) {
+          ctx = filters;
+        } else {
+          ctx = {};
+          Object.keys(filters).forEach(function (k) {
+            if (k !== facet.key) ctx[k] = filters[k];
+          });
+        }
+        var filtered = filterProducts(baseProducts, ctx);
+        result[facet.key] = {};
+        filtered.forEach(function (p) {
+          facet.field(p).forEach(function (v) {
+            if (v == null || v === '') return;
+            result[facet.key][v] = (result[facet.key][v] || 0) + 1;
+          });
+        });
+      });
+      return result;
+    }
+
+    /* T7 polish — lajittelu */
+    var sortValue = 'name-asc';
+    function sortProducts(products) {
+      var lang = state.lang || 'fi';
+      return products.slice().sort(function (a, b) {
+        if (sortValue === 'name-desc') return b.name.localeCompare(a.name, lang);
+        if (sortValue === 'newest') {
+          // "Uusimmat ensin": status=new ennen muita, sitten nimi
+          if (a.status === 'new' && b.status !== 'new') return -1;
+          if (b.status === 'new' && a.status !== 'new') return 1;
+          if (a.status === 'phasing-out' && b.status !== 'phasing-out') return 1;
+          if (b.status === 'phasing-out' && a.status !== 'phasing-out') return -1;
+          return a.name.localeCompare(b.name, lang);
+        }
+        // name-asc oletus
+        return a.name.localeCompare(b.name, lang);
+      });
+    }
+
+    function getBaseProducts() {
+      // Hakutulos: jos ei hakutermiä → tyhjä joukko (empty-state näkyy)
+      if (state.tila === 'tila-c') {
+        var q = state.param || '';
+        if (!q) return [];
+        var hits = searchProducts(SAMPLE_PRODUCTS, q);
+        // Kategoriarajaus hakutuloksessa (?kat=) — kategoria rajaa, ei vaihda sivua
+        if (state.searchCat) {
+          var ci = catInfoBySlug(state.searchCat);
+          if (ci) {
+            hits = hits.filter(function (p) {
+              return ci.isAla ? (p.category === ci.name) : (p.parent === ci.name);
+            });
+          }
+        }
+        return hits;
+      }
+      // Tila B: esisuodata kategorialla URL-slugin mukaan
+      // (WP-vastaavuus: kategoriasivun WP_Query rajaa automaattisesti termiin)
+      if (state.tila === 'tila-b' && state.param) {
+        var info = catInfoBySlug(state.param);
+        if (info) {
+          return SAMPLE_PRODUCTS.filter(function (p) {
+            return info.isAla ? (p.category === info.name) : (p.parent === info.name);
+          });
+        }
+      }
+      // Tila D: kuratoitu laskeutumissivu — esisuodata CURATED_PAGES.filters mukaan
+      // (WP-vastaavuus: oma template, pre_get_posts asettaa filtterit, oma URL, oma canonical)
+      if (state.tila === 'tila-d' && state.param && CURATED_PAGES[state.param]) {
+        return filterProducts(SAMPLE_PRODUCTS, CURATED_PAGES[state.param].filters);
+      }
+      return SAMPLE_PRODUCTS;
+    }
+
+    /* ============================================================
+       RENDERERS
+       ============================================================ */
+    /* Max näkyviä ruokavalio-chippejä kortilla.
+       Useimmat kortit mahtuvat ~2 riviin tällä määrällä. Loput näkyvät "+X" -pillerinä. */
+    var MAX_VISIBLE_DIETS = 3;
+
+    function renderCard(p) {
+      var catSlug = categoryToSlug(p.category);
+      var catDisplay = translateValue('category', p.category);
+      var imageHtml = '<div class="card-image-fallback" data-cat="' + catSlug + '">' +
+                      '<span class="initial">' + esc(catDisplay.charAt(0)) + '</span>' +
+                      '<span class="label">' + esc(catDisplay) + '</span>' +
+                      '</div>';
+      var statusHtml = '';
+      if (p.status === 'new') statusHtml = '<span class="card-status" data-status="new">' + esc(t('status_new')) + '</span>';
+      else if (p.status === 'phasing-out') statusHtml = '<span class="card-status" data-status="phasing-out">' + esc(t('status_phasing_out')) + '</span>';
+      var dietsHtml = '';
+      if (p.diets && p.diets.length > 0) {
+        var visibleDiets = p.diets.slice(0, MAX_VISIBLE_DIETS);
+        var hiddenCount = p.diets.length - visibleDiets.length;
+        // Tooltip-teksti loppujen ruokavalioiden listana → hover/focus näyttää piilotetut
+        var hiddenLabels = p.diets.slice(MAX_VISIBLE_DIETS)
+          .map(function (d) { return translateValue('diets', d); })
+          .join(', ');
+        var chipsHtml = visibleDiets.map(function (d) {
+          return '<span class="card-diet-chip">' + esc(translateValue('diets', d)) + '</span>';
+        }).join('');
+        if (hiddenCount > 0) {
+          chipsHtml += '<span class="card-diet-chip is-more" title="' + esc(hiddenLabels) + '" aria-label="' + esc('+' + hiddenCount + ': ' + hiddenLabels) + '">+' + hiddenCount + '</span>';
+        }
+        dietsHtml = '<div class="card-diets">' + chipsHtml + '</div>';
+      }
+      return '<a href="' + esc(p.url) + '" class="product-card" role="listitem" data-sku="' + esc(p.sku) + '">' +
+        '<div class="card-image">' + imageHtml + statusHtml + '</div>' +
+        '<div class="card-body">' +
+          '<div class="card-category">' + esc(p.brand) + '</div>' +
+          '<h3 class="card-name">' + esc(p.name) + '</h3>' +
+          // Pakkauskokoa ei toisteta erillisellä rivillä — se on aina tuotteen nimessä (otsikossa).
+          '<div class="card-sku" style="font-size:var(--fs-tiny);color:var(--c-text-muted);font-variant-numeric:tabular-nums">Tuotenro ' + esc(p.sku) + '</div>' +
+          dietsHtml +
+        '</div>' +
+      '</a>';
+    }
+
+    /* T6: Ryhmitä tuotteet group-axisin mukaan. Multi-value-akseleilla
+       (esim. purposes) tuote voi näkyä useassa ryhmässä.
+       flatList=true (Tila B) → palauta kaikki yhtenä "flat"-ryhmänä ilman otsikkoa. */
+    function groupProducts(products) {
+      var cfg = getGroupConfig();
+      if (cfg.flatList) {
+        if (products.length === 0) return [];
+        return [{ name: '__flat__', products: products.slice() }];
+      }
+      var groups = {};
+      products.forEach(function (p) {
+        var values = cfg.isMulti ? (p[cfg.field] || []) : [p[cfg.field]];
+        values.forEach(function (v) {
+          if (v == null || v === '') return;
+          if (!groups[v]) groups[v] = [];
+          groups[v].push(p);
+        });
+      });
+      return Object.keys(groups).sort(function (a, b) {
+        return a.localeCompare(b, 'fi');
+      }).map(function (name) {
+        return { name: name, products: groups[name] };
+      });
+    }
+
+    /* T6: Renderöi kaikki ryhmät containeriin.
+       Jokaisessa ryhmässä: group-heading (linkki kategoriasivulle) + max COMPACT_PER_GROUP korttia
+       flatList=true (Tila B, handoff §6): ei group-headingia, ei compact-rajoitusta */
+    /* Tila A: max 8 korttia per carousel-rivi (loput Lue lisää -linkin takana).
+       Muissa tiloissa COMPACT_PER_GROUP säilyy. */
+    var CAROUSEL_MAX_CARDS = 8;
+
+    function renderGroups(groups) {
+      var container = document.getElementById('groups-container');
+      if (!container) return;
+      if (groups.length === 0) {
+        container.innerHTML = '';
+        return;
+      }
+      var cfg = getGroupConfig();
+
+      // Tila B flat-list: suora tuoteruudukko ilman ryhmäotsikkoa
+      if (cfg.flatList) {
+        var allProducts = groups[0] ? groups[0].products : [];
+        container.innerHTML = '<div class="result-group" data-group="flat">' +
+          '<div class="results-grid" role="list">' +
+            allProducts.map(renderCard).join('') +
+          '</div>' +
+        '</div>';
+        return;
+      }
+
+      // Tila A käyttää horisontaalista carousel-mallia, Tila C/D pysyy gridinä.
+      var useCarousel = (state.tila === 'tila-a');
+
+      var html = groups.map(function (g) {
+        var groupDisplay = translateValue(cfg.field, g.name);
+        var perRowLimit = useCarousel ? CAROUSEL_MAX_CARDS : COMPACT_PER_GROUP;
+        var visible = g.products.slice(0, perRowLimit);
+        var hasMore = g.products.length > perRowLimit;
+
+        // Ryhmä-akseli on aina 'category' Tila A/C/D:ssä → otsikko + linkki
+        // ko. kategoriasivulle. Säilyttää aktiiviset filtterit (esim. dieta=Gluteeniton).
+        var catSlug = (cfg.field === 'category' || cfg.field === 'parent') ? categoryToSlug(g.name) : null;
+        var catUrl = catSlug ? buildPreservingUrl('/' + catSlug + '/') : null;
+
+        var headingTitle = catUrl
+          ? '<h2><a href="' + esc(catUrl) + '">' + esc(groupDisplay) + '</a></h2>'
+          : '<h2>' + esc(groupDisplay) + '</h2>';
+
+        // "Näytä kaikki →" -linkki AINA näkyvissä kun catUrl on olemassa.
+        // hasMore-tilassa linkkiteksti laajenee (N kaikkiaan), muulloin pelkkä "Näytä kaikki →".
+        // Erotettu intron "Lue lisää" -togglesta (eri toiminto, eri sanasto).
+        var seeAllHtml = '';
+        if (catUrl) {
+          var label = hasMore
+            ? t('see_all') + ' (' + g.products.length + ' ' + t('total_suffix') + ') →'
+            : t('see_all') + ' →';
+          seeAllHtml = '<a class="group-see-all" href="' + esc(catUrl) + '">' + esc(label) + '</a>';
+        }
+
+        var listHtml;
+        if (useCarousel) {
+          // Carousel: track + nuolinapit + fade-out (CSS hoitaa fade-overlayt)
+          listHtml =
+            '<div class="results-carousel" data-group="' + esc(g.name) + '">' +
+              '<button class="carousel-arrow is-prev" type="button" hidden' +
+                ' aria-label="' + esc(t('prev')) + '">‹</button>' +
+              '<div class="carousel-track" role="list" aria-label="' + esc(groupDisplay) + '"' +
+                ' tabindex="0">' +
+                visible.map(renderCard).join('') +
+              '</div>' +
+              '<button class="carousel-arrow is-next" type="button" hidden' +
+                ' aria-label="' + esc(t('next')) + '">›</button>' +
+            '</div>';
+        } else {
+          listHtml =
+            '<div class="results-grid" role="list" aria-label="' + esc(groupDisplay) + '">' +
+              visible.map(renderCard).join('') +
+            '</div>';
+        }
+
+        return '<div class="result-group" data-group="' + esc(g.name) + '">' +
+          '<div class="group-heading">' +
+            headingTitle +
+            '<span class="group-count">(' + g.products.length + ')</span>' +
+            seeAllHtml +
+          '</div>' +
+          listHtml +
+        '</div>';
+      }).join('');
+      container.innerHTML = html;
+
+      // Carousel: alusta scroll-state-tarkkailu jokaiselle riville
+      if (useCarousel) initCarousels();
+    }
+
+    /* Carousel-instanssin scroll-state: päivittää has-prev/has-next-luokat
+       (fade-out + nuolinappien näkyvyys) scrollin sijainnin mukaan. */
+    function initCarousels() {
+      var carousels = document.querySelectorAll('.results-carousel');
+      carousels.forEach(function (carousel) {
+        var track = carousel.querySelector('.carousel-track');
+        var prevBtn = carousel.querySelector('.carousel-arrow.is-prev');
+        var nextBtn = carousel.querySelector('.carousel-arrow.is-next');
+        if (!track) return;
+
+        function updateState() {
+          // Tolerance ±2px float-roundauksen vuoksi
+          var hasPrev = track.scrollLeft > 2;
+          var hasNext = track.scrollLeft + track.clientWidth < track.scrollWidth - 2;
+          carousel.classList.toggle('has-prev', hasPrev);
+          carousel.classList.toggle('has-next', hasNext);
+          if (prevBtn) prevBtn.hidden = !hasPrev;
+          if (nextBtn) nextBtn.hidden = !hasNext;
+        }
+        updateState();
+        track.addEventListener('scroll', updateState, { passive: true });
+        // Resize voi muuttaa visible-määrää (responsive) → päivitä uudelleen
+        window.addEventListener('resize', updateState);
+      });
+    }
+
+    /* Carousel-nuolen klikki: scrollaa ~80 % näkyvästä leveydestä eteen/taakse */
+    function scrollCarousel(carouselEl, direction) {
+      var track = carouselEl.querySelector('.carousel-track');
+      if (!track) return;
+      var step = Math.max(track.clientWidth * 0.8, 260);
+      track.scrollBy({ left: direction * step, behavior: 'smooth' });
+    }
+
+    /* Inline-laajennus poistettu — "Näytä kaikki →" -linkki otsikossa vie
+       suoraan ko. kategoriasivulle (Tila B). state.expandedGroups jätetty olemaan
+       graceful-degradation -varalta jos joku vanha url-tila vielä viittaa siihen. */
+
+    /* Yksittäinen fasetti-checkbox-rivi.
+       displayOverride: jos annettu, käytetään tämä etiketin tekstinä (esim. "Ei gluteenia").
+       Arvo (data-value) pysyy AINA käännöksen alkuperäisenä avaimena (esim. "Gluteeni"). */
+    function renderFacetItem(facetKey, value, count, isSelected, extraClass, displayOverride) {
+      count = count || 0;
+      var isZero = count === 0 && !isSelected;
+      var id = 'facet-' + facetKey + '-' + value.replace(/[^a-zA-Z0-9]/g, '_');
+      var displayValue = displayOverride || translateValue(facetKey, value);
+      var classes = [];
+      if (extraClass) classes.push(extraClass);
+      if (isZero) classes.push('is-zero');
+      return '<li class="' + classes.join(' ') + '">' +
+        '<label for="' + id + '">' +
+        '<input type="checkbox" id="' + id + '"' +
+          ' data-facet="' + esc(facetKey) + '"' +
+          ' data-value="' + esc(value) + '"' +
+          (isSelected ? ' checked' : '') + (isZero ? ' disabled' : '') + '>' +
+        '<span>' + esc(displayValue) + '</span>' +
+        '<span class="count">(' + count + ')</span>' +
+        '</label></li>';
+    }
+
+    /* Rakentaa URL annetulle reitille + säilyttää nykyiset state.filters.
+       Käytetään kategoria-navissa ja "Kaikki tuotteet" -linkissä.
+       §3A: kategoriavaihtoa tehdessä filtterit säilyvät → ristikategoria-löydettävyys. */
+    /* Hakutilan (Tila C) kategoriarajaus-URL: pysyy /haku/-reitillä, säilyttää hakutermin
+       ja fasetit, ja asettaa/poistaa ?kat=<slug>. slug=null → poistaa rajauksen. */
+    function buildSearchCatUrl(slug) {
+      var langSuffix = state.lang && state.lang !== 'fi' ? '@' + state.lang : '';
+      var parts = ['q=' + encodeURIComponent(state.param || '')];
+      if (slug) parts.push('kat=' + encodeURIComponent(slug));
+      Object.keys(state.filters).forEach(function (key) {
+        var values = state.filters[key];
+        if (!values || values.length === 0) return;
+        var facet = facetByKey(key);
+        if (!facet) return;
+        parts.push(facet.urlKey + '=' + values.map(encodeURIComponent).join(','));
+      });
+      return '#/haku/' + langSuffix + '?' + parts.join('&');
+    }
+
+    function buildPreservingUrl(route) {
+      var langSuffix = state.lang && state.lang !== 'fi' ? '@' + state.lang : '';
+      var parts = [];
+      Object.keys(state.filters).forEach(function (key) {
+        var values = state.filters[key];
+        if (!values || values.length === 0) return;
+        var facet = facetByKey(key);
+        if (!facet) return;
+        parts.push(facet.urlKey + '=' + values.map(encodeURIComponent).join(','));
+      });
+      return '#' + route + langSuffix + (parts.length ? '?' + parts.join('&') : '');
+    }
+
+    /* §2 + §3 + §3A: KATEGORIAT-lohko — AINA näkyvissä.
+       - "Kaikki tuotteet" ensimmäisenä rivinä (Tila A)
+       - Sen jälkeen kategoriat INSERTION ORDER:ssa (FACET_VALUE_I18N.category — handoff §12)
+       - Lukumäärät: kontekstuaaliset (nykyiset filtterit mukana, mutta EI kategoriarajausta)
+       - Nykyinen kategoria korostettu (Tila B); Tila A:ssa "Kaikki tuotteet" korostettu
+       - Linkit säilyttävät filtterit (buildPreservingUrl) */
+    function renderCategoryNav() {
+      var listEl = document.getElementById('category-nav-list');
+      if (!listEl) return;
+
+      // Hakutilassa (Tila C) lukumäärät ja linkit lasketaan HAKUTULOKSESTA → kategoria
+      // rajaa hakua (Olli/Miro: "suodata kategoriaa myös?"), ei hyppää pois hausta.
+      var isSearchMode = (state.tila === 'tila-c' && state.param);
+      var navBase = isSearchMode ? searchProducts(SAMPLE_PRODUCTS, state.param) : SAMPLE_PRODUCTS;
+      var contextualProducts = filterProducts(navBase, state.filters);
+      var paaCounts = {}, alaCounts = {}, total = contextualProducts.length;
+      contextualProducts.forEach(function (p) {
+        if (p.parent) paaCounts[p.parent] = (paaCounts[p.parent] || 0) + 1;
+        if (p.category) alaCounts[p.category] = (alaCounts[p.category] || 0) + 1;
+      });
+
+      var current = (state.tila === 'tila-b') ? catInfoBySlug(state.param)
+                  : (isSearchMode && state.searchCat ? catInfoBySlug(state.searchCat) : null);
+      var currentName = current ? current.name : null;
+      var currentPaa = current ? current.paa : null;
+      var isAllActive = (state.tila === 'tila-a') || (isSearchMode && !state.searchCat);
+
+      // Hakutilassa linkki pysyy haussa ja lisää ?kat=<slug>; muuten normaali kategoriareitti.
+      function catHref(slug) {
+        return isSearchMode ? buildSearchCatUrl(slug) : buildPreservingUrl('/' + slug + '/');
+      }
+      // Kategoriablokin otsikko kertoo roolin: hakutilassa rajain, muuten navigaatio.
+      var navTitleEl = document.querySelector('#category-block .block-title');
+      if (navTitleEl) navTitleEl.textContent = isSearchMode ? 'Rajaa kategorialla' : t('block_categories');
+
+      var CHEV = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"></polyline></svg>';
+
+      function nameCell(label, href, isCurrent) {
+        return isCurrent
+          ? '<span class="cat-current"><span class="cat-name">' + esc(label) + '</span></span>'
+          : '<a class="cat-link" href="' + esc(href) + '"><span class="cat-name">' + esc(label) + '</span></a>';
+      }
+
+      // Kaikki tuotteet
+      var html = '<li><div class="paa-head">' +
+        '<span class="cat-toggle-spacer" aria-hidden="true"></span>' +
+        nameCell(isSearchMode ? 'Kaikki hakutulokset' : t('category_all'), isSearchMode ? buildSearchCatUrl(null) : buildPreservingUrl('/'), isAllActive) +
+        '<span class="count">(' + total + ')</span>' +
+      '</div></li>';
+
+      CATEGORIES.forEach(function (paa) {
+        var slug = categoryToSlug(paa.name);
+        var count = paaCounts[paa.name] || 0;
+        var isPaaCurrent = (currentName === paa.name);
+        var hasSubs = paa.subs.length > 0;
+        var isOpen = hasSubs && ((currentPaa === paa.name) || expandedCats[slug]);
+        var liClass = 'paa-row' + (hasSubs ? ' has-subs' : '') + (isOpen ? ' is-open' : '');
+
+        var leadCtrl = hasSubs
+          ? '<button type="button" class="cat-toggle" data-cat-toggle="' + esc(slug) + '"' +
+            ' aria-expanded="' + (isOpen ? 'true' : 'false') + '"' +
+            ' aria-label="' + esc((isOpen ? 'Piilota alakategoriat: ' : 'Näytä alakategoriat: ') + paa.name) + '">' + CHEV + '</button>'
+          : '<span class="cat-toggle-spacer" aria-hidden="true"></span>';
+
+        html += '<li class="' + liClass + '">' +
+          '<div class="paa-head">' +
+            leadCtrl +
+            nameCell(paa.name, catHref(slug), isPaaCurrent) +
+            '<span class="count">(' + count + ')</span>' +
+          '</div>';
+        if (hasSubs) {
+          html += '<ul class="subcat-list">';
+          paa.subs.forEach(function (sub) {
+            var subSlug = categoryToSlug(sub);
+            var subCount = alaCounts[sub] || 0;
+            html += '<li><div class="sub-row">' +
+              nameCell(sub, catHref(subSlug), currentName === sub) +
+              '<span class="count">(' + subCount + ')</span>' +
+            '</div></li>';
+          });
+          html += '</ul>';
+        }
+        html += '</li>';
+      });
+      listEl.innerHTML = html;
+    }
+
+    /* §3: SUODATA-lohko — vain attribuuttifasetit (EI kategoriaa).
+       Kategoria renderöidään erillisellä renderCategoryNav():lla KATEGORIAT-lohkoon. */
+    /* Pakkauskoon lajitteluarvo — normalisoi yksiköt yhteismitalliseksi (kantayksikkö g/ml),
+       jotta "250 g" < "0.5 kg" < "1 kg" eikä paljaan parseFloatin tuottama 250 > 10 -sekaannus.
+       Massa → grammoiksi, tilavuus → millilitroiksi (sama suuruusluokka, riittää lajitteluun). */
+    function packageSizeBase(str) {
+      var m = String(str).match(/^([\d.,]+)\s*(kg|g|l|dl|cl|ml)?/i);
+      if (!m) return null;
+      var n = parseFloat(m[1].replace(',', '.'));
+      if (isNaN(n)) return null;
+      var unit = (m[2] || '').toLowerCase();
+      var factor = { kg: 1000, g: 1, l: 1000, dl: 100, cl: 10, ml: 1 }[unit];
+      return n * (factor || 1);
+    }
+
+    function renderFilterPanel(counts) {
+      var inner = document.getElementById('filter-panel-inner');
+      if (!inner) return;
+      var html = '';
+      FACET_DEFS.forEach(function (facet) {
+        // hideFromList: fasetti ohitetaan UI-listalla (käytetään suodatuksessa mutta ei näytetä)
+        if (facet.hideFromList) return;
+
+        var facetCounts = counts[facet.key] || {};
+        var selected = state.filters[facet.key] || [];
+        var allValues = {};
+        Object.keys(facetCounts).forEach(function (v) { allValues[v] = true; });
+        selected.forEach(function (v) { allValues[v] = true; });
+        var values = Object.keys(allValues).sort(function (a, b) {
+          if (facet.key === 'package_size') {
+            var na = packageSizeBase(a), nb = packageSizeBase(b);
+            if (na !== null && nb !== null) return na - nb;
+          }
+          return translateValue(facet.key, a).localeCompare(translateValue(facet.key, b), state.lang || 'fi');
+        });
+        if (values.length === 0) return;
+
+        // §6A: poissulkeva fasetti (allergeenit) → "Ei X" -prefix riveissä
+        var isExclusive = !!facet.negativeAnd;
+        var rowPrefix = isExclusive ? t('exclusion_prefix') : '';
+
+        // Pitkän listan katkaisu (esim. Brändi): näytä collapseAfter ensimmäistä,
+        // loput .is-overflow-piiloon. Valitut rivit pidetään AINA näkyvissä, jotta
+        // aktiiviset suodattimet eivät katoa katkaisun taakse.
+        var collapseAfter = facet.collapseAfter || 0;
+        var isExpanded = !!expandedFacets[facet.key];
+        var doCollapse = collapseAfter > 0 && values.length > collapseAfter;
+        var visibleCount = 0, hiddenCount = 0;
+        var items = values.map(function (v) {
+          var isSel = selected.indexOf(v) !== -1;
+          var overflow = false;
+          if (doCollapse) {
+            if (!isSel && visibleCount >= collapseAfter) overflow = true;
+            if (overflow) hiddenCount++; else visibleCount++;
+          }
+          var displayValue = rowPrefix + translateValue(facet.key, v);
+          return renderFacetItem(facet.key, v, facetCounts[v], isSel, overflow ? 'is-overflow' : '', displayValue);
+        }).join('');
+
+        var toggleHtml = (doCollapse && hiddenCount > 0)
+          ? '<button type="button" class="facet-toggle" data-facet-toggle="' + esc(facet.key) + '" aria-expanded="' + (isExpanded ? 'true' : 'false') + '">' +
+              '<span class="ft-more">' + esc(t('see_all')) + ' (' + hiddenCount + ') ▾</span>' +
+              '<span class="ft-less">' + esc(t('show_less')) + ' ▴</span>' +
+            '</button>'
+          : '';
+
+        var facetTitle = t('facet_' + facet.key) || facet.title;
+        var noteHtml = facet.note ? '<p class="facet-note">' + esc(facet.note) + '</p>' : '';
+        var groupClass = 'facet-group' +
+          (isExclusive ? ' is-exclusive' : '') +
+          (facet.demo ? ' is-demo' : '') +
+          (isExpanded ? ' is-expanded' : '');
+        html += '<div class="' + groupClass + '" data-facet="' + esc(facet.key) + '">' +
+          '<h3 class="facet-group-title">' + esc(facetTitle) + '</h3>' +
+          noteHtml +
+          '<ul class="facet-list">' + items + '</ul>' +
+          toggleHtml +
+        '</div>';
+      });
+      inner.innerHTML = html;
+    }
+
+    /* SUODATA-blockin headerin "Tyhjennä kaikki (N)" -toiminto.
+       NN/g #1 Visibility of system status: counter näyttää aktiivisten määrän.
+       NN/g #8 Aesthetic & minimalist: nappi piilotetaan kun N=0 (ei käyttöä). */
+    function renderFilterSummary() {
+      var btn = document.getElementById('clear-all-btn');
+      var countEl = document.getElementById('filter-clear-count');
+      if (!btn || !countEl) return;
+      var count = 0;
+      Object.keys(state.filters).forEach(function (k) {
+        if (state.filters[k]) count += state.filters[k].length;
+      });
+      if (count === 0) {
+        btn.hidden = true;
+        countEl.textContent = '(0)';
+      } else {
+        btn.hidden = false;
+        countEl.textContent = '(' + count + ')';
+      }
+    }
+
+    /* SEO Vaihe 1 + 3 — Intro-copy
+       Tila A: AINA TILA_A_INTRO (yleisteksti). Kategoria ei ole enää filtteri →
+               ei voi olla "kategoria-spesifistä introa Tila A:ssa". §10 bugfix.
+       Tila B: per-kategoria SEO-teksti (CATEGORY_INTRO) — ei koskaan peritä Tila A:lle
+       Tila D: kuratoitu laskeutumissivun intro (CURATED_PAGES[slug].intro)
+       Tila C: ei introa (haun H1 + tulosmäärä viestii kontekstia) */
+    function renderCuratedHero() {
+      var el = document.getElementById('curated-hero');
+      var hero = document.getElementById('hero');
+      if (!el || !hero) return;
+
+      var introText = null;
+      var catSlugForBg = '';
+      var initialForBg = '';
+      if (state.tila === 'tila-d' && CURATED_PAGES[state.param]) {
+        introText = CURATED_PAGES[state.param].intro;
+        // Kuratoidun sivun "lähikategoria" tausta — käytetään CURATED_PAGES.filters.category jos saatavilla
+        var curatedCats = CURATED_PAGES[state.param].filters && CURATED_PAGES[state.param].filters.category;
+        if (curatedCats && curatedCats[0]) {
+          catSlugForBg = categoryToSlug(curatedCats[0]);
+          initialForBg = translateValue('category', curatedCats[0]).charAt(0);
+        }
+      } else if (state.tila === 'tila-b' && state.param) {
+        var info = catInfoBySlug(state.param);
+        var fullCat = info ? info.name : null;
+        if (fullCat) {
+          introText = CATEGORY_INTRO[fullCat] || (info.isAla ? CATEGORY_INTRO[info.paa] : null) || null;
+          catSlugForBg = categoryToSlug(fullCat);
+          initialForBg = fullCat.charAt(0);
+        }
+      } else if (state.tila === 'tila-a') {
+        introText = TILA_A_INTRO;
+      }
+
+      // Päivitä hero-containerin tausta ja initial-koriste
+      hero.setAttribute('data-cat', catSlugForBg);
+      hero.setAttribute('data-initial', initialForBg);
+      hero.hidden = (state.tila === 'tila-c');
+
+      if (!introText) {
+        el.hidden = true;
+        el.innerHTML = '';
+        return;
+      }
+      el.hidden = false;
+      // Renderöi clamp-tilassa oletuksena. Mitataan ylivuoto seuraavalla framella;
+      // jos teksti ylittää 3 riviä → näytetään "Lue lisää" -nappi.
+      // Koko teksti pysyy DOM:ssa (SEO + AI-haku näkee), CSS vain leikkaa visuaalisesti.
+      el.innerHTML =
+        '<p class="curated-intro is-clamped" id="curated-intro-text">' + esc(introText) + '</p>' +
+        '<button type="button" class="curated-intro-toggle" id="curated-intro-toggle"' +
+          ' aria-expanded="false" aria-controls="curated-intro-text">' +
+          esc(t('read_more')) +
+        '</button>';
+      // Mittaa seuraavalla framella jotta layout on valmis
+      requestAnimationFrame(function () {
+        var p = document.getElementById('curated-intro-text');
+        var btn = document.getElementById('curated-intro-toggle');
+        if (!p || !btn) return;
+        // Ylivuoto = scrollHeight > clientHeight (clamp leikkaa korkeuden)
+        if (p.scrollHeight > p.clientHeight + 1) {
+          btn.classList.add('is-visible');
+        }
+      });
+    }
+
+    /* SEO Vaihe 4 — FAQ-lohko (Tila B + D, GEO/AI-haku)
+       Tila B: generic CATEGORY_FAQ
+       Tila D: curated-specific FAQ
+       Handoff §11: Schema.org FAQPage JSON-LD lisätään headiin (rich results + AI). */
+    function renderFAQ() {
+      var el = document.getElementById('faq-section');
+      if (!el) return;
+      var faqList = null;
+      if (state.tila === 'tila-d' && CURATED_PAGES[state.param]) {
+        faqList = CURATED_PAGES[state.param].faq;
+      } else if (state.tila === 'tila-b') {
+        faqList = CATEGORY_FAQ;
+      }
+      renderFAQSchema(faqList);
+      if (!faqList || faqList.length === 0) {
+        el.hidden = true;
+        el.innerHTML = '';
+        return;
+      }
+      el.hidden = false;
+      var html = '<h2>Usein kysytyt kysymykset</h2>';
+      html += faqList.map(function (item) {
+        return '<details class="faq-item">' +
+          '<summary>' +
+            '<span>' + esc(item.q) + '</span>' +
+            '<svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
+            ' stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+            '<polyline points="6 9 12 15 18 9"></polyline></svg>' +
+          '</summary>' +
+          '<div class="faq-answer">' + esc(item.a) + '</div>' +
+        '</details>';
+      }).join('');
+      el.innerHTML = html;
+    }
+
+    /* Schema.org FAQPage JSON-LD (handoff §11) — SEO + GEO/AI-sitaattikoukku */
+    function renderFAQSchema(faqList) {
+      var existing = document.getElementById('faq-schema');
+      if (!faqList || faqList.length === 0) {
+        if (existing) existing.remove();
+        return;
+      }
+      var schema = {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        'mainEntity': faqList.map(function (item) {
+          return {
+            '@type': 'Question',
+            'name': item.q,
+            'acceptedAnswer': { '@type': 'Answer', 'text': item.a }
+          };
+        })
+      };
+      var json = JSON.stringify(schema);
+      if (!existing) {
+        var script = document.createElement('script');
+        script.id = 'faq-schema';
+        script.type = 'application/ld+json';
+        script.textContent = json;
+        document.head.appendChild(script);
+      } else {
+        existing.textContent = json;
+      }
+    }
+
+    /* T7: Empty-state — kontekstitietoinen 4 polkua.
+       Brief: korjaa haku / selaa kategorioita / koko valikoima / yhteydenotto */
+    function renderEmptyState() {
+      var el = document.getElementById('empty-state');
+      if (!el) return;
+      var hasFilters = Object.keys(state.filters).length > 0;
+      var isSearch = state.tila === 'tila-c';
+
+      var heading, intro;
+      if (isSearch && state.param) {
+        heading = t('no_search_results');
+        intro = state.lang === 'fi' ? 'Hakusi "' + state.param + '" ei tuottanut tuloksia.' :
+                state.lang === 'sv' ? 'Sökningen "' + state.param + '" gav inga resultat.' :
+                                      'Your search "' + state.param + '" returned no results.';
+      } else if (isSearch) {
+        heading = t('no_search_results');
+        intro = state.lang === 'fi' ? 'Aloita kirjoittamalla hakukenttään.' :
+                state.lang === 'sv' ? 'Börja genom att skriva i sökfältet.' :
+                                      'Start by typing in the search box.';
+      } else if (hasFilters) {
+        heading = t('no_filter_results');
+        intro = t('filter_intro');
+      } else {
+        heading = t('no_products');
+        intro = t('generic_intro');
+      }
+
+      var paths = [];
+      if (isSearch) {
+        paths.push({ label: t('check_spelling'), href: '#', isInfo: true });
+      }
+      if (hasFilters) {
+        // Handoff §7: "Poista viimeisin suodatin" -toiminto kun filter history sallii
+        if (state.filterHistory.length > 0) {
+          var last = state.filterHistory[state.filterHistory.length - 1];
+          var facet = facetByKey(last.key);
+          var facetTitle = facet ? (t('facet_' + facet.key) || facet.title) : last.key;
+          var valLabel = translateValue(last.key, last.val);
+          paths.push({
+            label: 'Poista viimeisin: ' + facetTitle + ' — ' + valLabel,
+            action: 'remove-last'
+          });
+        }
+        paths.push({ label: t('clear_filters'), action: 'clear-filters' });
+      }
+      paths.push({ label: t('browse_categories'), href: '#/' });
+      paths.push({ label: t('show_all_products'), href: '#/' });
+      paths.push({ label: 'Varaa Makupaja', href: '/tuotekehitys/makupaja/' });
+      paths.push({ label: t('contact_expert'), href: '/yhteys/' });
+
+      var pathsHtml = '<ul class="empty-paths">' + paths.map(function (p) {
+        if (p.action === 'clear-filters') {
+          return '<li><button class="empty-clear" type="button" id="empty-clear-btn">' + esc(p.label) + '</button></li>';
+        }
+        if (p.action === 'remove-last') {
+          return '<li><button class="empty-clear" type="button" id="empty-remove-last-btn">' + esc(p.label) + '</button></li>';
+        }
+        var attrs = p.isInfo ? ' aria-disabled="true"' : '';
+        return '<li><a href="' + esc(p.href) + '"' + attrs + '>' + esc(p.label) + '</a></li>';
+      }).join('') + '</ul>';
+
+      el.innerHTML = '<h2>' + esc(heading) + '</h2>' +
+        '<p>' + esc(intro) + '</p>' + pathsHtml;
+    }
+
+    /* T7 + T8: SEO-roolit per tila.
+       Tila A: canonical = /tuotteet/ (canonical-pohja), ei noindex
+       Tila B: indeksoitava, oma canonical per kategoria
+       Tila C: noindex, follow + canonical takaisin /tuotteet/-pohjaan */
+    function updateMetaRobots() {
+      var existing = document.querySelector('meta[name="robots"]');
+      var hasFilters = Object.keys(state.filters).length > 0;
+      if (state.tila === 'tila-c' || hasFilters) {
+        if (!existing) {
+          var meta = document.createElement('meta');
+          meta.setAttribute('name', 'robots');
+          meta.setAttribute('content', 'noindex, follow');
+          document.head.appendChild(meta);
+        } else {
+          existing.setAttribute('content', 'noindex, follow');
+        }
+      } else if (existing) {
+        existing.remove();
+      }
+    }
+
+    /* T8: Canonical-tag — tila + kieli yhdistettynä.
+       Domain on placeholder, tuotantokoodissa korvataan oikealla.
+       Kieliprefiksi /sv/ tai /en/, suomi on oletus ilman prefiksiä. */
+    function updateCanonical() {
+      var base = 'https://www.feelia.fi';
+      var langPrefix =
+        state.lang === 'sv' ? '/sv' :
+        state.lang === 'en' ? '/en' : '';
+      var url;
+      var productsRoot = state.lang === 'fi' ? '/tuotteet/' : (state.lang === 'sv' ? '/produkter/' : '/products/');
+      if (state.tila === 'tila-b' && state.param) {
+        url = base + langPrefix +
+          (state.lang === 'fi' ? '/tuotekategoria/' :
+           state.lang === 'sv' ? '/produktkategori/' :
+                                  '/product-category/') + state.param + '/';
+      } else if (state.tila === 'tila-d' && state.param) {
+        // Kuratoitu laskeutumissivu — oma URL, canonical itseensä (SEO Vaihe 3)
+        url = base + langPrefix + productsRoot + state.param + '/';
+      } else if (state.tila === 'tila-c') {
+        // C noindex → canonical takaisin listausjuureen
+        url = base + langPrefix + productsRoot;
+      } else {
+        url = base + langPrefix + productsRoot;
+      }
+      var link = document.querySelector('link[rel="canonical"]');
+      if (!link) {
+        link = document.createElement('link');
+        link.setAttribute('rel', 'canonical');
+        document.head.appendChild(link);
+      }
+      link.setAttribute('href', url);
+    }
+
+    /* T8: Käännä static UI-elementit (data-i18n attribuutilla) */
+    function translateStaticUI() {
+      document.documentElement.lang = state.lang;
+      document.querySelectorAll('[data-i18n]').forEach(function (el) {
+        var key = el.dataset.i18n;
+        var text = t(key);
+        if (text) el.textContent = text;
+      });
+      // Lang-switcher aktiivisuus
+      document.querySelectorAll('.lang-switcher button').forEach(function (b) {
+        b.classList.toggle('is-active', b.dataset.lang === state.lang);
+      });
+      // Mobile drawer button — open/close labelit + aktiivisten filttereiden määrä (T-polish)
+      var btn = document.getElementById('filter-toggle');
+      var panel = document.getElementById('filter-panel');
+      if (btn && panel) {
+        var filterCount = 0;
+        Object.keys(state.filters).forEach(function (k) {
+          if (state.filters[k]) filterCount += state.filters[k].length;
+        });
+        var base = panel.classList.contains('is-open') ? t('filter_mobile_close') : t('filter_mobile');
+        btn.textContent = filterCount > 0 ? base + ' (' + filterCount + ')' : base;
+      }
+    }
+
+    function setCrumbs(html) {
+      var el = document.getElementById('crumbs');
+      if (el) el.innerHTML = html;
+    }
+
+    function renderTila(resultCount) {
+      var layout = document.getElementById('listing-layout');
+      var title = document.getElementById('page-title');
+      var sub = document.getElementById('page-sub');
+      var resultCountEl = document.getElementById('result-count');
+
+      // Empty-tila → näytä empty-state
+      if (resultCount === 0) layout.classList.add('is-empty');
+      else layout.classList.remove('is-empty');
+      sub.textContent = '';
+
+      // Lokalisoidut linkit murupolulle
+      var crumbHome = t('home');
+      var crumbProducts = t('products');
+
+      if (state.tila === 'tila-c') {
+        var q = state.param || '';
+        if (q) {
+          title.textContent = t('search_results') + ' "' + q + '"';
+        } else {
+          title.textContent = t('page_search');
+        }
+        setCrumbs(
+          '<a href="#/">' + esc(crumbHome) + '</a><span class="sep">›</span>' +
+          '<a href="#/">' + esc(crumbProducts) + '</a><span class="sep">›</span>' +
+          '<span class="current">' + esc(t('page_search')) + (q ? ': ' + esc(q) : '') + '</span>'
+        );
+      } else if (state.tila === 'tila-b') {
+        var info = catInfoBySlug(state.param);
+        var catDisplay = info ? info.name : categoryFromSlug(state.param);
+        title.textContent = catDisplay;
+        var ch = '<a href="#/">' + esc(crumbHome) + '</a><span class="sep">›</span>' +
+                 '<a href="#/">' + esc(crumbProducts) + '</a><span class="sep">›</span>';
+        if (info && info.isAla) {
+          ch += '<a href="' + esc(buildPreservingUrl('/' + categoryToSlug(info.paa) + '/')) + '">' + esc(info.paa) + '</a><span class="sep">›</span>';
+        }
+        ch += '<span class="current">' + esc(catDisplay) + '</span>';
+        setCrumbs(ch);
+      } else if (state.tila === 'tila-d' && state.param && CURATED_PAGES[state.param]) {
+        var curated = CURATED_PAGES[state.param];
+        title.textContent = curated.h1;
+        setCrumbs(
+          '<a href="#/">' + esc(crumbHome) + '</a><span class="sep">›</span>' +
+          '<a href="#/">' + esc(crumbProducts) + '</a><span class="sep">›</span>' +
+          '<span class="current">' + esc(curated.h1) + '</span>'
+        );
+      } else {
+        // Tila A — H1 "Tuotehaku" + 3-tasoinen murupolku:
+        // Etusivu > Tuotteet (landing) > Tuotehaku (tämä työkalu)
+        // WP-vastaavuus: Etusivu → "/", Tuotteet → "/tuotteet/" -landing,
+        // Tuotehaku → tämä archive-template
+        title.textContent = t('all_products');
+        setCrumbs(
+          '<a href="#/">' + esc(crumbHome) + '</a><span class="sep">›</span>' +
+          '<a href="#">' + esc(crumbProducts) + '</a><span class="sep">›</span>' +
+          '<span class="current">' + esc(t('all_products')) + '</span>'
+        );
+      }
+
+      resultCountEl.textContent = resultCount + ' ' + t('products_unit');
+    }
+
+    /* Cross-category-banneri poistettu — sama uloskäynti hoituu
+       KATEGORIAT-lohkon "Kaikki tuotteet" -rivillä (säilyttää filtterit). */
+
+    /* ============================================================
+       ACTIONS — filter mutations
+       ============================================================ */
+    function toggleFilter(facetKey, value, checked) {
+      if (!state.filters[facetKey]) state.filters[facetKey] = [];
+      var arr = state.filters[facetKey];
+      var idx = arr.indexOf(value);
+      if (checked && idx === -1) {
+        arr.push(value);
+        state.filterHistory.push({ key: facetKey, val: value });
+      }
+      if (!checked && idx !== -1) {
+        arr.splice(idx, 1);
+        state.filterHistory = state.filterHistory.filter(function (h) {
+          return !(h.key === facetKey && h.val === value);
+        });
+      }
+      if (arr.length === 0) delete state.filters[facetKey];
+      writeHash();
+      render();
+    }
+    /* removeFilter() poistettu — yksittäisen filtterin poistoon käytetään
+       suoraan checkboxin uncheckiä (NN/g #8 + Proximity).
+       Kokonaan tyhjennys hoituu clearAllFiltersilla. */
+    function clearAllFilters() {
+      state.filters = {};
+      state.filterHistory = [];
+      writeHash();
+      render();
+    }
+    /* Handoff §7: poista viimeisin lisätty suodatin (filter history stack) */
+    function removeLastFilter() {
+      if (state.filterHistory.length === 0) return;
+      var last = state.filterHistory.pop();
+      if (state.filters[last.key]) {
+        var idx = state.filters[last.key].indexOf(last.val);
+        if (idx !== -1) state.filters[last.key].splice(idx, 1);
+        if (state.filters[last.key].length === 0) delete state.filters[last.key];
+      }
+      writeHash();
+      render();
+    }
+
+    /* ============================================================
+       MASTER RENDER
+       ============================================================ */
+    function render() {
+      var baseProducts = getBaseProducts();
+      var filtered = filterProducts(baseProducts, state.filters);
+      filtered = sortProducts(filtered);    // T7 polish: lajittelu
+      var counts = computeContextualCounts(baseProducts, state.filters);
+      var groups = groupProducts(filtered);
+      translateStaticUI();
+      renderCuratedHero();          // SEO Vaihe 3
+      renderGroups(groups);
+      renderCategoryNav();          // §2 KATEGORIAT-lohko (aina näkyvissä)
+      renderFilterPanel(counts);    // §3 SUODATA-lohko (attribuuttifasetit)
+      renderFilterSummary();        // SUODATA-headerin "Tyhjennä kaikki (N)" -toggle
+      renderEmptyState();
+      renderFAQ();                  // SEO Vaihe 4
+      renderTila(filtered.length);
+      syncSearchInput();
+      updateMetaRobots();
+      updateCanonical();
+    }
+
+    /* T7 polish — hakukentän synkronointi state.paramin kanssa.
+       Vain yksi hakukenttä koko sivulla (result-bar) → yksi sync-target. */
+    function syncSearchInput() {
+      var input = document.getElementById('search-input');
+      if (!input) return;
+      var v = (state.tila === 'tila-c' && state.param) ? state.param : '';
+      if (input.value !== v && document.activeElement !== input) input.value = v;
+    }
+
+
+    /* ============================================================
+       EVENT WIRING — event delegation
+       ============================================================ */
+    window.addEventListener('hashchange', function () {
+      parseHash();
+      render();
+    });
+
+    document.addEventListener('change', function (e) {
+      var t = e.target;
+      if (t && t.matches && t.matches('input[type="checkbox"][data-facet]')) {
+        toggleFilter(t.dataset.facet, t.dataset.value, t.checked);
+      }
+    });
+
+    document.addEventListener('click', function (e) {
+      // §2.1 Kaksitasoinen kategorianavi — laajenna/sulje alakategoriat (ei navigoi)
+      var catToggle = e.target.closest && e.target.closest('.cat-toggle');
+      if (catToggle) {
+        e.preventDefault();
+        var ck = catToggle.dataset.catToggle;
+        expandedCats[ck] = !expandedCats[ck];
+        renderCategoryNav();
+        return;
+      }
+      // Pitkän fasettiryhmän "Näytä kaikki / Näytä vähemmän" -toggle (esim. Brändi)
+      var facetToggle = e.target.closest && e.target.closest('.facet-toggle');
+      if (facetToggle) {
+        var fk = facetToggle.dataset.facetToggle;
+        expandedFacets[fk] = !expandedFacets[fk];
+        var grp = facetToggle.closest('.facet-group');
+        if (grp) grp.classList.toggle('is-expanded', expandedFacets[fk]);
+        facetToggle.setAttribute('aria-expanded', expandedFacets[fk] ? 'true' : 'false');
+        return;
+      }
+      // "Tyhjennä kaikki" -nappi: SUODATA-blockin headerissa + empty-staten polku
+      // Käytetään closest() koska napissa on <span>-lapsielementit
+      var clearBtn = e.target.closest && e.target.closest('#clear-all-btn');
+      if (clearBtn || e.target.id === 'empty-clear-btn') {
+        clearAllFilters();
+        return;
+      }
+      // Handoff §7: "Poista viimeisin suodatin"
+      if (e.target.id === 'empty-remove-last-btn') {
+        removeLastFilter();
+        return;
+      }
+      // Carousel-nuolinappi (◀ / ▶) Tila A:ssa
+      var arrowBtn = e.target.closest && e.target.closest('.carousel-arrow');
+      if (arrowBtn) {
+        var carousel = arrowBtn.closest('.results-carousel');
+        if (carousel) {
+          scrollCarousel(carousel, arrowBtn.classList.contains('is-next') ? 1 : -1);
+        }
+        return;
+      }
+      // Kielivalitsin näkyy ei-toiminnallisena (HTML-vaihe vain suomi)
+      var langBtn = e.target.closest && e.target.closest('.lang-switcher button');
+      if (langBtn) { return; }
+      // Lue lisää / Näytä vähemmän — intro-teksti
+      if (e.target.id === 'curated-intro-toggle') {
+        var p = document.getElementById('curated-intro-text');
+        var btn = e.target;
+        if (!p) return;
+        // toggle() palauttaa true jos luokka lisättiin (eli nyt clamped/collapsed),
+        // false jos luokka poistettiin (eli nyt expanded)
+        var nowClamped = p.classList.toggle('is-clamped');
+        var expanded = !nowClamped;
+        btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        btn.textContent = expanded ? t('read_less') : t('read_more');
+        return;
+      }
+    });
+
+    /* T7 polish + Miro #1 — hakulomake submit → siirry Tila C:hen.
+       §3A: säilyttää aktiiviset filtterit (käyttäjä tekee haun jo valitun ruokavalion sisällä).
+       Vain yksi haku koko sivulla → yksinkertainen handler. */
+    var searchForm = document.getElementById('search-form');
+    if (searchForm) {
+      searchForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var input = document.getElementById('search-input');
+        var q = input ? input.value.trim() : '';
+        if (!q) {
+          location.hash = buildPreservingUrl('/');
+        } else {
+          var langSuffix = state.lang && state.lang !== 'fi' ? '@' + state.lang : '';
+          var parts = ['q=' + encodeURIComponent(q)];
+          Object.keys(state.filters).forEach(function (key) {
+            var values = state.filters[key];
+            if (!values || values.length === 0) return;
+            var facet = facetByKey(key);
+            if (!facet) return;
+            parts.push(facet.urlKey + '=' + values.map(encodeURIComponent).join(','));
+          });
+          location.hash = '#/haku/' + langSuffix + '?' + parts.join('&');
+        }
+      });
+    }
+
+    /* T7 polish — lajittelu-pudotusvalikko */
+    var sortSelect = document.getElementById('sort-select');
+    if (sortSelect) {
+      sortSelect.addEventListener('change', function (e) {
+        sortValue = e.target.value;
+        render();
+      });
+    }
+
+    /* ============================================================
+       INIT
+       ============================================================ */
+    parseHash();
+    render();
+  })();
+
+  /* ============================================================
+     Mobile filter-drawer toggle (T4)
+     ============================================================ */
+  (function () {
+    var btn = document.getElementById('filter-toggle');
+    var panel = document.getElementById('filter-panel');
+    if (!btn || !panel) return;
+    btn.addEventListener('click', function () {
+      var open = panel.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.textContent = open ? 'Piilota suodattimet' : 'Suodata tuotteita';
+    });
+  })();
+
+  /* ============================================================
+     Vertailukori-navin laskuri — jaettu tila tuotekortin + /vertaa-sivun kanssa.
+     Lukee localStoragesta avaimella feelia_vertailu_v1 (JSON-array slugeja, max 3).
+     Päivittää reaaliajassa: storage-event tulee toisesta välilehdestä, focus
+     ottaa kiinni saman välilehden muutokset (esim. /vertaa-sivulta palatessa).
+     ============================================================ */
+  (function () {
+    var KEY = 'condite_vertailu_v1';
+    var nav = document.getElementById('navCompare');
+    var navCount = document.getElementById('navCompareCount');
+    if (!nav || !navCount) return;
+
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) { return []; }
+    }
+    function paint() {
+      var list = read();
+      var n = list.length;
+      navCount.textContent = String(n);
+      nav.setAttribute('aria-label', 'Vertailu, ' + n + (n === 1 ? ' tuote' : ' tuotetta'));
+      nav.classList.toggle('is-empty', n === 0);
+    }
+    paint();
+    // Muutos toisesta välilehdestä → storage-event laukeaa tässä välilehdessä
+    window.addEventListener('storage', function (e) {
+      if (e.key === KEY) paint();
+    });
+    // Saman välilehden muutokset (esim. /vertaa palauttaa fokuksen) → päivitä focusissa
+    window.addEventListener('focus', paint);
+  })();
+
+  /* ============================================================
+     CONDITE — pääsytaso-näkymänvaihtaja (§8).
+     (Kortin vertailu-toggle poistettu tästä näkymästä — Olli.)
+     ============================================================ */
+  (function () {
+    document.addEventListener('click', function (e) {
+      var vb = e.target.closest && e.target.closest('.seg-btns button[data-setview]');
+      if (vb) {
+        document.body.setAttribute('data-view', vb.dataset.setview);
+        document.querySelectorAll('.seg-btns button[data-setview]').forEach(function (b) {
+          b.setAttribute('aria-pressed', b.dataset.setview === vb.dataset.setview ? 'true' : 'false');
+        });
+      }
+    });
+  })();
+</script>
+
+</body>
+</html>

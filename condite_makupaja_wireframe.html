@@ -1,0 +1,1040 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Makupaja — testikeittiömme tuotekehitykseen yhdessä | Condite</title>
+<meta name="description" content="Makupaja on Conditen oma testikeittiö, jossa idea kehitetään yhdessä toimivaksi tuotteeksi — briiffistä maistatukseen ja koesarjaan. Varaa Makupaja-sessio.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!--
+  CONDITE.FI — MAKUPAJA (TUOTEKEHITYS-OSION MARQUEE-ALASIVU) · KIILLOTETTU WIREFRAME (FI)
+  Pohja: approved design system (condite_design_system.html) — softened tonal blue.
+  SISARSIVU: condite_tuotekehitys_wireframe.html — sama chrome (sticky nav + crumbs + footer
+  + render-IIFE) ja sama rakenne/kieli. Tämä on sen suora alasivu ja koko sivuston CTA-kohde.
+
+  Palettipäätös: hyväksytty DS-paletti (--c-accent #7fc8ec / --c-accent-ink #0a6e9b),
+  joka KORVAA kirkkaan sinisen (CLAUDE.md / DS = kanoninen).
+
+  TEHTÄVÄ (yksi lause): tee Makupaja-testikeittiö konkreettiseksi ja varattavaksi —
+  muuta kiinnostus varaukseksi (liidi). Strategisen erottautumisen kärki.
+
+  PÄÄSYTASOT: sisältö avoin (löydettävyys + vakuuttaminen). Ainoa liidi-lohko on
+  varauslomake (S5) — ei lukittu sisältö, vaan yhteystiedot vastaan tapahtuva varaus.
+
+  §8-TARKISTUSLISTA (täytetty):
+  · Laskeutumisvalmius: crumbs (Etusivu/Tuotekehitys/Makupaja) · kontekstihero · näkyvä navi → seisoo omillaan
+  · Ratkaisulähtöinen otsikointi: H1/H2 testikeittiö-/yhteiskehitys-kulmasta (ei sisäistä nimikkeistöä)
+  · Kanava→laskeutuminen: etusivun/hubin Makupaja-CTA · ratkaisulähtöiset haut · segmenttihubit
+  · Verkkosivu vs verkkokauppa: sivu myy kokemuksen/kumppanuuden; konversio = varaus (liidi), ei Sana-siirtymää
+  · Pää-CTA: Varaa Makupaja-sessio (toistuu hero / lomake-ankkuri / loppu); muut alisteisia
+  · Pääsytaso per lohko: sisältö avoin, varaus liidi
+  · Ei umpikujia: varaus + Ota yhteyttä + Referenssit + paluu hubiin
+
+  AVOIMET (data): varauslomakkeen kentät + Dynamics 365 -kohde (WP-vaihe) · Kiitos-sivu erikseen ·
+  Referenssit-noston sisältö riippuu Referenssit-sivusta / K1:stä (lohko piilotettavissa show:false).
+-->
+<style>
+  :root {
+    /* Taustat */
+    --c-bg:#ffffff; --c-bg-soft:#f7f7f7; --c-bg-tint:#eef6fb;
+    /* Teksti */
+    --c-text:#1d1d1f; --c-text-2:#555555; --c-text-muted:#6f6f6f;
+    /* Viivat */
+    --c-border:#e3e3e3; --c-border-strong:#cfcfcf; --c-divider:#d8d8d8;
+    /* Kuvapaikat */
+    --c-ph-bg:#ececec; --c-ph-border:#c8c8c8;
+    /* Korostus — pehmeä sininen (DS) */
+    --c-accent:#7fc8ec; --c-accent-ink:#0a6e9b; --c-on-accent:#0a4f72;
+    --c-accent-soft:#e3f2fb; --c-suits-border:#b7def4;
+    /* Pyöristykset */
+    --r-sm:4px; --r-md:8px; --r-lg:12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--c-bg); color: var(--c-text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+    font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased;
+  }
+  /* Shell-gotcha: author-display:flex ohittaa UA-säännön — pidä tämä mukana */
+  [hidden] { display: none !important; }
+  a { color: var(--c-accent-ink); }
+  img { max-width: 100%; }
+
+  /* Saavutettavuus */
+  .skip {
+    position: absolute; left: 8px; top: -48px; z-index: 100;
+    background: var(--c-accent); color: var(--c-on-accent); font-weight: 700;
+    padding: 10px 16px; border-radius: var(--r-sm); text-decoration: none; transition: top .15s;
+  }
+  .skip:focus { top: 8px; }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible {
+    outline: 2.5px solid var(--c-accent); outline-offset: 2px; border-radius: var(--r-sm);
+  }
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+
+  /* Layout */
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  .block { max-width: 1200px; margin: 0 auto; padding: 64px 24px 0; }
+  .block.first { padding-top: 40px; }
+  .block.last { padding-bottom: 64px; }
+  .band { border-top: 1px solid var(--c-suits-border); border-bottom: 1px solid var(--c-suits-border); background: var(--c-bg-tint); margin-top: 64px; }
+  .band .block { padding-top: 64px; padding-bottom: 64px; }
+
+  /* Tyypit */
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--c-accent-ink); margin: 0 0 8px; }
+  h1 { font-size: 44px; line-height: 1.12; letter-spacing: -.01em; margin: 0 0 20px; font-weight: 700; }
+  h2 { font-size: 30px; line-height: 1.18; margin: 0; font-weight: 700; }
+  .intro { margin: 16px 0 0; color: var(--c-text-2); }
+  .section-head { max-width: 760px; }
+
+  /* Painikkeet */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: var(--r-sm); font-weight: 600; font-size: 16px; text-decoration: none; line-height: 1.2; cursor: pointer; padding: 13px 22px; border: 1.5px solid transparent; }
+  .btn-primary { border-color: var(--c-accent); background: var(--c-accent); color: var(--c-on-accent); }
+  .btn-outline { border-color: var(--c-accent-ink); background: var(--c-bg); color: var(--c-accent-ink); }
+  .btn-sm { padding: 9px 16px; font-size: 14px; border-color: var(--c-accent-ink); background: var(--c-bg); color: var(--c-accent-ink); }
+  .btn-link { color: var(--c-accent-ink); text-decoration: none; font-weight: 600; font-size: 14px; display: inline-flex; gap: 6px; align-items: center; white-space: nowrap; }
+  .btn[disabled] { opacity: .55; cursor: not-allowed; }
+
+  /* Header */
+  .site-header { border-bottom: 1px solid var(--c-border); background: var(--c-bg); position: sticky; top: 0; z-index: 50; }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; min-height: 64px; gap: 32px; }
+  .logo { flex: none; width: 110px; height: 34px; background: var(--c-ph-bg); border: 1px dashed var(--c-ph-border); display: flex; align-items: center; justify-content: center; color: var(--c-text-2); font-size: 12px; border-radius: var(--r-sm); letter-spacing: .5px; font-weight: 700; text-decoration: none; }
+  .nav-main { display: flex; align-items: center; justify-content: center; flex: 1; }
+  .nav-list { list-style: none; margin: 0; padding: 0; display: flex; gap: 2px; }
+  .nav-list a { text-decoration: none; padding: 8px 12px; border-radius: var(--r-sm); font-weight: 500; color: var(--c-text); font-size: 14px; white-space: nowrap; position: relative; }
+  .nav-list a:hover { color: var(--c-accent-ink); }
+  .nav-list a[aria-current="page"] { color: var(--c-accent-ink); font-weight: 700; }
+  .nav-list a[aria-current="page"]::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: 0; height: 2px; background: var(--c-accent); border-radius: 2px; }
+  .nav-actions { flex: none; display: inline-flex; align-items: center; gap: 16px; }
+  .lang { display: inline-flex; align-items: center; gap: 2px; font-size: 14px; }
+  .lang a { text-decoration: none; padding: 3px 7px; border-radius: var(--r-sm); color: var(--c-text-muted); }
+  .lang a[aria-current="true"] { background: var(--c-bg-soft); color: var(--c-text); font-weight: 700; }
+  .nav-toggle { display: none; }
+  /* Navin dropdown — "Tuotekehitys" on kattotermi, alasivut sen alla (Miro 26.8.2026).
+     Sama komponentti kuin Tuotteet/Toimialat/Yritys/Yhteys -dropdowneissa sisarsivuilla. */
+  .nav-list > li.has-dropdown { position: relative; }
+  .nav-list .caret { font-size: 9px; margin-left: 4px; color: var(--c-text-muted); }
+  .nav-dropdown { position: absolute; top: 100%; left: 0; min-width: 240px; background: var(--c-bg); border: 1px solid var(--c-border); border-radius: var(--r-md); box-shadow: 0 10px 26px rgba(10,79,114,.12); padding: 6px 0; margin-top: 4px; list-style: none; display: none; z-index: 60; }
+  .nav-list > li.has-dropdown:hover > .nav-dropdown,
+  .nav-list > li.has-dropdown:focus-within > .nav-dropdown,
+  .nav-list > li.has-dropdown.open > .nav-dropdown { display: block; }
+  .nav-dropdown a { display: block; padding: 9px 16px; font-size: 14px; color: var(--c-text); font-weight: 500; white-space: nowrap; }
+  .nav-dropdown a::after { display: none !important; }
+  .nav-dropdown a:hover { background: var(--c-bg-soft); color: var(--c-accent-ink); }
+  .nav-dropdown a[aria-current="page"] { color: var(--c-accent-ink); font-weight: 700; background: var(--c-accent-soft); }
+
+  /* Murupolku */
+  .crumbs { max-width: 1200px; margin: 0 auto; padding: 14px 24px 0; font-size: 13px; color: var(--c-text-muted); }
+  .crumbs ol { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; }
+  .crumbs a { color: var(--c-text-2); text-decoration: none; }
+  .crumbs a:hover { color: var(--c-accent-ink); }
+  .crumbs li[aria-current="page"] { color: var(--c-text); font-weight: 600; }
+  .crumbs .sep { color: var(--c-border-strong); }
+
+  /* ===== S1 Hero — split (teksti + media) ===== */
+  .hero-split { display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px; align-items: center; }
+  .hero .intro { font-size: 18px; max-width: 560px; }
+  .hero-ctas { margin: 28px 0 0; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .hero-note { font-size: 13px; color: var(--c-text-muted); display: inline-flex; align-items: center; gap: 7px; }
+  .hero-note i { color: var(--c-accent-ink); }
+
+  /* Yleinen kuvapaikka */
+  .ph { background: var(--c-ph-bg); border: 1px dashed var(--c-ph-border); display: flex; align-items: center; justify-content: center; color: var(--c-text-2); font-size: 13px; gap: 6px; border-radius: var(--r-lg); }
+  .ph i { opacity: .6; }
+  .ph-16-10 { aspect-ratio: 16 / 10; }
+  .ph-16-9 { aspect-ratio: 16 / 9; }
+  .ph-4-3 { aspect-ratio: 4 / 3; }
+
+  /* ===== S2 Mikä Makupaja on — USP-kortit (sama .card-usp -komponentti kuin sisarsivuilla) ===== */
+  .usp-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 24px; }
+  .card-usp { border: 1px solid var(--c-border); border-radius: var(--r-md); padding: 28px 24px; background: var(--c-bg); display: flex; flex-direction: column; gap: 8px; }
+  .card-usp .ic { width: 48px; height: 48px; border-radius: var(--r-md); background: var(--c-accent-soft); color: var(--c-accent-ink); border: 1px solid var(--c-suits-border); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 8px; }
+  .card-usp h3 { font-size: 18px; margin: 0; }
+  .card-usp p { font-size: 14px; color: var(--c-text-2); margin: 0; }
+
+  /* ============================================================================
+     KOMPONENTTIPOHJA — PYSTYSUUNTAINEN VAIHEISTUS (vertical process stepper)
+     Jaettu sisarsivujen kesken (Makupaja, Räätälöintiprosessi, Reseptikehitys…).
+     Lähde / komponenttipohja: condite_komponentti_vaiheistus.html — kopioi CSS +
+     render (renderVSteps) + config-muoto sieltä uudelle sivulle. EI eyebrowia
+     komponentissa — sivun oma section-head hoitaa otsikoinnin.
+     Rakenne:
+       <div class="vproc"><ol class="vsteps">
+         <li class="vstep">
+           <span class="vstep-node"><span class="vstep-ic"><i class="fa-…"></i></span></span>
+           <div class="vstep-body"><h3>…</h3><p>…</p></div>
+         </li> … </ol></div>
+     ============================================================================ */
+  .vproc { max-width: 760px; }
+  .vsteps { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+  .vstep { display: grid; grid-template-columns: 48px 1fr; gap: 20px; position: relative; padding-bottom: 28px; }
+  .vstep:last-child { padding-bottom: 0; }
+  .vstep-node { display: flex; align-items: flex-start; justify-content: center; position: relative; }
+  .vstep-ic { width: 48px; height: 48px; border-radius: 999px; background: var(--c-accent-soft); border: 1px solid var(--c-suits-border); color: var(--c-accent-ink); display: flex; align-items: center; justify-content: center; font-size: 18px; position: relative; z-index: 1; }
+  /* Pisteviiva tästä solmusta alas seuraavaan */
+  .vstep:not(:last-child) .vstep-node::after { content: ""; position: absolute; top: 52px; bottom: -28px; left: 50%; transform: translateX(-50%); border-left: 2px dotted var(--c-border-strong); }
+  .vstep-body { padding-top: 10px; }
+  .vstep-body h3 { font-size: 18px; margin: 0 0 6px; }
+  .vstep-body p { font-size: 14px; color: var(--c-text-2); margin: 0; max-width: 56ch; }
+
+  /* S3-infograafi: vaakaprosessi + sykli + vuorottelevat callout-kuvaukset */
+  .mp-process { margin-top: 8px; }
+  .mp-process svg text { font-family: inherit; }
+  .s-pill { font: 600 14px/1 inherit; fill: var(--c-text); }
+  .s-goal { font: 700 14px/1 inherit; fill: var(--c-on-accent); }
+  .s-loop { font: 700 14px/1 inherit; fill: var(--c-accent-ink); }
+  .s-edge { font: 600 12px/1 inherit; fill: var(--c-text-muted); }
+  .pill { fill: var(--c-bg); stroke: var(--c-border-strong); stroke-width: 1.5; }
+  .pill-goal { fill: var(--c-accent); stroke: var(--c-accent); stroke-width: 1.5; }
+  .loopnode { fill: var(--c-bg); stroke: var(--c-accent-ink); stroke-width: 2; }
+  .flow { fill: none; stroke: var(--c-text-muted); stroke-width: 2; }
+  .cyc { fill: none; stroke: var(--c-accent-ink); stroke-width: 2.5; }
+  .cyc-opt { fill: none; stroke: var(--c-accent-ink); stroke-width: 2; stroke-dasharray: 6 5; }
+  .lead { stroke: var(--c-border-strong); stroke-width: 1.2; }
+  .leaddot { fill: var(--c-accent-ink); }
+  .co { height: 100%; background: var(--c-bg); border: 1px solid var(--c-border); border-radius: 8px; padding: 9px 11px; font-family: inherit; }
+  .co-t { margin: 0 0 3px; font-size: 13px; font-weight: 700; color: var(--c-text); }
+  .co-n { color: var(--c-accent-ink); font-weight: 700; margin-right: 3px; }
+  .co-d { margin: 0; font-size: 12px; line-height: 1.4; color: var(--c-text-2); }
+
+  /* ===== S4 Mitä hyödyt / kenelle — segmenttikortit (Toimialat-hub -tyyli: media+ikoni+lista+CTA→hubi) ===== */
+  .seg-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 24px; }
+  .seg-card { border: 1px solid var(--c-border); border-radius: var(--r-md); background: var(--c-bg); overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: inherit; transition: border-color .15s, box-shadow .15s, transform .15s; }
+  .seg-card:hover { border-color: var(--c-suits-border); box-shadow: 0 6px 20px rgba(10,79,114,.08); transform: translateY(-2px); }
+  .seg-card .ph { border: 0; border-bottom: 1px dashed var(--c-ph-border); border-radius: 0; }
+  .seg-card .body { padding: 20px 24px 24px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .seg-card .seg-ic { width: 42px; height: 42px; border-radius: var(--r-md); background: var(--c-accent-soft); color: var(--c-accent-ink); display: flex; align-items: center; justify-content: center; font-size: 18px; margin-top: -42px; position: relative; z-index: 1; border: 1px solid var(--c-suits-border); }
+  .seg-card h3 { font-size: 18px; margin: 0; }
+  .seg-card .promise { font-size: 14px; color: var(--c-text-2); margin: 0; }
+  .seg-card ul { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 6px; }
+  .seg-card ul li { font-size: 13px; color: var(--c-text-2); display: flex; align-items: center; gap: 8px; }
+  .seg-card ul li i { color: var(--c-accent-ink); font-size: 11px; }
+  .seg-card .cta { margin-top: auto; padding-top: 14px; }
+  .seg-card .cta span { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: var(--r-sm); border: 1.5px solid var(--c-accent-ink); color: var(--c-accent-ink); font-weight: 600; font-size: 14px; }
+  .seg-card:hover .cta span { background: var(--c-accent-soft); }
+
+  /* ===== Sx Mitä sinulta / mitä meiltä — kaksi saraketta (Räätälöintiprosessi-tyyli) ===== */
+  .giveget { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .gg-card { border: 1px solid var(--c-border); border-radius: var(--r-lg); background: var(--c-bg); padding: 28px 24px; }
+  .gg-card.them { background: var(--c-bg-tint); border-color: var(--c-suits-border); }
+  .gg-head { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+  .gg-ic { width: 44px; height: 44px; flex: none; border-radius: var(--r-md); background: var(--c-accent-soft); border: 1px solid var(--c-suits-border); color: var(--c-accent-ink); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .gg-head h3 { font-size: 18px; margin: 0; }
+  .gg-head .gg-sub { font-size: 13px; color: var(--c-text-muted); margin: 2px 0 0; }
+  .gg-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 13px; }
+  .gg-list li { display: flex; gap: 11px; font-size: 15px; color: var(--c-text-2); }
+  .gg-list li i { color: var(--c-accent-ink); margin-top: 4px; font-size: 13px; flex: none; }
+
+  /* ===== S5 Varaa sessio — lomake (liidi) + vakuutus-aside ===== */
+  .booking { display: grid; grid-template-columns: 1.25fr 1fr; gap: 40px; align-items: start; }
+  .form-panel { background: var(--c-bg); border: 1px solid var(--c-border); border-radius: var(--r-lg); padding: 28px; display: grid; gap: 16px; }
+  .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 14px; font-weight: 600; }
+  .field .req { color: var(--c-accent-ink); }
+  .field input, .field select, .field textarea {
+    padding: 11px 12px; border: 1px solid var(--c-border-strong); border-radius: var(--r-sm);
+    font: inherit; font-size: 14px; background: var(--c-bg); color: var(--c-text); width: 100%;
+  }
+  .field textarea { resize: vertical; min-height: 96px; }
+  .field .hint { font-size: 12px; color: var(--c-text-muted); }
+  /* Validointivirhe (placeholder-tila) */
+  .field.has-error input, .field.has-error select, .field.has-error textarea { border-color: #c0392b; }
+  .field .err { font-size: 12px; color: #c0392b; display: none; }
+  .field.has-error .err { display: block; }
+  .form-foot { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .form-consent { font-size: 12px; color: var(--c-text-muted); max-width: 40ch; }
+  /* Lähetetty-tila (placeholder, ei oikeaa lähetystä) */
+  .form-sent { display: none; background: var(--c-accent-soft); border: 1px solid var(--c-suits-border); border-radius: var(--r-md); padding: 18px 20px; gap: 12px; align-items: flex-start; }
+  .form-sent.show { display: flex; }
+  .form-sent i { color: var(--c-accent-ink); font-size: 20px; margin-top: 2px; }
+  .form-sent b { display: block; }
+  .form-sent p { margin: 4px 0 0; font-size: 14px; color: var(--c-text-2); }
+  /* Aside: vastaa "sitooko mihinkään" + mitä tapahtuu varauksen jälkeen */
+  .booking-aside { background: var(--c-bg-soft); border: 1px solid var(--c-border); border-radius: var(--r-lg); padding: 26px; }
+  .booking-aside h3 { font-size: 16px; margin: 0 0 14px; }
+  .booking-aside ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+  .booking-aside li { display: grid; grid-template-columns: 24px 1fr; gap: 12px; font-size: 14px; color: var(--c-text-2); }
+  .booking-aside li i { color: var(--c-accent-ink); margin-top: 3px; }
+  .booking-aside b { color: var(--c-text); font-weight: 600; }
+  .booking-aside .alt { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--c-border); font-size: 14px; color: var(--c-text-2); }
+
+  /* ===== S5 Referenssit / Case-kortit (uskottavuus) — sama komponentti kuin Tuotekehitys-hubissa ===== */
+  .case-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 24px; }
+  .case-card { border: 1px solid var(--c-border); border-radius: var(--r-md); background: var(--c-bg); overflow: hidden; display: flex; flex-direction: column; }
+  .case-card .ph { border: 0; border-bottom: 1px dashed var(--c-ph-border); border-radius: 0; }
+  .case-card .body { padding: 20px 22px 22px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .case-tag { align-self: flex-start; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--c-accent-ink); background: var(--c-accent-soft); border: 1px solid var(--c-suits-border); padding: 4px 11px; border-radius: 999px; }
+  .case-card h3 { font-size: 17px; margin: 0; }
+  .case-card p { font-size: 14px; color: var(--c-text-2); margin: 0; }
+  .case-result { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: var(--c-text); font-weight: 600; }
+  .case-result i { color: var(--c-accent-ink); margin-top: 3px; }
+  .case-meta { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--c-border); font-size: 13px; color: var(--c-text-muted); display: flex; align-items: center; gap: 8px; }
+  .case-meta i { color: var(--c-accent-ink); opacity: .7; }
+  .case-ctas { margin: 32px 0 0; display: flex; gap: 12px; flex-wrap: wrap; }
+
+  /* Footer — kiinni edellisessä lohkossa (ei valkoista rakoa) */
+  .site-footer { background: var(--c-bg-soft); border-top: 1px solid var(--c-border); padding: 48px 0 32px; margin-top: 0; }
+  .footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--c-border); }
+  .footer-grid h4 { font-size: 14px; text-transform: uppercase; letter-spacing: .06em; margin: 0 0 16px; }
+  .footer-grid ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .footer-grid a { text-decoration: none; color: var(--c-text-2); font-size: 14px; }
+  .footer-grid a:hover { color: var(--c-accent-ink); }
+  .footer-blurb { font-size: 14px; color: var(--c-text-2); margin: 16px 0 0; max-width: 30ch; }
+  .news { display: flex; gap: 8px; }
+  .news input { flex: 1; min-width: 0; padding: 10px 12px; border-radius: var(--r-sm); border: 1px solid var(--c-border-strong); background: var(--c-bg); color: var(--c-text); font: inherit; font-size: 14px; }
+  .news button { padding: 10px 16px; border-radius: var(--r-sm); border: 1.5px solid var(--c-accent); background: var(--c-accent); color: var(--c-on-accent); font-weight: 700; font-size: 14px; cursor: pointer; }
+  .footer-legal { display: flex; justify-content: space-between; gap: 24px; padding-top: 24px; flex-wrap: wrap; font-size: 12px; color: var(--c-text-muted); }
+  .footer-legal a { color: var(--c-text-muted); text-decoration: none; }
+  .footer-legal .legal-links { display: flex; gap: 24px; flex-wrap: wrap; }
+
+  /* ===== S1B Kilpailuetu-väittämä + todisteluvut (Miro 26.8.2026: "Makupaja on yksi
+     Conditen tärkeimmistä kilpailueduista — korosta rohkeasti") =====
+     Sama komponentti kuin Yritys-sivun claim-bandissa: väittämä ja luvut SAMASSA
+     kaistassa (ei kahta sinistä palkkia valkoinen rako välissä). */
+  .claim-band .claim-inner { max-width: 900px; margin: 0 auto 40px; text-align: center; }
+  .claim-band .claim-text { font-size: 25px; line-height: 1.42; font-weight: 600; color: var(--c-on-accent); margin: 0; letter-spacing: -.01em; }
+  .claim-band .stat-grid { padding-top: 36px; border-top: 1px solid var(--c-suits-border); }
+  .stat-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 20px; }
+  .stat { text-align: center; padding: 8px 12px; }
+  .stat .num { font-size: 42px; line-height: 1; font-weight: 700; color: var(--c-accent-ink); font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+  .stat .num.text { font-size: 26px; line-height: 1.15; }
+  .stat .lbl { font-size: 14px; color: var(--c-text-2); margin-top: 10px; }
+  .stat + .stat { border-left: 1px solid var(--c-suits-border); }
+  .note { display: flex; align-items: flex-start; gap: 10px; border: 1px dashed var(--c-ph-border); border-radius: var(--r-md); background: var(--c-bg); padding: 14px 18px; font-size: 13px; color: var(--c-text-muted); margin-top: 28px; }
+  .note i { color: var(--c-accent-ink); margin-top: 2px; }
+
+  /* Kattotermi-linkitys: Makupaja on osa Tuotekehitystä — hiljainen rivi, ei omaa kaistaa */
+  .parent-links { margin: 28px 0 0; padding-top: 20px; border-top: 1px solid var(--c-border); font-size: 14px; color: var(--c-text-2); }
+  .parent-links a { color: var(--c-accent-ink); }
+  .parent-links .sep { color: var(--c-border-strong); margin: 0 8px; }
+
+  /* ===== Responsiivisuus ===== */
+  @media (max-width: 1000px) {
+    .seg-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .case-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .hero-split, .booking { grid-template-columns: 1fr; gap: 28px; }
+    .hero .ph { min-height: 0; }
+  }
+  @media (max-width: 760px) {
+    h1 { font-size: 34px; }
+    h2 { font-size: 26px; }
+    .nav-main { display: none; }
+    .nav-toggle { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 1px solid var(--c-border-strong); border-radius: var(--r-sm); background: var(--c-bg); color: var(--c-text); cursor: pointer; }
+    .site-header.nav-open .nav-main { display: block; position: absolute; top: 100%; left: 0; right: 0; background: var(--c-bg); border-bottom: 1px solid var(--c-border); box-shadow: 0 8px 20px rgba(0,0,0,.06); padding: 8px 24px 16px; }
+    .site-header.nav-open .nav-list { flex-direction: column; gap: 0; }
+    .site-header.nav-open .nav-list a { display: block; padding: 13px 0; border-bottom: 1px solid var(--c-border); font-size: 15px; }
+    .site-header.nav-open .nav-list a[aria-current="page"]::after { display: none; }
+    /* Dropdownit auki staattisesti mobiilivalikossa */
+    .site-header.nav-open .nav-dropdown { position: static; display: block; box-shadow: none; border: 0; padding: 0 0 6px 14px; margin: 0; min-width: 0; background: none; }
+    .site-header.nav-open .nav-dropdown a { padding: 10px 0; font-size: 14px; color: var(--c-text-2); }
+    .site-header.nav-open .nav-dropdown a[aria-current="page"] { background: none; }
+    .nav-list .caret { display: none; }
+    .hero-ctas .btn { flex: 1; }
+    .seg-grid { grid-template-columns: 1fr; }
+    .case-grid { grid-template-columns: 1fr; }
+    .usp-grid { grid-template-columns: 1fr; }
+    .claim-band .claim-text { font-size: 20px; }
+    .stat-grid { grid-template-columns: 1fr; }
+    .stat + .stat { border-left: 0; border-top: 1px solid var(--c-suits-border); padding-top: 20px; margin-top: 4px; }
+    .form-grid-2 { grid-template-columns: 1fr; }
+    .giveget { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+  <a class="skip" href="#main">Siirry sisältöön</a>
+
+  <!-- ===== HEADER (yhteinen chrome) ===== -->
+  <header class="site-header">
+    <div class="nav-inner">
+      <a href="/" class="logo" aria-label="Condite — etusivu">CONDITE</a>
+      <nav class="nav-main" id="primary-nav" aria-label="Päänavigaatio">
+        <ul class="nav-list">
+          <li><a href="/tuotteet/">Tuotteet</a></li>
+          <li><a href="/toimialat/">Toimialat</a></li>
+          <li><a href="/reseptit/">Reseptit</a></li>
+          <!-- Miro 26.8.2026: "tuotekehitys — kattotermi, sen alla makupaja."
+               Tuotekehitys avautuu dropdowniksi, jossa Makupaja on ensimmäisenä ja
+               merkitty nykyiseksi sivuksi → kattotermi ja sen alasivut näkyvät joka sivulta.
+               SWEEP: sama dropdown pitää viedä sisarsivuille (nyt kaikilla flat-linkki). -->
+          <li class="has-dropdown">
+            <a href="/tuotekehitys/" aria-current="page" aria-haspopup="true" aria-expanded="false">Tuotekehitys <span class="caret" aria-hidden="true">▾</span></a>
+            <ul class="nav-dropdown">
+              <li><a href="/tuotekehitys/makupaja/" aria-current="page">Makupaja</a></li>
+              <li><a href="/tuotekehitys/reseptikehitys/">Resepti- ja sovelluskehitys</a></li>
+              <li><a href="/tuotekehitys/raatalointiprosessi/">Räätälöintiprosessi</a></li>
+              <li><a href="/tuotekehitys/private-label/">Private label</a></li>
+              <li><a href="/referenssit/">Referenssit</a></li>
+              <li><a href="/tuotekehitys/">Tuotekehitys — yleiskuva</a></li>
+            </ul>
+          </li>
+          <li><a href="/yritys/">Yritys</a></li>
+          <li><a href="/yhteys/">Yhteys</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <span class="lang" role="group" aria-label="Kieli">
+          <a href="#" aria-current="true" lang="fi">FI</a>
+          <a href="#" lang="sv">SV</a>
+          <a href="#" lang="en">EN</a>
+        </span>
+        <a href="/kirjaudu/" class="btn btn-sm"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Kirjaudu</a>
+        <button class="nav-toggle" type="button" aria-label="Avaa valikko" aria-expanded="false" aria-controls="primary-nav"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Murupolku -->
+  <nav class="crumbs" aria-label="Murupolku">
+    <ol>
+      <li><a href="/">Etusivu</a></li>
+      <li class="sep" aria-hidden="true">›</li>
+      <li><a href="/tuotekehitys/">Tuotekehitys</a></li>
+      <li class="sep" aria-hidden="true">›</li>
+      <li aria-current="page">Makupaja</li>
+    </ol>
+  </nav>
+
+  <main id="main">
+
+    <!-- ===== S1 HERO — Makupaja konkretiana + varaus-CTA (avoin; CTA → liidi) ===== -->
+    <section class="block first hero" aria-labelledby="hero-h1">
+      <div class="hero-split">
+        <div class="hero-inner">
+          <p class="eyebrow">Tuotekehitys · Makupaja</p>
+          <h1 id="hero-h1">[H1: Makupaja — testikeittiömme, jossa idea kehittyy tuotteeksi]</h1>
+          <!-- Lede kärjistetty kilpailueduksi (Miro): ei "meillä on testikeittiö" vaan
+               mitä se tarkoittaa asiakkaalle — kehitystyö tehdään yhdessä valmiiksi asti. -->
+          <p class="intro">[Lede-luonnos: Makupaja on Conditen oma testikeittiö — paikka, jossa raaka-aineesta kehitetään sinun tuotteesi. Tuo tarpeesi ja reunaehtosi, niin suunnittelemme, maistatamme ja hiomme ratkaisun yhdessä tuotantoon asti. Condite kirjoittaa lopullisen sanoituksen.]</p>
+          <div class="hero-ctas">
+            <a class="btn btn-primary" href="#varaa">Varaa Makupaja-sessio</a>
+            <span class="hero-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i>Maksuton ja sitoumukseton</span>
+          </div>
+        </div>
+        <div class="hero-media">
+          <div class="ph ph-4-3"><i class="fa-regular fa-image" aria-hidden="true"></i>Makupaja-kuva — testikeittiö työssä</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== S1B KILPAILUETU — väittämä + todisteluvut (avoin) ===== -->
+    <!-- Miro 26.8.2026: "Makupaja on yksi Conditen tärkeimmistä kilpailueduista. Tätä kannattaa
+         korostaa rohkeasti." Sivu selitti aiemmin heti mikä Makupaja ON, muttei sanonut missään
+         MIKSI se erottaa Conditen muista toimittajista. Tämä kaista sanoo sen heti heron jälkeen,
+         samalla komponentilla kuin Yritys-sivun claim-band (väittämä + luvut samassa kaistassa).
+         Sanoitus on luonnos — Condite vahvistaa, ks. KYSYMYS-note. -->
+    <section class="band claim-band" aria-labelledby="claim-h2">
+      <div class="block">
+        <h2 id="claim-h2" class="visually-hidden">Miksi Makupaja on Conditen kilpailuetu</h2>
+        <div class="claim-inner">
+          <p class="claim-text">Raaka-aineen voi tilata mistä tahansa. Makupajassa siitä kehitetään yhdessä valmis tuote — omassa testikeittiössämme, oman kehitystiimimme kanssa.</p>
+        </div>
+        <div class="stat-grid" id="claim-stats"></div>
+        <div class="note" id="claim-note"></div>
+      </div>
+    </section>
+
+    <!-- ===== S2 MIKÄ MAKUPAJA ON — teksti-johtoinen selitys (avoin; ei media-splittiä, hero kantaa kuvan) ===== -->
+    <section class="block" aria-labelledby="mika-h2">
+      <div class="section-head" style="margin-bottom:28px">
+        <p class="eyebrow">Mikä Makupaja on</p>
+        <h2 id="mika-h2">[H2: Oma testikeittiö idean ja valmiin tuotteen välissä]</h2>
+        <p class="intro">[Intro-placeholder: selittää mitä oma testikeittiö tarkoittaa asiakkaalle — paikka, jossa idea viedään kokeilun ja maistatuksen kautta toimivaksi tuotteeksi, yhdessä Conditen kehitystiimin kanssa. Condite kirjoittaa.]</p>
+      </div>
+      <div class="usp-grid" id="mika-grid"></div>
+      <!-- Kattotermi näkyväksi myös sivun sisällä (Miro: tuotekehitys = kattotermi, makupaja sen alla).
+           Hiljainen rivi, ei omaa kaistaa — kertoo mihin kokonaisuuteen Makupaja kuuluu ja
+           vie sisarpalveluihin, jos kävijän tarve onkin toinen. -->
+      <p class="parent-links">
+        Makupaja on osa <a href="/tuotekehitys/">Conditen tuotekehityspalveluita</a>.
+        Katso myös:
+        <a href="/tuotekehitys/reseptikehitys/">Resepti- ja sovelluskehitys</a>
+        <span class="sep" aria-hidden="true">·</span>
+        <a href="/tuotekehitys/raatalointiprosessi/">Räätälöintiprosessi</a>
+        <span class="sep" aria-hidden="true">·</span>
+        <a href="/tuotekehitys/private-label/">Private label</a>
+      </p>
+    </section>
+
+    <!-- ===== S3 MITEN SESSIO ETENEE — numeroidut vaiheet (avoin) ===== -->
+    <section class="band" aria-labelledby="steps-h2">
+      <div class="block">
+        <div class="section-head" style="margin-bottom:32px">
+          <p class="eyebrow">Näin sessio etenee</p>
+          <h2 id="steps-h2">[H2: Briiffistä tuotantoon — kuusi vaihetta]</h2>
+          <p class="intro">[Intro-placeholder: konkretia madaltaa varauskynnystä — näin yhteistyö etenee vaihe vaiheelta. Condite kirjoittaa.]</p>
+        </div>
+        <!-- INFOGRAAFI: vaakaprosessi + testaussykli + vuorottelevat callout-kuvaukset (avoin) -->
+        <div class="mp-process">
+          <svg width="100%" viewBox="0 100 1120 540" role="img" aria-labelledby="steps-ig-t steps-ig-d">
+            <title id="steps-ig-t">Makupaja-session vaiheet, joissa maistatus ja iterointi muodostavat toistuvan syklin</title>
+            <desc id="steps-ig-d">Lineaarinen polku Briiffi → Suunnittelu → testaussykli (maistatus ja iterointi
+              toistuvat) → Koesarja → Tuotantoon. Koesarja voi tarvittaessa palauttaa testaukseen. Kunkin
+              vaiheen kuvaus on vuorotellen prosessin ylä- ja alapuolella.</desc>
+            <defs>
+              <marker id="mp-ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </marker>
+            </defs>
+
+            <!-- lineaariset nuolet -->
+            <line class="flow" x1="142" y1="360" x2="201" y2="360" marker-end="url(#mp-ah)"/>
+            <line class="flow" x1="337" y1="360" x2="424" y2="360" marker-end="url(#mp-ah)"/>
+            <line class="flow" x1="686" y1="360" x2="795" y2="360" marker-end="url(#mp-ah)"/>
+            <line class="flow" x1="913" y1="360" x2="967" y2="360" marker-end="url(#mp-ah)"/>
+
+            <!-- sykli-kaaret -->
+            <path class="cyc" d="M494,326 Q555,294 616,326" marker-end="url(#mp-ah)"/>
+            <path class="cyc" d="M616,394 Q555,426 494,394" marker-end="url(#mp-ah)"/>
+            <path class="cyc-opt" d="M855,382 Q760,478 667,392" marker-end="url(#mp-ah)"/>
+
+            <text class="s-edge" x="740" y="348" text-anchor="middle">kun toimii</text>
+            <text class="s-edge" x="772" y="462" text-anchor="middle">jos säätöä tarvitaan</text>
+
+            <!-- solmut -->
+            <rect class="pill" x="50" y="338" width="90" height="44" rx="22"/>
+            <text class="s-pill" x="95" y="365" text-anchor="middle">Briiffi</text>
+            <rect class="pill" x="205" y="338" width="130" height="44" rx="22"/>
+            <text class="s-pill" x="270" y="365" text-anchor="middle">Suunnittelu</text>
+            <circle class="loopnode" cx="470" cy="360" r="42"/>
+            <text class="s-loop" x="470" y="365" text-anchor="middle">Maistatus</text>
+            <circle class="loopnode" cx="640" cy="360" r="42"/>
+            <text class="s-loop" x="640" y="365" text-anchor="middle">Iterointi</text>
+            <rect class="pill" x="799" y="338" width="112" height="44" rx="22"/>
+            <text class="s-pill" x="855" y="365" text-anchor="middle">Koesarja</text>
+            <rect class="pill-goal" x="971" y="338" width="128" height="44" rx="22"/>
+            <text class="s-goal" x="1035" y="365" text-anchor="middle">Tuotantoon</text>
+
+            <!-- callout-viivat (1,3,5 ylös · 2,4,6 alas) -->
+            <line class="lead" x1="95"   y1="338" x2="95"   y2="280"/><circle class="leaddot" cx="95"   cy="338" r="2.5"/>
+            <line class="lead" x1="470"  y1="318" x2="470"  y2="280"/><circle class="leaddot" cx="470" cy="318" r="2.5"/>
+            <line class="lead" x1="855"  y1="338" x2="855"  y2="280"/><circle class="leaddot" cx="855"  cy="338" r="2.5"/>
+            <line class="lead" x1="270"  y1="382" x2="270"  y2="470"/><circle class="leaddot" cx="270"  cy="382" r="2.5"/>
+            <line class="lead" x1="640"  y1="402" x2="640"  y2="470"/><circle class="leaddot" cx="640"  cy="402" r="2.5"/>
+            <line class="lead" x1="1035" y1="382" x2="1035" y2="470"/><circle class="leaddot" cx="1035" cy="382" r="2.5"/>
+
+            <!-- kuvaukset: yläpuoli (1,3,5) -->
+            <foreignObject x="8" y="130" width="220" height="150">
+              <div xmlns="http://www.w3.org/1999/xhtml" class="co">
+                <p class="co-t"><span class="co-n">1</span>Briiffi</p>
+                <p class="co-d">[Luonnos: Kartoitamme tarpeen, tavoitteen ja reunaehdot — mm. allergeenit, säilyvyys, hinta ja volyymi.]</p>
+              </div>
+            </foreignObject>
+            <foreignObject x="360" y="130" width="220" height="150">
+              <div xmlns="http://www.w3.org/1999/xhtml" class="co">
+                <p class="co-t"><span class="co-n">3</span>Maistatus</p>
+                <p class="co-d">[Luonnos: Valmistamme ensimmäiset versiot Makupajan testikeittiössä ja maistatamme ne kanssasi paikan päällä.]</p>
+              </div>
+            </foreignObject>
+            <foreignObject x="745" y="130" width="220" height="150">
+              <div xmlns="http://www.w3.org/1999/xhtml" class="co">
+                <p class="co-t"><span class="co-n">5</span>Koesarja</p>
+                <p class="co-d">[Luonnos: Testaamme reseptin pienemmässä tuotantomittakaavassa ja varmistamme, että ratkaisu skaalautuu tasalaatuisena.]</p>
+              </div>
+            </foreignObject>
+
+            <!-- kuvaukset: alapuoli (2,4,6) -->
+            <foreignObject x="160" y="470" width="220" height="150">
+              <div xmlns="http://www.w3.org/1999/xhtml" class="co">
+                <p class="co-t"><span class="co-n">2</span>Suunnittelu</p>
+                <p class="co-d">[Luonnos: Valitsemme raaka-aineet ja lähestymistavan ja ehdotamme yhden tai useamman suunnan kokeiltavaksi.]</p>
+              </div>
+            </foreignObject>
+            <foreignObject x="530" y="470" width="220" height="150">
+              <div xmlns="http://www.w3.org/1999/xhtml" class="co">
+                <p class="co-t"><span class="co-n">4</span>Iterointi</p>
+                <p class="co-d">[Luonnos: Hiomme reseptiä palautteesi pohjalta — makua, koostumusta ja ominaisuuksia — kunnes lopputulos toimii.]</p>
+              </div>
+            </foreignObject>
+            <foreignObject x="892" y="470" width="220" height="150">
+              <div xmlns="http://www.w3.org/1999/xhtml" class="co">
+                <p class="co-t"><span class="co-n">6</span>Tuotantoon</p>
+                <p class="co-d">[Luonnos: Viemme valmiin tuotteen tuotantoon ja jatkamme kehityskumppanina myös sen jälkeen.]</p>
+              </div>
+            </foreignObject>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== S3B MITÄ SINULTA / MITÄ MEILTÄ — roolit heti prosessin jälkeen, samaa sisältöä (avoin; Räätälöintiprosessi-tyyli) ===== -->
+    <section class="block" aria-labelledby="gg-h2">
+      <div class="section-head" style="margin-bottom:8px">
+        <p class="eyebrow">Selkeät roolit</p>
+        <h2 id="gg-h2">[H2: Mitä sinulta tarvitaan — ja mitä saat meiltä]</h2>
+        <p class="intro">[Intro-placeholder: selkeyttää sitoutumisen — kummankin osapuolen panos näkyväksi, jotta varaaminen tuntuu turvalliselta. Condite kirjoittaa.]</p>
+      </div>
+      <div class="giveget" id="giveget"></div>
+    </section>
+
+    <!-- ===== S4 MITÄ HYÖDYT / KENELLE — segmenttikulmat (avoin) ===== -->
+    <section class="block" aria-labelledby="benefit-h2">
+      <div class="section-head" style="margin-bottom:32px">
+        <p class="eyebrow">Mitä hyödyt</p>
+        <h2 id="benefit-h2">[H2: Makupaja palvelee jokaista — eri tarpeeseen]</h2>
+        <p class="intro">[Intro-placeholder: madaltaa kynnystä — riippumatta segmentistä Makupaja vie kehityksen eteenpäin. Condite kirjoittaa.]</p>
+      </div>
+      <div class="seg-grid" id="benefit-grid"></div>
+    </section>
+
+    <!-- ===== S5 REFERENSSIT / CASE-KORTIT — todiste (avoin; sama komponentti kuin Tuotekehitys-hub; piilotettavissa show:false) ===== -->
+    <!-- TODO: oikeat referenssitarinat + lupa käyttää asiakkaan nimeä/lukuja Conditelta.
+         Alla rakenne-placeholderit (asiakas + tulos hakasulkeissa) — ÄLÄ julkaise keksittyjä nimiä tai lukuja. -->
+    <section class="block" aria-labelledby="ref-h2" id="ref-section">
+      <div class="section-head" style="margin-bottom:32px">
+        <p class="eyebrow">Referenssit</p>
+        <h2 id="ref-h2">[H2: Näin Makupaja on auttanut asiakkaitamme]</h2>
+        <p class="intro">[Intro-placeholder: lyhyt uskottavuusnosto — esimerkkejä Makupajassa syntyneestä kehityksestä eri toimialoilta. Condite kirjoittaa; sisältö riippuu mahdollisesti K1-uskottavuussignaaleista.]</p>
+      </div>
+      <div class="case-grid" id="case-grid"></div>
+      <div class="case-ctas">
+        <a class="btn btn-outline" href="/referenssit/">Katso kaikki referenssit</a>
+      </div>
+    </section>
+
+    <!-- ===== S7 VARAA SESSIO — liidilomake (LIIDI) ===== -->
+    <section class="band" id="varaa" aria-labelledby="book-h2">
+      <div class="block">
+        <div class="section-head" style="margin-bottom:28px">
+          <p class="eyebrow">Varaa sessio</p>
+          <h2 id="book-h2">[H2: Varaa Makupaja-sessio]</h2>
+          <p class="intro">[Intro-placeholder: lyhyt kannustava — jätä yhteystiedot, otamme yhteyttä ja sovitaan sopiva aika. Condite kirjoittaa.]</p>
+        </div>
+
+        <div class="booking">
+          <!-- Lomake — staattinen placeholder (ei oikeaa lähetystä HTML-vaiheessa) -->
+          <form class="form-panel" id="book-form" novalidate aria-describedby="book-consent">
+            <!-- Lähetetty-tila (placeholder) -->
+            <div class="form-sent" id="form-sent" role="status" aria-live="polite">
+              <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+              <div>
+                <b>[Kiitos — varauspyyntö vastaanotettu]</b>
+                <p>[Placeholder-tila: WP-vaiheessa lähetys → Dynamics 365 / Makupaja-varaus ja ohjaus Kiitos-sivulle. Tämä on demo-tila.]</p>
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="field">
+                <label for="f-name">Nimi <span class="req" aria-hidden="true">*</span></label>
+                <input id="f-name" name="name" type="text" autocomplete="name" required>
+                <span class="err">[Täytä nimi]</span>
+              </div>
+              <div class="field">
+                <label for="f-company">Yritys <span class="req" aria-hidden="true">*</span></label>
+                <input id="f-company" name="company" type="text" autocomplete="organization" required>
+                <span class="err">[Täytä yritys]</span>
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="field">
+                <label for="f-email">Sähköposti <span class="req" aria-hidden="true">*</span></label>
+                <input id="f-email" name="email" type="email" autocomplete="email" placeholder="nimi@yritys.fi" required>
+                <span class="err">[Täytä kelvollinen sähköposti]</span>
+              </div>
+              <div class="field">
+                <label for="f-phone">Puhelin</label>
+                <input id="f-phone" name="phone" type="tel" autocomplete="tel">
+                <span class="hint">[Valinnainen — nopeuttaa yhteydenottoa]</span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="f-segment">Segmentti / tarve <span class="req" aria-hidden="true">*</span></label>
+              <select id="f-segment" name="segment" required>
+                <option value="">Valitse…</option>
+              </select>
+              <span class="err">[Valitse segmentti tai tarve]</span>
+            </div>
+
+            <div class="field">
+              <label for="f-desc">Kuvaile lyhyesti, mitä haluat kehittää</label>
+              <textarea id="f-desc" name="description" placeholder="[Esim. uusi täyte gluteenittomaan leivontaan, kasvipohjainen sovellus, PL-konsepti…]"></textarea>
+              <span class="hint">[Vapaaehtoinen — auttaa valmistautumaan sessioon]</span>
+            </div>
+
+            <div class="form-foot">
+              <button class="btn btn-primary" type="submit">Lähetä varauspyyntö</button>
+              <p class="form-consent" id="book-consent">[Lähettämällä hyväksyt tietojen käsittelyn tietosuojaselosteen mukaisesti. Lomake ei lähetä vielä — kytketään Dynamics 365:een WP-vaiheessa.]</p>
+            </div>
+          </form>
+
+          <!-- Aside — vastaa "sitooko mihinkään" + mitä tapahtuu seuraavaksi -->
+          <aside class="booking-aside" aria-label="Mitä varaaminen tarkoittaa">
+            <h3>[Mitä varaaminen tarkoittaa]</h3>
+            <ul>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i><span><b>[Sitoumukseton.]</b> [Placeholder: varauspyyntö ei sido mihinkään — kartoitetaan ensin yhdessä, mitä lähdetään kehittämään.]</span></li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i><span><b>[Otamme yhteyttä.]</b> [Placeholder: olemme yhteydessä ja sovitaan sopiva aika ja tavoite sessiolle.]</span></li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i><span><b>[Valmistaudumme.]</b> [Placeholder: tarpeesi pohjalta valmistelemme session, jotta aika käytetään tehokkaasti.]</span></li>
+            </ul>
+            <div class="alt">
+              [Mieluummin juttelisit ensin?] <a class="btn-link" href="/yhteys/" style="margin-top:6px">Ota yhteyttä <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER (yhteinen chrome) ===== -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <a href="/" class="logo" aria-label="Condite — etusivu">CONDITE</a>
+          <p class="footer-blurb">Elintarvikealan raaka-aineiden maahantuoja ja kehityskumppani. Osa Orkla Food Ingredientsia.</p>
+        </div>
+        <div>
+          <h4>Sivusto</h4>
+          <ul>
+            <li><a href="/tuotteet/">Tuotteet</a></li>
+            <li><a href="/toimialat/">Toimialat</a></li>
+            <li><a href="/reseptit/">Reseptit</a></li>
+            <li><a href="/tuotekehitys/">Tuotekehitys</a></li>
+            <li><a href="/yritys/">Yritys</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Kehitys</h4>
+          <ul>
+            <li><a href="/tuotekehitys/makupaja/" aria-current="page">Makupaja</a></li>
+            <li><a href="/tuotekehitys/raatalointiprosessi/">Räätälöintiprosessi</a></li>
+            <li><a href="/tuotekehitys/reseptikehitys/">Resepti- ja sovelluskehitys</a></li>
+            <li><a href="/tuotekehitys/private-label/">Private label</a></li>
+            <li><a href="/referenssit/">Referenssit</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Uutiskirje</h4>
+          <label for="news-email" style="display:block;font-size:14px;color:var(--c-text-2);margin-bottom:8px">Tilaa ajankohtaiset uutiset ja sovellukset.</label>
+          <div class="news">
+            <input id="news-email" type="email" placeholder="sähköposti@yritys.fi" aria-label="Sähköpostiosoite">
+            <button type="button">Tilaa</button>
+          </div>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <span>© 2026 Condite Oy · Osa Orkla Food Ingredientsia</span>
+        <div class="legal-links">
+          <a href="/tietosuoja/">Tietosuoja</a>
+          <a href="/evasteet/">Evästeet</a>
+          <a href="/saavutettavuus/">Saavutettavuusseloste</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== Rakenteinen data (SEO): Service + BreadcrumbList ===== -->
+  <script type="application/ld+json" id="ld-json"></script>
+
+  <!-- ===== Sisältökonfiguraatio + render (config-driven, ei buildia) ===== -->
+  <script>
+  (function () {
+    "use strict";
+
+    var PAGE = {
+      // S1B — Kilpailuetu-kaista. value = iso luku/sana, label = selite, text:true pienentää fonttia.
+      //       "2025" on yrityspresentaatiosta (s2); muut odottavat Conditen lukuja.
+      claimStats: [
+        { value: "2025",     label: "Makupaja avattu" },
+        { value: "[TÄYTTÖ]", label: "kehityssessiota vuodessa", text: true },
+        { value: "4",        label: "toimialaa kehittää kanssamme" }
+      ],
+      claimNote: "KYSYMYS — Väittämän ja lukujen vahvistus: (1) saako avausvuoden 2025 mainita ja missä Makupaja fyysisesti sijaitsee — yrityspresentaatio 2026 sanoo Helsinki, kun tuotanto ja pääkonttori ovat Naantalissa; (2) montako kehityssessiota Makupajassa pidetään vuodessa — konkreettinen luku tekee kilpailuedusta todistettavan, ilman sitä väittämä jää sanoiksi; (3) yllä oleva sanoitus on luonnos — Condite kirjoittaa lopullisen.",
+
+      // S2 — Mikä Makupaja on (3 USP-korttia, sama .card-usp -komponentti kuin sisarsivuilla).
+      mika: [
+        { icon: "fa-solid fa-kitchen-set",  title: "Oma testikeittiö",  text: "[Placeholder: varustettu tila reseptien ja sovellusten kehitykseen.]" },
+        { icon: "fa-solid fa-people-group", title: "Yhdessä kehittäen", text: "[Placeholder: Conditen tuotekehitysosaaminen + sinun tarpeesi samassa pöydässä.]" },
+        { icon: "fa-solid fa-arrow-trend-up", title: "Idea → tuote",    text: "[Placeholder: briiffistä maistatuksen ja iteroinnin kautta koesarjaan ja tuotantoon.]" }
+      ],
+
+      // S3 — session vaiheet (briiffi → … → tuotantoon). KOMPONENTTI: pystyvaiheistus.
+      //       icon = FontAwesome-luokka (solmu), title = vaiheen nimi, desc = 1 lause. Sanoitus Conditelta.
+      steps: [
+        { icon: "fa-solid fa-clipboard-list", title: "[Briiffi]",     desc: "[Placeholder: kartoitetaan tarve, tavoite ja reunaehdot yhdessä.]" },
+        { icon: "fa-solid fa-pen-ruler",       title: "[Suunnittelu]", desc: "[Placeholder: valitaan raaka-aineet ja lähestymistapa kehitystyölle.]" },
+        { icon: "fa-solid fa-utensils",        title: "[Maistatus]",   desc: "[Placeholder: kokeillaan ja maistatetaan ensimmäiset versiot Makupajassa.]" },
+        { icon: "fa-solid fa-rotate",          title: "[Iterointi]",   desc: "[Placeholder: hiotaan reseptiä palautteen pohjalta toimivaksi.]" },
+        { icon: "fa-solid fa-flask-vial",      title: "[Koesarja]",    desc: "[Placeholder: testataan ratkaisu pienemmässä mittakaavassa ennen tuotantoa.]" },
+        { icon: "fa-solid fa-circle-check",    title: "[Tuotantoon]",  desc: "[Placeholder: viedään valmis tuote tuotantoon ja jatketaan kumppanina.]" }
+      ],
+
+      // S4 — hyöty/segmenttikortit (Toimialat-hub -tyyli). Makupaja palvelee kaikkia neljää
+      //       persoonaa eri tarpeeseen; koko kortti = linkki segmenttihubiin (ei umpikujia).
+      //       name = segmentti, promise = mitä Makupaja tarjoaa, bullets = konkretia, cta → hubi.
+      benefits: [
+        {
+          name: "Leipomot", icon: "fa-solid fa-bread-slice", href: "/toimialat/leipomot/",
+          promise: "[Placeholder: kehitä ja testaa uudet täytteet ja sovellukset oman tuotantosi tueksi.]",
+          bullets: ["Reseptien yhteiskehitys", "Maistatus paikan päällä", "Sovellukset leivontaan"],
+          cta: "Leipomoille"
+        },
+        {
+          name: "Food Service", icon: "fa-solid fa-utensils", href: "/toimialat/food-service/",
+          promise: "[Placeholder: sovella raaka-aineet ammattikeittiön annoksiin ja maistata tulokset.]",
+          bullets: ["Annossovellukset", "Inspiraatio menuun", "Maistatus"],
+          cta: "Food servicelle"
+        },
+        {
+          name: "Food Industry", icon: "fa-solid fa-industry", href: "/toimialat/food-industry/",
+          promise: "[Placeholder: räätälöi ja testaa ratkaisut teolliseen mittakaavaan ennen tuotantoa.]",
+          bullets: ["Teolliset koesarjat", "Räätälöinti", "Skaalaus tuotantoon"],
+          cta: "Food industrylle"
+        },
+        {
+          name: "Private Label", icon: "fa-solid fa-tags", href: "/toimialat/private-label/",
+          promise: "[Placeholder: kehitä private label -konsepti briiffistä maistatettuun tuotteeseen.]",
+          bullets: ["PL-konseptit", "Maistatus", "Prosessi vaiheittain"],
+          cta: "Private labelille"
+        }
+      ],
+
+      // S6 — Mitä sinulta / mitä meiltä. Kaksi saraketta: "sinulta" ja "meiltä". Sanoitus Conditelta.
+      give: {
+        icon: "fa-solid fa-user", title: "[Sinulta]", sub: "Mitä tuot sessioon",
+        items: [
+          "[Placeholder: briiffi ja tavoite — mitä haluat kehittää ja kenelle.]",
+          "[Placeholder: reunaehdot — volyymit, hintahaarukka, aikataulu.]",
+          "[Placeholder: vaatimukset — allergeenit, säilyvyys, pakkaus, lainsäädäntö.]",
+          "[Placeholder: palaute maistatuksissa — suunta iterointiin.]"
+        ]
+      },
+      get: {
+        icon: "fa-solid fa-handshake-angle", title: "[Meiltä]", sub: "Mitä saat käyttöösi",
+        items: [
+          "[Placeholder: tuotekehitysosaaminen — reseptiikka ja sovellustuntemus.]",
+          "[Placeholder: Makupaja — varustettu testikeittiö kehitykseen ja maistatukseen.]",
+          "[Placeholder: näytteet ja koesarjat — kokeile ennen sitoutumista.]",
+          "[Placeholder: Orkla-tason laatu ja toimitusvarmuus tuotannossa. (K1)]"
+        ]
+      },
+
+      // S7 — varauslomakkeen segmentti/tarve-valinnat (vahvistettava Dynamics 365 -kentät, §9).
+      segmentOptions: [
+        "Leipomot", "Food Service", "Food Industry", "Private Label", "[Muu / en osaa vielä sanoa]"
+      ],
+
+      // S5 — Referenssit / case (3 korttia). RAKENNE-placeholderit: asiakas + tulos hakasulkeissa,
+      //       täytetään Conditen oikeilla Makupaja-tarinoilla (ja luvalla nimien/lukujen käyttöön). ÄLÄ keksi lukuja.
+      //       Kattaa eri toimialat — todistaa että Makupaja palvelee kaikkia persoonia.
+      cases: [
+        {
+          tag: "Leipomot · Resepti",
+          title: "[Case-otsikko: uusi täyte ideasta tuotantoon Makupajassa]",
+          text: "[Placeholder: leipomo kehitti täytteen kanssamme Makupajassa — briiffistä maistatuksen kautta koesarjaan. Condite kirjoittaa.]",
+          result: "[Tulos — esim. lanseerausaika / hävikin lasku]",
+          customer: "[Asiakas, toimiala]"
+        },
+        {
+          tag: "Food Service · Sovellus",
+          title: "[Case-otsikko: annossovellus ammattikeittiöön]",
+          text: "[Placeholder: keittiömestari sovelsi raaka-aineen menuun yhdessä kanssamme Makupajassa ja maistatti tulokset. Condite kirjoittaa.]",
+          result: "[Tulos — esim. menu-uudistus / asiakaspalaute]",
+          customer: "[Asiakas, toimiala]"
+        },
+        {
+          tag: "Private Label · Konsepti",
+          title: "[Case-otsikko: private label -konsepti maistatettuna]",
+          text: "[Placeholder: kehitimme PL-konseptin Makupajassa briiffistä maistatettuun tuotteeseen. Condite kirjoittaa.]",
+          result: "[Tulos — esim. time-to-market / valikoiman laajennus]",
+          customer: "[Asiakas, toimiala]"
+        }
+      ],
+
+      // S5 — Referenssit-nosto näkyy vain jos caseja on (muuten lohko piiloon).
+      showReferences: true
+    };
+
+    function el(html) { var t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstChild; }
+    function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]; }); }
+
+    // S1B — Kilpailuetu: todisteluvut + KYSYMYS-note
+    var claimStats = document.getElementById("claim-stats");
+    PAGE.claimStats.forEach(function (st) {
+      claimStats.appendChild(el(
+        '<div class="stat">' +
+          '<div class="num' + (st.text ? " text" : "") + '">' + esc(st.value) + '</div>' +
+          '<div class="lbl">' + esc(st.label) + '</div>' +
+        '</div>'
+      ));
+    });
+    var claimNote = document.getElementById("claim-note");
+    claimNote.innerHTML = '<i class="fa-solid fa-circle-question" aria-hidden="true"></i><span>' + esc(PAGE.claimNote) + '</span>';
+
+    // S2 — Mikä Makupaja on — USP-kortit (.card-usp)
+    var mikaGrid = document.getElementById("mika-grid");
+    PAGE.mika.forEach(function (u) {
+      mikaGrid.appendChild(el(
+        '<div class="card-usp">' +
+          '<span class="ic"><i class="' + esc(u.icon) + '" aria-hidden="true"></i></span>' +
+          '<h3>' + esc(u.title) + '</h3>' +
+          '<p>' + esc(u.text) + '</p>' +
+        '</div>'
+      ));
+    });
+
+    // KOMPONENTTI: pystysuuntainen vaiheistus (vsteps). Geneerinen renderöijä —
+    // kopioitavissa sisarsivuille: anna lista [{icon,title,desc}] ja mount-id.
+    function renderVSteps(steps, mountId) {
+      var mount = document.getElementById(mountId);
+      if (!mount || !steps) return;
+      steps.forEach(function (s) {
+        mount.appendChild(el(
+          '<li class="vstep">' +
+            '<span class="vstep-node"><span class="vstep-ic"><i class="' + esc(s.icon) + '" aria-hidden="true"></i></span></span>' +
+            '<div class="vstep-body">' +
+              '<h3>' + esc(s.title) + '</h3>' +
+              '<p>' + esc(s.desc) + '</p>' +
+            '</div>' +
+          '</li>'
+        ));
+      });
+    }
+    renderVSteps(PAGE.steps, "steps");
+
+    // S4 — hyöty/segmenttikortit (Toimialat-hub -tyyli: media + ikoni + lista + CTA → segmenttihubi).
+    //       Koko kortti yksi <a> (ei sisäkkäisiä linkkejä); CTA = visuaalinen "nappi".
+    var benefitGrid = document.getElementById("benefit-grid");
+    PAGE.benefits.forEach(function (b) {
+      var lis = (b.bullets || []).map(function (x) {
+        return '<li><i class="fa-solid fa-check" aria-hidden="true"></i>' + esc(x) + '</li>';
+      }).join("");
+      benefitGrid.appendChild(el(
+        '<a class="seg-card" href="' + esc(b.href) + '">' +
+          '<div class="ph ph-16-10"><i class="fa-regular fa-image" aria-hidden="true"></i>Toimialakuva 16:10</div>' +
+          '<div class="body">' +
+            '<span class="seg-ic"><i class="' + esc(b.icon) + '" aria-hidden="true"></i></span>' +
+            '<h3>' + esc(b.name) + '</h3>' +
+            '<p class="promise">' + esc(b.promise) + '</p>' +
+            '<ul>' + lis + '</ul>' +
+            '<span class="cta"><span>' + esc(b.cta) + ' <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></span>' +
+          '</div>' +
+        '</a>'
+      ));
+    });
+
+    // S5 — Referenssit / case-kortit (uskottavuus) — sama rakenne kuin Tuotekehitys-hubissa
+    var caseGrid = document.getElementById("case-grid");
+    PAGE.cases.forEach(function (c) {
+      caseGrid.appendChild(el(
+        '<article class="case-card">' +
+          '<div class="ph ph-16-10"><i class="fa-regular fa-image" aria-hidden="true"></i>Case-kuva 16:10</div>' +
+          '<div class="body">' +
+            '<span class="case-tag">' + esc(c.tag) + '</span>' +
+            '<h3>' + esc(c.title) + '</h3>' +
+            '<p>' + esc(c.text) + '</p>' +
+            '<p class="case-result"><i class="fa-solid fa-arrow-trend-up" aria-hidden="true"></i><span>' + esc(c.result) + '</span></p>' +
+            '<div class="case-meta"><i class="fa-solid fa-store" aria-hidden="true"></i>' + esc(c.customer) + '</div>' +
+          '</div>' +
+        '</article>'
+      ));
+    });
+
+    // S6 — Mitä sinulta / mitä meiltä — kaksi korttia (toinen tintattu erotteluksi)
+    var ggWrap = document.getElementById("giveget");
+    function ggCard(cfg, them) {
+      var items = cfg.items.map(function (t) {
+        return '<li><i class="fa-solid fa-check" aria-hidden="true"></i><span>' + esc(t) + '</span></li>';
+      }).join("");
+      return '<div class="gg-card' + (them ? ' them' : '') + '">' +
+        '<div class="gg-head">' +
+          '<span class="gg-ic"><i class="' + esc(cfg.icon) + '" aria-hidden="true"></i></span>' +
+          '<div><h3>' + esc(cfg.title) + '</h3><p class="gg-sub">' + esc(cfg.sub) + '</p></div>' +
+        '</div>' +
+        '<ul class="gg-list">' + items + '</ul>' +
+      '</div>';
+    }
+    if (ggWrap) {
+      ggWrap.appendChild(el(ggCard(PAGE.give, false)));
+      ggWrap.appendChild(el(ggCard(PAGE.get, true)));
+    }
+
+    // S7 — segmentti/tarve-valinnat lomakkeeseen
+    var segSel = document.getElementById("f-segment");
+    PAGE.segmentOptions.forEach(function (opt) {
+      segSel.appendChild(el('<option value="' + esc(opt) + '">' + esc(opt) + '</option>'));
+    });
+
+    // S5 — Referenssit-noston ehdollinen piilotus
+    if (PAGE.showReferences === false) {
+      var refSec = document.getElementById("ref-section");
+      if (refSec) refSec.hidden = true;
+    }
+
+    // S7 — lomakkeen tilat (tyhjä / validointivirhe / lähetetty) demona, ei oikeaa lähetystä
+    var form = document.getElementById("book-form");
+    var sent = document.getElementById("form-sent");
+    if (form) {
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var ok = true;
+        ["f-name", "f-company", "f-email", "f-segment"].forEach(function (id) {
+          var inp = document.getElementById(id);
+          var field = inp.closest(".field");
+          var valid = inp.value.trim() !== "" && !(inp.type === "email" && !/.+@.+\..+/.test(inp.value));
+          field.classList.toggle("has-error", !valid);
+          if (!valid) ok = false;
+        });
+        if (ok) {
+          sent.classList.add("show");
+          form.querySelectorAll("input,select,textarea,button[type=submit]").forEach(function (n) { n.disabled = true; });
+          sent.scrollIntoView({ block: "nearest" });
+        } else {
+          form.querySelector(".has-error input, .has-error select").focus();
+        }
+      });
+    }
+
+    // SEO — Service + BreadcrumbList
+    var origin = "https://www.condite.fi";
+    var ld = {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Service",
+          "name": "Makupaja — Conditen testikeittiö",
+          "serviceType": "Tuotekehitys ja reseptikehitys testikeittiössä",
+          "description": "Makupaja on Conditen oma testikeittiö, jossa idea kehitetään yhdessä toimivaksi tuotteeksi — briiffistä maistatukseen ja koesarjaan.",
+          "url": origin + "/tuotekehitys/makupaja/",
+          "provider": { "@type": "Organization", "name": "Condite Oy" },
+          "areaServed": "FI"
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Etusivu", "item": origin + "/" },
+            { "@type": "ListItem", "position": 2, "name": "Tuotekehitys", "item": origin + "/tuotekehitys/" },
+            { "@type": "ListItem", "position": 3, "name": "Makupaja", "item": origin + "/tuotekehitys/makupaja/" }
+          ]
+        }
+      ]
+    };
+    document.getElementById("ld-json").textContent = JSON.stringify(ld);
+
+    // Mobiilinavigaation avaus/sulku (hampurilainen ei saa olla kuollut kontrolli)
+    var navToggle = document.querySelector(".nav-toggle");
+    var header = document.querySelector(".site-header");
+    if (navToggle && header) {
+      navToggle.addEventListener("click", function () {
+        var open = header.classList.toggle("nav-open");
+        navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+        navToggle.setAttribute("aria-label", open ? "Sulje valikko" : "Avaa valikko");
+      });
+    }
+  })();
+  </script>
+</body>
+</html>

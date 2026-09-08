@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Komponenttipohja — Pystysuuntainen vaiheistus (vsteps) | Condite</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!--
+  CONDITE.FI — KOMPONENTTIPOHJA: PYSTYSUUNTAINEN VAIHEISTUS (vertical process stepper)
+
+  MITÄ TÄMÄ ON: jaettu, kopioitava komponentti sisarsivujen kesken (Makupaja,
+  Räätälöintiprosessi, Reseptikehitys, Private label…). Tämä tiedosto on
+  ainoa "lähde" komponentille: avaa, katso renderöinti, kopioi 3 palaa
+  (1) CSS-lohko, (2) renderVSteps-funktio, (3) config-muoto + mount-markup
+  uudelle sivulle. Pohja nojaa kanoniseen DS-palettiin (condite_design_system.html).
+
+  EI EYEBROWIA: komponentti ei sisällä otsikkoa/eyebrowia — sivun oma
+  section-head (eyebrow + H2 + intro) hoitaa otsikoinnin. Pudota komponentti
+  section-headin alle.
+
+  KÄYTTÖ uudella sivulla (3 kopioitavaa palaa):
+    1) CSS — kopioi alla oleva "KOMPONENTTI-CSS" -lohko sivun <style>:een.
+    2) Markup — mount-piste section-headin alle:
+         <div class="vproc"><ol class="vsteps" id="steps" aria-label="…"></ol></div>
+    3) JS — kopioi renderVSteps() ja kutsu: renderVSteps(PAGE.steps, "steps");
+       Config-muoto:  steps: [{ icon: "fa-solid fa-…", title: "…", desc: "…" }, …]
+       (icon = FontAwesome-luokka, title = vaiheen nimi, desc = 1 lause.
+        Ei eyebrowia/"Vaihe N" -merkkiä — pelkkä vaiheen otsikko riittää.)
+-->
+<style>
+  :root {
+    --c-bg:#ffffff; --c-bg-soft:#f7f7f7; --c-bg-tint:#eef6fb;
+    --c-text:#1d1d1f; --c-text-2:#555555; --c-text-muted:#6f6f6f;
+    --c-border:#e3e3e3; --c-border-strong:#cfcfcf;
+    --c-accent:#7fc8ec; --c-accent-ink:#0a6e9b; --c-on-accent:#0a4f72;
+    --c-accent-soft:#e3f2fb; --c-suits-border:#b7def4;
+    --r-sm:4px; --r-md:8px; --r-lg:12px;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; background: var(--c-bg); color: var(--c-text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif; font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  a:focus-visible, summary:focus-visible { outline: 2.5px solid var(--c-accent); outline-offset: 2px; border-radius: var(--r-sm); }
+
+  /* Demo-kehys (EI osa komponenttia — vain tämän pohjan esittelyyn) */
+  .demo-wrap { max-width: 880px; margin: 0 auto; padding: 48px 24px; }
+  .demo-band { border-top: 1px solid var(--c-suits-border); border-bottom: 1px solid var(--c-suits-border); background: var(--c-bg-tint); }
+  .demo-note { font-size: 13px; color: var(--c-text-muted); border: 1px dashed var(--c-border-strong); border-radius: var(--r-md); padding: 12px 14px; margin-bottom: 28px; }
+  .demo-note b { color: var(--c-text); }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--c-accent-ink); margin: 0 0 8px; }
+  h2 { font-size: 30px; line-height: 1.18; margin: 0; font-weight: 700; }
+  .intro { margin: 14px 0 0; color: var(--c-text-2); max-width: 640px; }
+  .section-head { max-width: 760px; margin-bottom: 32px; }
+
+  /* ==========================================================================
+     KOMPONENTTI-CSS — kopioi tämä lohko sellaisenaan (alku) ------------------- */
+  .vproc { max-width: 760px; }
+  .vsteps { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+  .vstep { display: grid; grid-template-columns: 48px 1fr; gap: 20px; position: relative; padding-bottom: 28px; }
+  .vstep:last-child { padding-bottom: 0; }
+  .vstep-node { display: flex; align-items: flex-start; justify-content: center; position: relative; }
+  .vstep-ic { width: 48px; height: 48px; border-radius: 999px; background: var(--c-accent-soft); border: 1px solid var(--c-suits-border); color: var(--c-accent-ink); display: flex; align-items: center; justify-content: center; font-size: 18px; position: relative; z-index: 1; }
+  /* Pisteviiva tästä solmusta alas seuraavaan */
+  .vstep:not(:last-child) .vstep-node::after { content: ""; position: absolute; top: 52px; bottom: -28px; left: 50%; transform: translateX(-50%); border-left: 2px dotted var(--c-border-strong); }
+  .vstep-body { padding-top: 10px; }
+  .vstep-body h3 { font-size: 18px; margin: 0 0 6px; }
+  .vstep-body p { font-size: 14px; color: var(--c-text-2); margin: 0; max-width: 56ch; }
+  /* KOMPONENTTI-CSS (loppu) -------------------------------------------------- */
+
+  @media (max-width: 760px) {
+    h2 { font-size: 26px; }
+    .demo-wrap { padding: 36px 20px; }
+  }
+</style>
+</head>
+<body>
+  <div class="demo-band">
+    <div class="demo-wrap">
+      <p class="demo-note"><b>Komponenttipohja.</b> Pystysuuntainen vaiheistus (vsteps). Alla demo-instanssi configista. Komponentti ei sisällä eyebrowia/otsikkoa — sivun oma section-head hoitaa sen. Tämä band + section-head ovat vain esittelyä varten.</p>
+
+      <!-- Sivun oma section-head (esimerkki — EI osa komponenttia) -->
+      <div class="section-head">
+        <p class="eyebrow">Näin sessio etenee</p>
+        <h2>[H2: Briiffistä tuotantoon — kuusi vaihetta]</h2>
+        <p class="intro">[Intro-placeholder: konkretia madaltaa kynnystä — näin yhteistyö etenee vaihe vaiheelta. Condite kirjoittaa.]</p>
+      </div>
+
+      <!-- KOMPONENTTI: mount-piste (kopioitava markup) -->
+      <div class="vproc">
+        <ol class="vsteps" id="steps" aria-label="Prosessin vaiheet"></ol>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function () {
+    "use strict";
+
+    // CONFIG-MUOTO — [{ icon, title, desc }]. Sivukohtainen sisältö PAGE-objektista.
+    var PAGE = {
+      steps: [
+        { icon: "fa-solid fa-clipboard-list", title: "[Briiffi]",     desc: "[Placeholder: kartoitetaan tarve, tavoite ja reunaehdot yhdessä.]" },
+        { icon: "fa-solid fa-pen-ruler",       title: "[Suunnittelu]", desc: "[Placeholder: valitaan raaka-aineet ja lähestymistapa kehitystyölle.]" },
+        { icon: "fa-solid fa-utensils",        title: "[Maistatus]",   desc: "[Placeholder: kokeillaan ja maistatetaan ensimmäiset versiot Makupajassa.]" },
+        { icon: "fa-solid fa-rotate",          title: "[Iterointi]",   desc: "[Placeholder: hiotaan reseptiä palautteen pohjalta toimivaksi.]" },
+        { icon: "fa-solid fa-flask-vial",      title: "[Koesarja]",    desc: "[Placeholder: testataan ratkaisu pienemmässä mittakaavassa ennen tuotantoa.]" },
+        { icon: "fa-solid fa-circle-check",    title: "[Tuotantoon]",  desc: "[Placeholder: viedään valmis tuote tuotantoon ja jatketaan kumppanina.]" }
+      ]
+    };
+
+    function el(html) { var t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstChild; }
+    function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]; }); }
+
+    // ========================================================================
+    // KOMPONENTTI: renderVSteps — kopioi tämä funktio sellaisenaan.
+    // Käyttö: renderVSteps(PAGE.steps, "steps");
+    function renderVSteps(steps, mountId) {
+      var mount = document.getElementById(mountId);
+      if (!mount || !steps) return;
+      steps.forEach(function (s) {
+        mount.appendChild(el(
+          '<li class="vstep">' +
+            '<span class="vstep-node"><span class="vstep-ic"><i class="' + esc(s.icon) + '" aria-hidden="true"></i></span></span>' +
+            '<div class="vstep-body">' +
+              '<h3>' + esc(s.title) + '</h3>' +
+              '<p>' + esc(s.desc) + '</p>' +
+            '</div>' +
+          '</li>'
+        ));
+      });
+    }
+    // ========================================================================
+
+    renderVSteps(PAGE.steps, "steps");
+  })();
+  </script>
+</body>
+</html>

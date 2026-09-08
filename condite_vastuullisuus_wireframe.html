@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vastuullisuus ja toimitusketju | Condite</title>
+<meta name="description" content="Conditen raaka-aineiden alkuperä, vastuullinen toimitusketju ja laadunhallinta — osana Orkla Food Ingredientsin vastuullisuusohjelmaa. Läpinäkyvyyttä ammattiostajalle.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!--
+  CONDITE.FI — VASTUULLISUUS (+ TOIMITUSKETJU) · KIILLOTETTU WIREFRAME (FI)
+  Pohja: approved design system (condite_design_system.html) — softened tonal blue.
+  Sisarsivu / Yritys-osion spoke: sama chrome kuin condite_yritys_wireframe.html.
+
+  LINJAUS (Olli 16.6.2026): KÄYTÄ NYKYISTÄ DS:ää JA OLEMASSA OLEVIA BLOKKEJA — ei uusia
+  sivukohtaisia elementtejä. Rakenne pidetään (ok). Jokainen lohko = vakiintunut DS-blokki:
+   · Hero               = hero-split (teksti + 4:3 media)            [Yritys]
+   · Kehys              = tint-band + section-head + .note            [Yritys/DS]
+   · Osa-alueet/pilarit = value-grid + card-usp (ikonikortit)        [Yritys/DS]
+   · Toimitusketju      = jaettu vsteps-pystystepperi                 [condite_komponentti_vaiheistus.html]
+   · Sertifikaatit      = cert-grid + cert-card (etusivun 5.6c) + .note
+   · Orkla-tausta       = tumma orkla-banner                         [Yritys/etusivu]
+   · Loppu              = end-cta                                     [Yritys]
+
+  PALETTI: hyväksytty DS-paletti (--c-accent #7fc8ec / --c-accent-ink #0a6e9b) = kanoninen.
+
+  KRIITTINEN REUNAEHTO (juridinen / greenwashing): ÄLÄ keksi sertifikaatteja, ESG-lukuja tai
+  Orkla-väittämiä. Kaikki spesifit väittämät [TÄYTTÖ/VAHVISTA]. Sivu toimii faktojen kanssa JA ilman.
+
+  PÄÄSYTASOT: koko sivu AVOIN. Ei liidi-/login-lohkoja. Konversio = yhteydenotto (Yhteys-sivu).
+
+  AVOIMET TIETOPYYNNÖT: K1 sertifikaatit & laadunhallinta (S5 kotipaikka) · K5 vastuullisuus-/
+  toimitusketjusisältö (Orkla-sanoitus, alkuperä/jäljitettävyys, Naantali/volyymi, ympäristö) · P1 kuvat.
+
+  §8-TARKISTUSLISTA (täytetty): laskeutumisvalmius (crumbs+hero+navi) · ratkaisulähtöinen otsikointi
+  (H1 "jäljittää", H2:t alkuperä/ketju/laatu) · kanava→laskeutuminen (vastuullisuus-/alkuperähaut,
+  segmenttihubit, Yritys) · verkkosivu-rooli (myy luottamuksen, ei Sana-siirtymää) · yksi pää-CTA
+  (Ota yhteyttä) · pääsytaso/lohko avoin · ei umpikujia (loppu-CTA 4 reittiä).
+-->
+<style>
+  :root {
+    /* Taustat */
+    --c-bg:#ffffff; --c-bg-soft:#f7f7f7; --c-bg-tint:#eef6fb;
+    /* Teksti */
+    --c-text:#1d1d1f; --c-text-2:#555555; --c-text-muted:#6f6f6f;
+    /* Viivat */
+    --c-border:#e3e3e3; --c-border-strong:#cfcfcf; --c-divider:#d8d8d8;
+    /* Kuvapaikat */
+    --c-ph-bg:#ececec; --c-ph-border:#c8c8c8;
+    /* Korostus — pehmeä sininen (DS) */
+    --c-accent:#7fc8ec; --c-accent-ink:#0a6e9b; --c-on-accent:#0a4f72;
+    --c-accent-soft:#e3f2fb; --c-suits-border:#b7def4;
+    /* Pyöristykset */
+    --r-sm:4px; --r-md:8px; --r-lg:12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--c-bg); color: var(--c-text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+    font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased;
+  }
+  /* Shell-gotcha: author-display:flex ohittaa UA-säännön — pidä tämä mukana */
+  [hidden] { display: none !important; }
+  a { color: var(--c-accent-ink); }
+  img { max-width: 100%; }
+
+  /* Saavutettavuus */
+  .skip {
+    position: absolute; left: 8px; top: -48px; z-index: 100;
+    background: var(--c-accent); color: var(--c-on-accent); font-weight: 700;
+    padding: 10px 16px; border-radius: var(--r-sm); text-decoration: none; transition: top .15s;
+  }
+  .skip:focus { top: 8px; }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible {
+    outline: 2.5px solid var(--c-accent); outline-offset: 2px; border-radius: var(--r-sm);
+  }
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+
+  /* Layout */
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  .block { max-width: 1200px; margin: 0 auto; padding: 64px 24px 0; }
+  .block.first { padding-top: 40px; }
+  .block.last { padding-bottom: 64px; }
+  .band { border-top: 1px solid var(--c-suits-border); border-bottom: 1px solid var(--c-suits-border); background: var(--c-bg-tint); margin-top: 64px; }
+  .band .block { padding-top: 64px; padding-bottom: 64px; }
+
+  /* Tyypit */
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--c-accent-ink); margin: 0 0 8px; }
+  h1 { font-size: 44px; line-height: 1.12; letter-spacing: -.01em; margin: 0 0 20px; font-weight: 700; }
+  h2 { font-size: 30px; line-height: 1.18; margin: 0; font-weight: 700; }
+  .intro { margin: 16px 0 0; color: var(--c-text-2); }
+  .section-head { max-width: 760px; }
+
+  /* Painikkeet */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: var(--r-sm); font-weight: 600; font-size: 16px; text-decoration: none; line-height: 1.2; cursor: pointer; padding: 13px 22px; border: 1.5px solid transparent; }
+  .btn-primary { border-color: var(--c-accent); background: var(--c-accent); color: var(--c-on-accent); }
+  .btn-outline { border-color: var(--c-accent-ink); background: var(--c-bg); color: var(--c-accent-ink); }
+  .btn-sm { padding: 9px 16px; font-size: 14px; border-color: var(--c-accent-ink); background: var(--c-bg); color: var(--c-accent-ink); }
+  .btn-link { color: var(--c-accent-ink); text-decoration: none; font-weight: 600; font-size: 14px; display: inline-flex; gap: 6px; align-items: center; white-space: nowrap; }
+  .btn-link:hover { text-decoration: underline; }
+
+  /* Header */
+  .site-header { border-bottom: 1px solid var(--c-border); background: var(--c-bg); position: sticky; top: 0; z-index: 50; }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; min-height: 64px; gap: 32px; }
+  .logo { flex: none; width: 110px; height: 34px; background: var(--c-ph-bg); border: 1px dashed var(--c-ph-border); display: flex; align-items: center; justify-content: center; color: var(--c-text-2); font-size: 12px; border-radius: var(--r-sm); letter-spacing: .5px; font-weight: 700; text-decoration: none; }
+  .nav-main { display: flex; align-items: center; justify-content: center; flex: 1; }
+  .nav-list { list-style: none; margin: 0; padding: 0; display: flex; gap: 2px; }
+  .nav-list a { text-decoration: none; padding: 8px 12px; border-radius: var(--r-sm); font-weight: 500; color: var(--c-text); font-size: 14px; white-space: nowrap; position: relative; }
+  .nav-list a:hover { color: var(--c-accent-ink); }
+  .nav-list a[aria-current="page"] { color: var(--c-accent-ink); font-weight: 700; }
+  .nav-list a[aria-current="page"]::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: 0; height: 2px; background: var(--c-accent); border-radius: 2px; }
+  .nav-actions { flex: none; display: inline-flex; align-items: center; gap: 16px; }
+  .lang { display: inline-flex; align-items: center; gap: 2px; font-size: 14px; }
+  .lang a { text-decoration: none; padding: 3px 7px; border-radius: var(--r-sm); color: var(--c-text-muted); }
+  .lang a[aria-current="true"] { background: var(--c-bg-soft); color: var(--c-text); font-weight: 700; }
+  .nav-toggle { display: none; }
+
+  /* Murupolku */
+  .crumbs { max-width: 1200px; margin: 0 auto; padding: 14px 24px 0; font-size: 13px; color: var(--c-text-muted); }
+  .crumbs ol { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; }
+  .crumbs a { color: var(--c-text-2); text-decoration: none; }
+  .crumbs a:hover { color: var(--c-accent-ink); }
+  .crumbs li[aria-current="page"] { color: var(--c-text); font-weight: 600; }
+  .crumbs .sep { color: var(--c-border-strong); }
+
+  /* Yleinen kuvapaikka */
+  .ph { background: var(--c-ph-bg); border: 1px dashed var(--c-ph-border); display: flex; align-items: center; justify-content: center; color: var(--c-text-2); font-size: 13px; gap: 6px; text-align: center; padding: 16px; }
+  .ph i { opacity: .6; }
+  .ph-4-3 { aspect-ratio: 4 / 3; }
+  .ph-16-9 { aspect-ratio: 16 / 9; }
+
+  /* Placeholder/TODO-note (DS-pattern, Yritys S8) */
+  .note { display: flex; align-items: flex-start; gap: 10px; border: 1px dashed var(--c-ph-border); border-radius: var(--r-md); background: var(--c-bg-soft); padding: 14px 18px; font-size: 13px; color: var(--c-text-muted); }
+  .note i { color: var(--c-accent-ink); margin-top: 2px; }
+
+  /* ===== S1 Hero (teksti + media 4:3) — DS hero-split ===== */
+  .hero-split { display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: center; }
+  .hero .intro { font-size: 18px; max-width: 60ch; }
+  .hero-ctas { margin: 28px 0 0; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .hero-media .ph { border-radius: var(--r-lg); }
+
+  /* ===== S3 Osa-alueet (pilarit) — DS value-grid + card-usp ===== */
+  .value-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+  .card-usp { border: 1px solid var(--c-border); border-radius: var(--r-md); padding: 28px 24px; background: var(--c-bg); display: flex; flex-direction: column; gap: 8px; }
+  .card-usp .ic { width: 48px; height: 48px; border-radius: var(--r-md); background: var(--c-accent-soft); color: var(--c-accent-ink); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 8px; }
+  .card-usp h3 { font-size: 18px; margin: 0; }
+  .card-usp p { font-size: 14px; color: var(--c-text-2); margin: 0; }
+
+  /* ===== S4 Toimitusketju — JAETTU vsteps-komponentti (condite_komponentti_vaiheistus.html) ===== */
+  .vproc { max-width: 760px; }
+  .vsteps { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+  .vstep { display: grid; grid-template-columns: 48px 1fr; gap: 20px; position: relative; padding-bottom: 28px; }
+  .vstep:last-child { padding-bottom: 0; }
+  .vstep-node { display: flex; align-items: flex-start; justify-content: center; position: relative; }
+  .vstep-ic { width: 48px; height: 48px; border-radius: 999px; background: var(--c-accent-soft); border: 1px solid var(--c-suits-border); color: var(--c-accent-ink); display: flex; align-items: center; justify-content: center; font-size: 18px; position: relative; z-index: 1; }
+  .vstep:not(:last-child) .vstep-node::after { content: ""; position: absolute; top: 52px; bottom: -28px; left: 50%; transform: translateX(-50%); border-left: 2px dotted var(--c-border-strong); }
+  .vstep-body { padding-top: 10px; }
+  .vstep-body h3 { font-size: 18px; margin: 0 0 6px; }
+  .vstep-body p { font-size: 14px; color: var(--c-text-2); margin: 0; max-width: 56ch; }
+
+  /* ===== S5 Laadunhallinta & sertifikaatit — DS cert-grid + cert-card (etusivu 5.6c) ===== */
+  .cert-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 24px; }
+  .cert-card { border: 1px solid var(--c-border); border-radius: var(--r-md); background: var(--c-bg); padding: 24px; display: flex; gap: 16px; align-items: flex-start; }
+  .cert-ico { width: 46px; height: 46px; border-radius: var(--r-md); background: var(--c-accent-soft); color: var(--c-accent-ink); display: flex; align-items: center; justify-content: center; font-size: 19px; flex: none; }
+  .cert-card h3 { font-size: 15px; margin: 0 0 2px; }
+  .cert-card p { font-size: 14px; color: var(--c-text-2); margin: 0; }
+
+  /* ===== S6 Orkla-tausta (tumma banneri) — DS orkla-banner ===== */
+  .orkla-banner { display: flex; align-items: center; gap: 24px; background: #1f2730; color: #e3e5e8; border-radius: var(--r-lg); padding: 32px; }
+  .orkla-banner .ob-ico { width: 56px; height: 56px; border-radius: 50%; background: #2c343d; border: 1px solid #49515b; color: #cfd5db; display: flex; align-items: center; justify-content: center; font-size: 22px; flex: none; }
+  .orkla-banner .ob-body { flex: 1; min-width: 0; }
+  .orkla-banner .ob-eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #aab2bb; margin: 0 0 6px; }
+  .orkla-banner strong { color: #fff; display: block; font-size: 20px; margin-bottom: 6px; }
+  .orkla-banner p { margin: 0; font-size: 14px; color: #aab2bb; max-width: 60ch; }
+  .orkla-banner .ob-link { color: #fff; font-weight: 600; font-size: 14px; text-decoration: none; display: inline-flex; gap: 6px; align-items: center; margin-top: 12px; }
+  .orkla-banner .ob-link:hover { text-decoration: underline; }
+
+  /* ===== S7 Loppu-CTA / reitit — DS end-cta ===== */
+  .end-cta { text-align: center; background: var(--c-bg-tint); border: 1px solid var(--c-suits-border); border-radius: var(--r-lg); padding: 56px 32px; }
+  .end-cta-inner { max-width: 680px; margin: 0 auto; }
+  .end-cta .ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 24px; align-items: center; }
+  .end-routes { display: flex; gap: 10px 20px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+
+  /* Footer */
+  .site-footer { background: var(--c-bg-soft); border-top: 1px solid var(--c-border); padding: 48px 0 32px; margin-top: 64px; }
+  .footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--c-border); }
+  .footer-grid h4 { font-size: 14px; text-transform: uppercase; letter-spacing: .06em; margin: 0 0 16px; }
+  .footer-grid ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .footer-grid a { text-decoration: none; color: var(--c-text-2); font-size: 14px; }
+  .footer-grid a:hover { color: var(--c-accent-ink); }
+  .footer-blurb { font-size: 14px; color: var(--c-text-2); margin: 16px 0 0; max-width: 30ch; }
+  .news { display: flex; gap: 8px; }
+  .news input { flex: 1; min-width: 0; padding: 10px 12px; border-radius: var(--r-sm); border: 1px solid var(--c-border-strong); background: var(--c-bg); color: var(--c-text); font: inherit; font-size: 14px; }
+  .news button { padding: 10px 16px; border-radius: var(--r-sm); border: 1.5px solid var(--c-accent); background: var(--c-accent); color: var(--c-on-accent); font-weight: 700; font-size: 14px; cursor: pointer; }
+  .footer-legal { display: flex; justify-content: space-between; gap: 24px; padding-top: 24px; flex-wrap: wrap; font-size: 12px; color: var(--c-text-muted); }
+  .footer-legal a { color: var(--c-text-muted); text-decoration: none; }
+  .footer-legal .legal-links { display: flex; gap: 24px; flex-wrap: wrap; }
+
+  /* ===== Responsiivisuus ===== */
+  @media (max-width: 1000px) {
+    .hero-split { grid-template-columns: 1fr; gap: 32px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 760px) {
+    h1 { font-size: 34px; }
+    h2 { font-size: 26px; }
+    .nav-main { display: none; }
+    .nav-toggle { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 1px solid var(--c-border-strong); border-radius: var(--r-sm); background: var(--c-bg); color: var(--c-text); cursor: pointer; }
+    .site-header.nav-open .nav-main { display: block; position: absolute; top: 100%; left: 0; right: 0; background: var(--c-bg); border-bottom: 1px solid var(--c-border); box-shadow: 0 8px 20px rgba(0,0,0,.06); padding: 8px 24px 16px; }
+    .site-header.nav-open .nav-list { flex-direction: column; gap: 0; }
+    .site-header.nav-open .nav-list a { display: block; padding: 13px 0; border-bottom: 1px solid var(--c-border); font-size: 15px; }
+    .site-header.nav-open .nav-list a[aria-current="page"]::after { display: none; }
+    .hero-ctas .btn { flex: 1; }
+    .orkla-banner { flex-direction: column; align-items: flex-start; gap: 16px; padding: 24px; }
+    .footer-grid { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+  <a class="skip" href="#main">Siirry sisältöön</a>
+
+  <!-- ===== HEADER (yhteinen chrome) ===== -->
+  <header class="site-header">
+    <div class="nav-inner">
+      <a href="/" class="logo" aria-label="Condite — etusivu">CONDITE</a>
+      <nav class="nav-main" id="primary-nav" aria-label="Päänavigaatio">
+        <ul class="nav-list">
+          <li><a href="/tuotteet/">Tuotteet</a></li>
+          <li><a href="/toimialat/">Toimialat</a></li>
+          <li><a href="/reseptit/">Reseptit</a></li>
+          <li><a href="/tuotekehitys/">Tuotekehitys</a></li>
+          <li><a href="/yritys/" aria-current="page">Yritys</a></li>
+          <li><a href="/yhteys/">Yhteys</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <span class="lang" role="group" aria-label="Kieli">
+          <a href="#" aria-current="true" lang="fi">FI</a>
+          <a href="#" lang="sv">SV</a>
+          <a href="#" lang="en">EN</a>
+        </span>
+        <a href="/kirjaudu/" class="btn btn-sm"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Kirjaudu</a>
+        <button class="nav-toggle" type="button" aria-label="Avaa valikko" aria-expanded="false" aria-controls="primary-nav"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Murupolku -->
+  <nav class="crumbs" aria-label="Murupolku">
+    <ol>
+      <li><a href="/">Etusivu</a></li>
+      <li class="sep" aria-hidden="true">›</li>
+      <li><a href="/yritys/">Yritys</a></li>
+      <li class="sep" aria-hidden="true">›</li>
+      <li aria-current="page">Vastuullisuus</li>
+    </ol>
+  </nav>
+
+  <main id="main">
+
+    <!-- ===== S1 HERO — DS hero-split (avoin) ===== -->
+    <section class="block first hero" aria-labelledby="hero-h1">
+      <div class="hero-split">
+        <div class="hero-body">
+          <p class="eyebrow">Vastuullisuus</p>
+          <h1 id="hero-h1">Vastuullisuus, jonka voit jäljittää</h1>
+          <p class="intro">Ammattiostaja tarvitsee enemmän kuin lupauksia. Avaamme raaka-aineidemme alkuperän, toimitusketjumme ja laadunhallintamme — osana Orkla Food Ingredientsin vastuullisuusohjelmaa.</p>
+          <div class="hero-ctas">
+            <a class="btn btn-primary" href="/yhteys/">Ota yhteyttä</a>
+            <a class="btn btn-outline" href="#laatu">Katso laatu ja sertifikaatit</a>
+          </div>
+        </div>
+        <div class="hero-media">
+          <div class="ph ph-4-3"><i class="fa-regular fa-image" aria-hidden="true"></i>Hero-media 4:3 — alkuperä / toimitusketju</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== S2 KEHYS — DS tint-band + section-head + .note (avoin) ===== -->
+    <!-- TODO K5: Orklan vastuullisuusohjelman viralliset painopisteet + sanoitus Conditen kontekstissa -->
+    <section class="band" aria-labelledby="frame-h2">
+      <div class="block">
+        <div class="section-head">
+          <p class="eyebrow">Kehys</p>
+          <h2 id="frame-h2">Osa Orklan vastuullisuusohjelmaa</h2>
+          <p class="intro">Kuulumme Orkla Food Ingredients -konserniin, jonka vastuullisuustyö ohjaa myös meidän toimintaamme. Se tarkoittaa yhteisiä periaatteita hankinnassa, ympäristössä ja laadunhallinnassa — ja taustaa, joka ei katoa toimituskaudesta toiseen.</p>
+        </div>
+        <div class="note" style="margin-top:24px;max-width:760px">
+          <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+          <span>[VAHVISTA K5: Orklan vastuullisuusohjelman viralliset painopisteet ja sanoitus Conditen kontekstissa — älä julkaise lukuja tai lupauksia ilman vahvistusta.]</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== S3 OSA-ALUEET (PILARIT) — DS value-grid + card-usp (avoin) ===== -->
+    <!-- TODO K5: mappaa Orklan ohjelman pilareihin; 3 tai 4 korttia (grid skaalautuu). -->
+    <section class="block" aria-labelledby="pillars-h2">
+      <div class="section-head" style="margin-bottom:32px">
+        <p class="eyebrow">Osa-alueet</p>
+        <h2 id="pillars-h2">Mistä vastuullisuutemme rakentuu</h2>
+      </div>
+      <div class="value-grid" id="pillar-grid"></div>
+    </section>
+
+    <!-- ===== S4 TOIMITUSKETJU — JAETTU vsteps-pystystepperi (avoin) ===== -->
+    <!-- TODO K5: alkuperä-/Naantali-faktat. Tila: piilota tyhjä vaihe (PAGE.steps[].show=false). -->
+    <section class="block" aria-labelledby="chain-h2">
+      <div class="section-head" style="margin-bottom:32px">
+        <p class="eyebrow">Toimitusketju</p>
+        <h2 id="chain-h2">Läpinäkyvä ketju alkuperästä toimitukseen</h2>
+        <p class="intro">Toimitusvarmuus on ammattikäytön perusta. Näin raaka-aine kulkee meiltä sinulle.</p>
+      </div>
+      <div class="vproc">
+        <ol class="vsteps" id="chain-steps" aria-label="Toimitusketjun vaiheet"></ol>
+      </div>
+    </section>
+
+    <!-- ===== S5 LAADUNHALLINTA & SERTIFIKAATIT (K1 — kotipaikka) — avoin ===== -->
+    <!-- TODO K1: mitkä sertifikaatit/merkit voidaan julkaista. ÄLÄ keksi — kaikki [VAHVISTA].
+         Tila: jos sertifikaatteja ei vahvisteta → PAGE.certs.mode = "principles"
+         (laadunhallinnan periaatteet, card-usp-ruudukko); älä renderöi tyhjiä sertifikaattilogoja. -->
+    <section class="block" id="laatu" aria-labelledby="cert-h2">
+      <div class="section-head" style="margin-bottom:32px">
+        <p class="eyebrow">Laatu ja tausta</p>
+        <h2 id="cert-h2">Sertifioitu ja luotettava kumppani</h2>
+      </div>
+      <div id="cert-grid"></div>
+      <div class="note" id="cert-note" style="margin-top:24px;max-width:760px" hidden></div>
+    </section>
+
+    <!-- ===== S6 ORKLA-TAUSTA — DS tumma orkla-banner (avoin) ===== -->
+    <section class="block" aria-labelledby="orkla-h2">
+      <div class="orkla-banner">
+        <span class="ob-ico" aria-hidden="true"><i class="fa-solid fa-earth-europe"></i></span>
+        <div class="ob-body">
+          <p class="ob-eyebrow">Taustamme</p>
+          <strong id="orkla-h2">Osa Orkla Food Ingredientsia</strong>
+          <p>Orkla on yksi Pohjoismaiden suurimmista elintarvikealan toimijoista. Tausta tuo vastuullisuustyöhön resursseja ja jatkuvuutta, jotka näkyvät asiakkaalle vakautena.</p>
+          <a class="ob-link" href="/yritys/">Tutustu Conditeen <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== S7 LOPPU-CTA / REITIT — DS end-cta (avoin; pää-CTA Ota yhteyttä) ===== -->
+    <section class="block last" aria-labelledby="end-h2">
+      <div class="end-cta">
+        <div class="end-cta-inner">
+          <p class="eyebrow">Mennäänkö eteenpäin?</p>
+          <h2 id="end-h2">Keskustellaan yhteistyöstä</h2>
+          <p class="intro" style="margin-left:auto;margin-right:auto">Arvioitko meitä toimittajana? Kerro tarpeestasi — käymme läpi alkuperän, laadunhallinnan ja toimitusvarmuuden juuri sinun käyttöösi.</p>
+          <div class="ctas">
+            <a class="btn btn-primary" href="/yhteys/">Ota yhteyttä</a>
+          </div>
+          <div class="end-routes" id="end-routes"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER (yhteinen chrome) ===== -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <a href="/" class="logo" aria-label="Condite — etusivu">CONDITE</a>
+          <p class="footer-blurb">Elintarvikealan raaka-aineiden maahantuoja ja kehityskumppani. Osa Orkla Food Ingredientsia.</p>
+        </div>
+        <div>
+          <h4>Sivusto</h4>
+          <ul>
+            <li><a href="/tuotteet/">Tuotteet</a></li>
+            <li><a href="/toimialat/">Toimialat</a></li>
+            <li><a href="/reseptit/">Reseptit</a></li>
+            <li><a href="/tuotekehitys/">Tuotekehitys</a></li>
+            <li><a href="/yritys/">Yritys</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Yritys</h4>
+          <ul>
+            <li><a href="/yritys/">Tietoa meistä</a></li>
+            <li><a href="/yritys/vastuullisuus/">Vastuullisuus</a></li>
+            <li><a href="/tuotekehitys/makupaja/">Makupaja</a></li>
+            <li><a href="/yhteys/">Ota yhteyttä</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Uutiskirje</h4>
+          <label for="news-email" style="display:block;font-size:14px;color:var(--c-text-2);margin-bottom:8px">Tilaa ajankohtaiset uutiset ja sovellukset.</label>
+          <div class="news">
+            <input id="news-email" type="email" placeholder="sähköposti@yritys.fi" aria-label="Sähköpostiosoite">
+            <button type="button">Tilaa</button>
+          </div>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <span>© 2026 Condite Oy · Osa Orkla Food Ingredientsia</span>
+        <div class="legal-links">
+          <a href="/tietosuoja/">Tietosuoja</a>
+          <a href="/evasteet/">Evästeet</a>
+          <a href="/saavutettavuus/">Saavutettavuusseloste</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== Rakenteinen data (SEO): WebPage + Organization(parentOrganization=Orkla) + BreadcrumbList ===== -->
+  <script type="application/ld+json" id="ld-json"></script>
+
+  <!-- ===== Sisältökonfiguraatio + render (config-driven, ei buildia) ===== -->
+  <script>
+  (function () {
+    "use strict";
+
+    var PAGE = {
+      // S3 — osa-alueet / pilarit (DS card-usp). 3 tai 4 korttia. [VAHVISTA K5].
+      //       Jos Ympäristö-sisältöä ei ole → poista rivi, grid tasapainottuu (3 korttia).
+      pillars: [
+        { icon: "fa-solid fa-handshake-angle", title: "Vastuullinen hankinta", text: "Valikoimamme tuotteet ja brändit on valittu vastuullisilta toimittajilta." },
+        { icon: "fa-solid fa-route", title: "Alkuperä & jäljitettävyys", text: "Tiedämme mistä raaka-aineet tulevat — ja kerromme sen." },
+        { icon: "fa-solid fa-leaf", title: "Ympäristö", text: "[TÄYTTÖ K5: Orklan ympäristötavoitteet / pakkaukset / hävikki.]" },
+        { icon: "fa-solid fa-clipboard-check", title: "Laadunhallinta", text: "Sertifioidut prosessit varmistavat tasalaadun erästä toiseen." }
+      ],
+
+      // S4 — toimitusketju (jaettu vsteps, config-muoto {icon,title,desc}). show:false piilottaa vaiheen.
+      //       [TÄYTTÖ K5] alkuperä-/Naantali-faktat. "Toimitusvarmuus / Orkla" voidaan näyttää aina.
+      steps: [
+        { icon: "fa-solid fa-globe",      title: "Alkuperä",        desc: "[TÄYTTÖ K5: alkuperämaat / toimittajaverkosto / valintaperusteet.]" },
+        { icon: "fa-solid fa-warehouse",  title: "Varastointi",     desc: "[TÄYTTÖ K5: Naantali / varastokapasiteetti / kylmäketju.]" },
+        { icon: "fa-solid fa-truck-fast", title: "Toimitusvarmuus", desc: "Orklan tausta tuo jatkuvuutta ja vakautta toimituksiin." }
+      ],
+
+      // S5 — laadunhallinta & sertifikaatit (K1 kotipaikka).
+      //   mode "certs"      → cert-card-ruudukko (5.6c), kun sertifikaatit vahvistettu.
+      //   mode "principles" → card-usp-ruudukko (laadunhallinnan periaatteet), kun sertifikaatteja EI vahvisteta.
+      certs: {
+        mode: "certs",
+        note: "[VAHVISTA K1: mitkä sertifikaatit (esim. ISO 22000 / FSSC 22000), merkit ja laadunhallinnan periaatteet voidaan julkaista. Jos ei vielä vahvisteta → mode:\"principles\" (periaatteet card-usp-ruudukkona), ei tyhjiä sertifikaattilogoja.]",
+        items: [
+          { icon: "fa-solid fa-certificate", title: "[Sertifikaatti, esim. ISO 22000]", text: "[TÄYTTÖ K1: mitä sertifikaatti takaa.]" },
+          { icon: "fa-solid fa-shield-halved", title: "[Sertifikaatti, esim. FSSC 22000]", text: "[TÄYTTÖ K1: lyhyt kuvaus.]" },
+          { icon: "fa-solid fa-leaf", title: "[Sertifikaatti / merkki]", text: "[TÄYTTÖ K1: esim. luomu / vastuullisuusmerkki.]" }
+        ],
+        // Käytetään vain mode:"principles" -tilassa (card-usp):
+        principles: [
+          { icon: "fa-solid fa-clipboard-check", title: "[Laadunhallinnan periaate]", text: "[TÄYTTÖ K1: esim. dokumentoidut prosessit, jäljitettävyys, toimittaja-auditoinnit.]" },
+          { icon: "fa-solid fa-shield-halved", title: "[Laadunhallinnan periaate]", text: "[TÄYTTÖ K1: esim. allergeenien hallinta / omavalvonta.]" },
+          { icon: "fa-solid fa-rotate", title: "[Laadunhallinnan periaate]", text: "[TÄYTTÖ K1: esim. poikkeamien käsittely / takaisinveto.]" }
+        ]
+      },
+
+      // S7 — sekundääriset reitit (pää-CTA Ota yhteyttä on staattisesti HTML:ssä)
+      routes: [
+        { label: "Food Industry -ratkaisut", href: "/toimialat/food-industry/" },
+        { label: "Private Label -prosessi", href: "/toimialat/private-label/" },
+        { label: "Tutustu Conditeen", href: "/yritys/" }
+      ]
+    };
+
+    function el(html) { var t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstChild; }
+    function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]; }); }
+
+    // S3 Pilarit — DS card-usp
+    var pillarGrid = document.getElementById("pillar-grid");
+    PAGE.pillars.forEach(function (p) {
+      pillarGrid.appendChild(el(
+        '<div class="card-usp">' +
+          '<span class="ic" aria-hidden="true"><i class="' + esc(p.icon) + '"></i></span>' +
+          '<h3>' + esc(p.title) + '</h3>' +
+          '<p>' + esc(p.text) + '</p>' +
+        '</div>'
+      ));
+    });
+
+    // S4 Toimitusketju — JAETTU renderVSteps (kopioitu komponentista; lisätty show:false-suodatin)
+    function renderVSteps(steps, mountId) {
+      var mount = document.getElementById(mountId);
+      if (!mount || !steps) return;
+      steps.filter(function (s) { return s.show !== false; }).forEach(function (s) {
+        mount.appendChild(el(
+          '<li class="vstep">' +
+            '<span class="vstep-node"><span class="vstep-ic"><i class="' + esc(s.icon) + '" aria-hidden="true"></i></span></span>' +
+            '<div class="vstep-body">' +
+              '<h3>' + esc(s.title) + '</h3>' +
+              '<p>' + esc(s.desc) + '</p>' +
+            '</div>' +
+          '</li>'
+        ));
+      });
+    }
+    renderVSteps(PAGE.steps, "chain-steps");
+
+    // S5 Laadunhallinta & sertifikaatit — mode-ohjattu (K1)
+    var certGrid = document.getElementById("cert-grid");
+    var c = PAGE.certs;
+    if (c.mode === "principles") {
+      certGrid.className = "value-grid";
+      c.principles.forEach(function (it) {
+        certGrid.appendChild(el(
+          '<div class="card-usp">' +
+            '<span class="ic" aria-hidden="true"><i class="' + esc(it.icon) + '"></i></span>' +
+            '<h3>' + esc(it.title) + '</h3>' +
+            '<p>' + esc(it.text) + '</p>' +
+          '</div>'
+        ));
+      });
+    } else {
+      certGrid.className = "cert-grid";
+      c.items.forEach(function (it) {
+        certGrid.appendChild(el(
+          '<article class="cert-card">' +
+            '<span class="cert-ico" aria-hidden="true"><i class="' + esc(it.icon) + '"></i></span>' +
+            '<div><h3>' + esc(it.title) + '</h3><p>' + esc(it.text) + '</p></div>' +
+          '</article>'
+        ));
+      });
+    }
+    if (c.note) {
+      var note = document.getElementById("cert-note");
+      note.hidden = false;
+      note.innerHTML = '<i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>' + esc(c.note) + '</span>';
+    }
+
+    // S7 Reitit (sekundääriset)
+    var routes = document.getElementById("end-routes");
+    PAGE.routes.forEach(function (r) {
+      routes.appendChild(el(
+        '<a class="btn-link" href="' + esc(r.href) + '">' + esc(r.label) + ' <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>'
+      ));
+    });
+
+    // SEO — WebPage + Organization(parentOrganization=Orkla) + BreadcrumbList
+    var origin = "https://www.condite.fi";
+    var ld = {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebPage",
+          "name": "Vastuullisuus ja toimitusketju | Condite",
+          "description": "Conditen raaka-aineiden alkuperä, vastuullinen toimitusketju ja laadunhallinta — osana Orkla Food Ingredientsin vastuullisuusohjelmaa.",
+          "url": origin + "/yritys/vastuullisuus/"
+        },
+        {
+          "@type": "Organization",
+          "name": "Condite Oy",
+          "url": origin + "/",
+          "description": "Elintarvikealan raaka-aineiden maahantuoja ja kehityskumppani.",
+          "parentOrganization": { "@type": "Organization", "name": "Orkla Food Ingredients" }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Etusivu", "item": origin + "/" },
+            { "@type": "ListItem", "position": 2, "name": "Yritys", "item": origin + "/yritys/" },
+            { "@type": "ListItem", "position": 3, "name": "Vastuullisuus", "item": origin + "/yritys/vastuullisuus/" }
+          ]
+        }
+      ]
+    };
+    document.getElementById("ld-json").textContent = JSON.stringify(ld);
+
+    // Mobiilinavigaation avaus/sulku (hampurilainen ei saa olla kuollut kontrolli)
+    var navToggle = document.querySelector(".nav-toggle");
+    var header = document.querySelector(".site-header");
+    if (navToggle && header) {
+      navToggle.addEventListener("click", function () {
+        var open = header.classList.toggle("nav-open");
+        navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+        navToggle.setAttribute("aria-label", open ? "Sulje valikko" : "Avaa valikko");
+      });
+    }
+  })();
+  </script>
+</body>
+</html>

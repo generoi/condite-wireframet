@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brändit — omat ja edustetut brändit yhdestä paikasta | Condite</title>
+<meta name="description" content="Conditen omat brändit (oma kehitys ja tuotanto Naantalissa) sekä edustetut brändit — Capsi, Promix, Xocofine ja yli 160 muuta. Löydä brändi ja sen tuotteet.">
+<link rel="canonical" href="https://www.condite.fi/brandit/">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!--
+  CONDITE.FI — BRÄNDIHUB (BRÄNDIEN KOONTISIVU) · KIILLOTETTU WIREFRAME (FI)
+  Pohja: approved design system (condite_design_system.html) — softened tonal blue.
+  Sisarsivu Toimialat-/Tuotteet-hubeille; sama chrome (sticky nav + crumbs + footer + render-IIFE).
+
+  YDINJAKO: omat brändit ensin (erottautuja: oma kehitys/tuotanto) → edustetut brändit (kattavuus: logoseinä).
+  PÄÄSYTASOT: koko hub AVOIN (brändien löydettävyys tukee SEO:ta ja anonyymiä kävijää).
+  Ei liidi-/login-gatingia hubilla (liidi syntyy omabrändisivun / Yhteyden kautta).
+
+  DATAHUOMIO (Olli/Miro): "tuotteet pitää osoittaa tietylle brändille käsin" — brändi ei ole
+  luotettavasti omana kenttänään tuotedatassa (joskus category ID:n takana, joskus tuotenimessä).
+  → WP-vaiheessa brändi on oma taksonomia, ja tuote–brändi-mappaus tehdään kertaluontoisesti käsin
+  (tai puolikoneellisesti nimestä päätellen + tarkistus). Tämä koskee myös logoseinän linkitettyjä
+  brändejä: linkki brändifasettiin toimii vain mapatuille tuotteille.
+
+  NAVI-PÄÄTÖS: Brändihub = OMA top-level-kohta päänavigaatiossa (ohjeen mukaan).
+  Lisätty "Brändit" naviin (Tuotteet jälkeen). HUOM: sama navi-kohta tulee propagoida sisarsivuille
+  (kuten Yhteys-dropdown -sweep) — tällä sivulla aria-current="page".
+
+  POIKKEUS: EI Makupaja-nostoa (lukittu päätös) — brändien löytäminen ≠ kehityspalvelu.
+
+  §8-TARKISTUSLISTA (täytetty):
+  · Laskeutumisvalmius: crumbs · kehystyshero · näkyvä navi → seisoo omillaan
+  · Ratkaisulähtöinen otsikointi: "Omat brändimme" / "Edustamamme brändit" (kävijän kieli)
+  · Kanava→laskeutuminen: suora brändihaku + selailupolku; hero + kortit palvelevat molempia
+  · Verkkosivu vs verkkokauppa: hub esittelee + reitittää; tilaus tuotekortin/verkkokaupan kautta
+  · Pää-CTA: "Tutustu omiin brändeihimme" (ankkuri S2 = erottautuja); sekundääri → Tuotteet
+  · Pääsytaso per lohko: koko hub avoin
+  · Ei umpikujia: jokainen lohko reitittää (brändisivu / tuotelistaus / tuotteet-hub / yhteys)
+
+  OMAT BRÄNDIT (S2): kukin brändi = otsikko + logo + ingressi + tuotekaruselli + CTA "Tutustu brändiin".
+  Kaikki 4 yhdenmukaisia (myös Condite → sama CTA, brändisivu oletettu tulevan). Tuotekaruselli:
+  symmetrinen määrä placeholder-tuotteita (8/brändi) + "Katso kaikki" → tuotelistaus brändifasetilla.
+  K-item: brändiasetit (logot, ingressit) ja oikeat karusellituotteet (Condite_tuotteet.xlsx).
+-->
+<style>
+  :root {
+    /* Taustat */
+    --c-bg:#ffffff; --c-bg-soft:#f7f7f7; --c-bg-tint:#eef6fb;
+    /* Teksti */
+    --c-text:#1d1d1f; --c-text-2:#555555; --c-text-muted:#6f6f6f;
+    /* Viivat */
+    --c-border:#e3e3e3; --c-border-strong:#cfcfcf; --c-divider:#d8d8d8;
+    /* Kuvapaikat */
+    --c-ph-bg:#ececec; --c-ph-border:#c8c8c8;
+    /* Korostus — pehmeä sininen (DS) */
+    --c-accent:#7fc8ec; --c-accent-ink:#0a6e9b; --c-on-accent:#0a4f72;
+    --c-accent-soft:#e3f2fb; --c-suits-border:#b7def4;
+    /* Pyöristykset */
+    --r-sm:4px; --r-md:8px; --r-lg:12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--c-bg); color: var(--c-text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+    font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased;
+  }
+  /* Shell-gotcha: author-display:flex ohittaa UA-säännön — pidä tämä mukana */
+  [hidden] { display: none !important; }
+  a { color: var(--c-accent-ink); }
+  img { max-width: 100%; }
+
+  /* Saavutettavuus */
+  .skip {
+    position: absolute; left: 8px; top: -48px; z-index: 100;
+    background: var(--c-accent); color: var(--c-on-accent); font-weight: 700;
+    padding: 10px 16px; border-radius: var(--r-sm); text-decoration: none; transition: top .15s;
+  }
+  .skip:focus { top: 8px; }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible {
+    outline: 2.5px solid var(--c-accent); outline-offset: 2px; border-radius: var(--r-sm);
+  }
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+
+  /* Layout */
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  .block { max-width: 1200px; margin: 0 auto; padding: 64px 24px 0; }
+  .block.first { padding-top: 40px; }
+  .block.last { padding-bottom: 64px; }
+  .band { border-top: 1px solid var(--c-suits-border); border-bottom: 1px solid var(--c-suits-border); background: var(--c-bg-tint); margin-top: 64px; }
+  .band .block { padding-top: 64px; padding-bottom: 64px; }
+
+  /* Tyypit */
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--c-accent-ink); margin: 0 0 8px; }
+  h1 { font-size: 44px; line-height: 1.12; letter-spacing: -.01em; margin: 0 0 20px; font-weight: 700; }
+  h2 { font-size: 30px; line-height: 1.18; margin: 0; font-weight: 700; }
+  .intro { margin: 16px 0 0; color: var(--c-text-2); }
+  .section-head { max-width: 760px; }
+
+  /* Painikkeet */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: var(--r-sm); font-weight: 600; font-size: 16px; text-decoration: none; line-height: 1.2; cursor: pointer; padding: 13px 22px; border: 1.5px solid transparent; }
+  .btn-primary { border-color: var(--c-accent); background: var(--c-accent); color: var(--c-on-accent); }
+  .btn-outline { border-color: var(--c-accent-ink); background: var(--c-bg); color: var(--c-accent-ink); }
+  .btn-sm { padding: 9px 16px; font-size: 14px; border-color: var(--c-accent-ink); background: var(--c-bg); color: var(--c-accent-ink); }
+  .btn-link { color: var(--c-accent-ink); text-decoration: none; font-weight: 600; font-size: 14px; display: inline-flex; gap: 6px; align-items: center; white-space: nowrap; }
+
+  /* Header */
+  .site-header { border-bottom: 1px solid var(--c-border); background: var(--c-bg); position: sticky; top: 0; z-index: 50; }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; min-height: 64px; gap: 32px; }
+  .logo { flex: none; width: 110px; height: 34px; background: var(--c-ph-bg); border: 1px dashed var(--c-ph-border); display: flex; align-items: center; justify-content: center; color: var(--c-text-2); font-size: 12px; border-radius: var(--r-sm); letter-spacing: .5px; font-weight: 700; text-decoration: none; }
+  .nav-main { display: flex; align-items: center; justify-content: center; flex: 1; }
+  .nav-list { list-style: none; margin: 0; padding: 0; display: flex; gap: 2px; }
+  .nav-list a { text-decoration: none; padding: 8px 12px; border-radius: var(--r-sm); font-weight: 500; color: var(--c-text); font-size: 14px; white-space: nowrap; position: relative; }
+  .nav-list a:hover { color: var(--c-accent-ink); }
+  .nav-list a[aria-current="page"] { color: var(--c-accent-ink); font-weight: 700; }
+  .nav-list a[aria-current="page"]::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: 0; height: 2px; background: var(--c-accent); border-radius: 2px; }
+  /* Pudotusvalikot (Yhteys) */
+  .nav-list > li.has-dropdown { position: relative; }
+  .nav-list .caret { font-size: 9px; margin-left: 4px; color: var(--c-text-muted); }
+  .nav-dropdown { position: absolute; top: 100%; left: 0; min-width: 220px; background: var(--c-bg); border: 1px solid var(--c-border); border-radius: var(--r-md); box-shadow: 0 10px 26px rgba(10,79,114,.12); padding: 6px 0; margin-top: 4px; list-style: none; display: none; z-index: 60; }
+  .nav-list > li.has-dropdown:hover > .nav-dropdown,
+  .nav-list > li.has-dropdown:focus-within > .nav-dropdown,
+  .nav-list > li.has-dropdown.open > .nav-dropdown { display: block; }
+  .nav-dropdown a { display: block; padding: 9px 16px; font-size: 14px; color: var(--c-text); font-weight: 500; white-space: nowrap; }
+  .nav-dropdown a::after { display: none !important; }
+  .nav-dropdown a:hover { background: var(--c-bg-soft); color: var(--c-accent-ink); }
+  .ext-ico { font-size: 10px; margin-left: 5px; opacity: .7; vertical-align: baseline; }
+  .nav-actions { flex: none; display: inline-flex; align-items: center; gap: 16px; }
+  .lang { display: inline-flex; align-items: center; gap: 2px; font-size: 14px; }
+  .lang a { text-decoration: none; padding: 3px 7px; border-radius: var(--r-sm); color: var(--c-text-muted); }
+  .lang a[aria-current="true"] { background: var(--c-bg-soft); color: var(--c-text); font-weight: 700; }
+  .nav-toggle { display: none; }
+
+  /* Murupolku */
+  .crumbs { max-width: 1200px; margin: 0 auto; padding: 14px 24px 0; font-size: 13px; color: var(--c-text-muted); }
+  .crumbs ol { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; }
+  .crumbs a { color: var(--c-text-2); text-decoration: none; }
+  .crumbs a:hover { color: var(--c-accent-ink); }
+  .crumbs li[aria-current="page"] { color: var(--c-text); font-weight: 600; }
+  .crumbs .sep { color: var(--c-border-strong); }
+
+  /* Hero */
+  .hero-inner { max-width: 880px; }
+  .hero .intro { font-size: 18px; max-width: 660px; }
+  .hero-ctas { margin: 28px 0 0; display: flex; gap: 12px; flex-wrap: wrap; }
+
+  /* Yleinen kuvapaikka */
+  .ph { background: var(--c-ph-bg); border: 1px dashed var(--c-ph-border); display: flex; align-items: center; justify-content: center; color: var(--c-text-2); font-size: 13px; gap: 6px; }
+  .ph i { opacity: .6; }
+
+  /* ===== S2 Omat brändit (erottautuja — ensin & näkyvimmin) =====
+     Kukin oma brändi = otsikko + logo + ingressi + tuotekaruselli + CTA "Tutustu brändiin". */
+  .brand-lead { max-width: 760px; }
+  /* minmax(0,1fr): sarake ei veny karusellin sisältöön — lapset rullaavat, sivu ei ylivuoda */
+  .own-brands { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; margin-top: 32px; }
+  .own-brand { border: 1px solid var(--c-border); border-radius: var(--r-lg); background: var(--c-bg); padding: 28px; }
+  .ob-head { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .ob-logo { flex: none; width: 150px; height: 60px; border-radius: var(--r-sm); background: var(--c-ph-bg); border: 1px dashed var(--c-ph-border); display: flex; align-items: center; justify-content: center; color: var(--c-text-2); font-weight: 700; font-size: 14px; text-align: center; padding: 8px; }
+  .ob-titles { flex: 1; min-width: 180px; display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+  .ob-titles h3 { font-size: 22px; margin: 0; }
+  .ob-head .ob-cta { flex: none; }
+  .ob-ingress { font-size: 15px; color: var(--c-text-2); margin: 16px 0 0; max-width: 72ch; }
+  /* Tuotekaruselli */
+  .ob-carousel-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 20px 0 12px; }
+  .ob-carousel-head .lbl { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--c-text-muted); }
+  .carousel-nav { display: flex; gap: 8px; }
+  .carousel-btn { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--c-accent-ink); background: var(--c-bg); color: var(--c-accent-ink); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; }
+  .carousel-btn:hover { background: var(--c-accent-soft); }
+  .carousel-btn:disabled { opacity: .35; cursor: default; }
+  /* min-width:0 estää grid-säiliön min-content-leveyden venyttämästä korttia/sivua (vaakaylivuoto) */
+  .ob-carousel { display: grid; grid-auto-flow: column; grid-auto-columns: 184px; gap: 16px; overflow-x: auto; min-width: 0; max-width: 100%; scroll-snap-type: x proximity; scroll-behavior: smooth; padding-bottom: 8px; }
+  .ob-carousel::-webkit-scrollbar { height: 8px; }
+  .ob-carousel::-webkit-scrollbar-track { background: var(--c-bg-soft); border-radius: 999px; }
+  .ob-carousel::-webkit-scrollbar-thumb { background: var(--c-border-strong); border-radius: 999px; }
+  .prod-card { scroll-snap-align: start; border: 1px solid var(--c-border); border-radius: var(--r-md); overflow: hidden; background: var(--c-bg); display: flex; flex-direction: column; }
+  .prod-card .ph { aspect-ratio: 4 / 3; border: 0; border-bottom: 1px dashed var(--c-ph-border); min-height: 0; }
+  .prod-card .pc-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; }
+  .prod-card .pc-name { font-size: 13px; font-weight: 600; color: var(--c-text); }
+  .prod-card .pc-meta { font-size: 12px; color: var(--c-text-muted); }
+  /* Karusellin viimeinen "katso kaikki" -ruutu (ei umpikujaa) */
+  .prod-all { scroll-snap-align: start; border: 1px dashed var(--c-suits-border); border-radius: var(--r-md); background: var(--c-bg-tint); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-decoration: none; color: var(--c-accent-ink); font-weight: 600; font-size: 14px; text-align: center; padding: 12px; }
+  .prod-all:hover { border-style: solid; }
+  .prod-all i { font-size: 18px; }
+
+  /* ===== S3 Edustetut brändit — logoseinä (kattavuus) ===== */
+  .logo-wall { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; margin-top: 32px; }
+  .logo-tile-rep { background: var(--c-bg); border: 1px solid var(--c-border); border-radius: var(--r-md); height: 80px; display: flex; align-items: center; justify-content: center; color: var(--c-text-2); font-weight: 600; font-size: 14px; text-align: center; padding: 8px; text-decoration: none; }
+  a.logo-tile-rep { transition: border-color .15s, box-shadow .15s, color .15s; }
+  a.logo-tile-rep:hover { border-color: var(--c-suits-border); box-shadow: 0 4px 14px rgba(10,79,114,.08); color: var(--c-accent-ink); }
+  .logo-tile-rep.more { background: transparent; border-style: dashed; color: var(--c-text-muted); font-weight: 700; }
+  .wall-note { margin-top: 20px; font-size: 13px; color: var(--c-text-muted); display: flex; align-items: center; gap: 8px; }
+  .wall-note i { color: var(--c-accent-ink); }
+
+  /* ===== S4 USP-kortit (strateginen arvolohko) ===== */
+  .usp-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 24px; margin-top: 32px; }
+  .card-usp { border: 1px solid var(--c-border); border-radius: var(--r-md); padding: 28px 24px; background: var(--c-bg); display: flex; flex-direction: column; gap: 8px; }
+  .card-usp .ic { width: 48px; height: 48px; border-radius: var(--r-md); background: var(--c-accent-soft); color: var(--c-accent-ink); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 8px; }
+  .card-usp h3 { font-size: 18px; margin: 0; }
+  .card-usp p { font-size: 14px; color: var(--c-text-2); margin: 0; }
+
+  /* ===== S5 Loppu-CTA — tintattu paneeli ===== */
+  .end-cta { text-align: center; background: var(--c-bg-tint); border: 1px solid var(--c-suits-border); border-radius: var(--r-lg); padding: 56px 32px; }
+  .end-cta-inner { max-width: 660px; margin: 0 auto; }
+  .end-cta .ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 24px; align-items: center; }
+  @media (max-width: 760px) { .end-cta { padding: 40px 20px; } }
+
+  /* Footer */
+  .site-footer { background: var(--c-bg-soft); border-top: 1px solid var(--c-border); padding: 48px 0 32px; margin-top: 64px; }
+  .footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--c-border); }
+  .footer-grid h4 { font-size: 14px; text-transform: uppercase; letter-spacing: .06em; margin: 0 0 16px; }
+  .footer-grid ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .footer-grid a { text-decoration: none; color: var(--c-text-2); font-size: 14px; }
+  .footer-grid a:hover { color: var(--c-accent-ink); }
+  .footer-blurb { font-size: 14px; color: var(--c-text-2); margin: 16px 0 0; max-width: 30ch; }
+  .news { display: flex; gap: 8px; }
+  .news input { flex: 1; min-width: 0; padding: 10px 12px; border-radius: var(--r-sm); border: 1px solid var(--c-border-strong); background: var(--c-bg); color: var(--c-text); font: inherit; font-size: 14px; }
+  .news button { padding: 10px 16px; border-radius: var(--r-sm); border: 1.5px solid var(--c-accent); background: var(--c-accent); color: var(--c-on-accent); font-weight: 700; font-size: 14px; cursor: pointer; }
+  .footer-legal { display: flex; justify-content: space-between; gap: 24px; padding-top: 24px; flex-wrap: wrap; font-size: 12px; color: var(--c-text-muted); }
+  .footer-legal a { color: var(--c-text-muted); text-decoration: none; }
+  .footer-legal .legal-links { display: flex; gap: 24px; flex-wrap: wrap; }
+
+  /* ===== Responsiivisuus ===== */
+  @media (max-width: 1000px) {
+    .usp-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 760px) {
+    h1 { font-size: 34px; }
+    h2 { font-size: 26px; }
+    .nav-main { display: none; }
+    .nav-toggle { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 1px solid var(--c-border-strong); border-radius: var(--r-sm); background: var(--c-bg); color: var(--c-text); cursor: pointer; }
+    .site-header.nav-open .nav-main { display: block; position: absolute; top: 100%; left: 0; right: 0; background: var(--c-bg); border-bottom: 1px solid var(--c-border); box-shadow: 0 8px 20px rgba(0,0,0,.06); padding: 8px 24px 16px; }
+    .site-header.nav-open .nav-list { flex-direction: column; gap: 0; }
+    .site-header.nav-open .nav-list a { display: block; padding: 13px 0; border-bottom: 1px solid var(--c-border); font-size: 15px; }
+    .site-header.nav-open .nav-list a[aria-current="page"]::after { display: none; }
+    .site-header.nav-open .nav-dropdown { position: static; display: block; box-shadow: none; border: 0; padding: 0 0 6px 14px; margin: 0; min-width: 0; }
+    .site-header.nav-open .nav-dropdown a { padding: 10px 0; font-size: 14px; color: var(--c-text-2); }
+    .nav-list .caret { display: none; }
+    .hero-ctas .btn { flex: 1; }
+    .own-brand { padding: 20px; }
+    .ob-head .ob-cta { width: 100%; }
+    .footer-grid { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .ob-carousel { scroll-behavior: auto; }
+    a.logo-tile-rep { transition: none; }
+  }
+</style>
+</head>
+<body>
+  <a class="skip" href="#main">Siirry sisältöön</a>
+
+  <!-- ===== HEADER (yhteinen chrome) ===== -->
+  <header class="site-header">
+    <div class="nav-inner">
+      <a href="/" class="logo" aria-label="Condite — etusivu">CONDITE</a>
+      <nav class="nav-main" id="primary-nav" aria-label="Päänavigaatio">
+        <ul class="nav-list">
+          <li><a href="/tuotteet/">Tuotteet</a></li>
+          <li><a href="/brandit/" aria-current="page">Brändit</a></li>
+          <li><a href="/toimialat/">Toimialat</a></li>
+          <li><a href="/reseptit/">Reseptit</a></li>
+          <li><a href="/tuotekehitys/">Tuotekehitys</a></li>
+          <li><a href="/yritys/">Yritys</a></li>
+          <li class="has-dropdown">
+            <a href="/yhteys/" aria-haspopup="true" aria-expanded="false">Yhteys <span class="caret" aria-hidden="true">▾</span></a>
+            <ul class="nav-dropdown">
+              <li><a href="/yhteys/">Yhteys</a></li>
+              <li><a href="/yhteys/laskutusohjeet/">Laskutusohjeet</a></li>
+              <li><a href="https://ura.condite.fi" target="_blank" rel="noopener" aria-label="Avoimet työpaikat (avautuu ura.condite.fi)">Avoimet työpaikat <i class="fa-solid fa-arrow-up-right-from-square ext-ico" aria-hidden="true"></i></a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <span class="lang" role="group" aria-label="Kieli">
+          <a href="#" aria-current="true" lang="fi">FI</a>
+          <a href="#" lang="sv">SV</a>
+          <a href="#" lang="en">EN</a>
+        </span>
+        <a href="/kirjaudu/" class="btn btn-sm"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Kirjaudu</a>
+        <button class="nav-toggle" type="button" aria-label="Avaa valikko" aria-expanded="false" aria-controls="primary-nav"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Murupolku -->
+  <nav class="crumbs" aria-label="Murupolku">
+    <ol>
+      <li><a href="/">Etusivu</a></li>
+      <li class="sep" aria-hidden="true">›</li>
+      <li aria-current="page">Brändit</li>
+    </ol>
+  </nav>
+
+  <main id="main">
+
+    <!-- ===== S1 HERO — kehystys (avoin) ===== -->
+    <section class="block first hero" aria-labelledby="hero-h1">
+      <div class="hero-inner">
+        <p class="eyebrow">Brändit</p>
+        <h1 id="hero-h1">Omat ja edustetut brändit — yhdestä paikasta</h1>
+        <p class="intro">[TÄYTTÖ: kehystys kävijän näkökulmasta — Conditella on omia brändejä (oma kehitys ja tuotanto) ja se edustaa alan johtavia brändejä. Kaikki yhdestä paikasta: löydä brändi ja siirry sen tuotteisiin.]</p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="#omat-brandit">Tutustu omiin brändeihimme</a>
+          <a class="btn btn-outline" href="/tuotteet/">Selaa kaikkia tuotteita</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== S2 OMAT BRÄNDIT — erottautuja, ensin & näkyvimmin (avoin) ===== -->
+    <section class="block" id="omat-brandit" aria-labelledby="omat-h2">
+      <div class="section-head">
+        <p class="eyebrow">Erottautujamme</p>
+        <h2 id="omat-h2">Omat brändimme</h2>
+        <p class="intro brand-lead">[TÄYTTÖ: omat brändit ovat itse kehitettyjä — Capsi ja Promix valmistetaan omalla tehtaalla Naantalissa. Tässä näkyy ”kehityskumppani, ei toimittaja”: emme vain välitä, vaan kehitämme ja tuotamme itse.]</p>
+      </div>
+      <div class="own-brands" id="own-brands"></div>
+    </section>
+
+    <!-- ===== S3 EDUSTETUT BRÄNDIT — kattavuus, yksi logoseinä (avoin) ===== -->
+    <section class="band" aria-labelledby="rep-h2">
+      <div class="block">
+        <div class="section-head">
+          <p class="eyebrow">Kattavuus</p>
+          <h2 id="rep-h2">Edustamamme brändit</h2>
+          <p class="intro">[TÄYTTÖ: edustamme alan johtavia brändejä ja olemme Orkla Food Ingredientsin edustaja Suomessa — kaikki tarvitsemasi yhdeltä toimittajalta.]</p>
+        </div>
+        <div class="logo-wall" id="logo-wall"></div>
+        <p class="wall-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Klikkaa brändiä nähdäksesi sen tuotteet. Näytämme tässä osan brändeistä — koko valikoima löytyy tuotehausta.</p>
+      </div>
+    </section>
+
+    <!-- ===== S4 STRATEGINEN ARVOLOHKO — miksi sinulle (avoin) ===== -->
+    <section class="block" aria-labelledby="usp-h2">
+      <div class="section-head">
+        <p class="eyebrow">Miksi tämä hyödyttää sinua</p>
+        <h2 id="usp-h2">Oma kehitys ja koko valikoima — saman katon alta</h2>
+        <p class="intro">[TÄYTTÖ: lyhyt silta — yhdistät omien brändien kehitysosaamisen ja laajan edustusvalikoiman yhteen kumppaniin.]</p>
+      </div>
+      <div class="usp-grid" id="usp-grid"></div>
+    </section>
+
+    <!-- ===== S5 LOPPU-CTA — ei umpikujia (avoin) ===== -->
+    <section class="block last" aria-labelledby="end-h2">
+      <div class="end-cta">
+        <div class="end-cta-inner">
+          <p class="eyebrow">Mennäänkö eteenpäin?</p>
+          <h2 id="end-h2">[TÄYTTÖ: eteneminen — esim. ”Etkö löytänyt etsimääsi brändiä?”]</h2>
+          <p class="intro" style="margin-left:auto;margin-right:auto">[TÄYTTÖ: selaa koko valikoimaa tai kysy meiltä — autamme löytämään oikean brändin ja tuotteen.]</p>
+          <div class="ctas">
+            <a class="btn btn-primary" href="/tuotteet/">Selaa tuotteita</a>
+            <a class="btn-link" href="/yhteys/">Kysy lisää brändeistä <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER (yhteinen chrome) ===== -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <a href="/" class="logo" aria-label="Condite — etusivu">CONDITE</a>
+          <p class="footer-blurb">Elintarvikealan raaka-aineiden maahantuoja ja kehityskumppani. Osa Orkla Food Ingredientsia.</p>
+        </div>
+        <div>
+          <h4>Sivusto</h4>
+          <ul>
+            <li><a href="/tuotteet/">Tuotteet</a></li>
+            <li><a href="/brandit/">Brändit</a></li>
+            <li><a href="/toimialat/">Toimialat</a></li>
+            <li><a href="/reseptit/">Reseptit</a></li>
+            <li><a href="/tuotekehitys/">Tuotekehitys</a></li>
+            <li><a href="/yritys/">Yritys</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Asiakkaalle</h4>
+          <ul>
+            <li><a href="/kirjaudu/">Kirjaudu verkkokauppaan</a></li>
+            <li><a href="/tuotekehitys/#makupaja">Makupaja</a></li>
+            <li><a href="/yhteys/">Ota yhteyttä</a></li>
+            <li><a href="/yhteys/">Yhteyshenkilöt</a></li>
+            <li><a href="/yhteys/laskutusohjeet/">Laskutusohjeet</a></li>
+            <li><a href="https://ura.condite.fi" target="_blank" rel="noopener" aria-label="Avoimet työpaikat (avautuu ura.condite.fi)">Avoimet työpaikat <i class="fa-solid fa-arrow-up-right-from-square ext-ico" aria-hidden="true"></i></a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Uutiskirje</h4>
+          <label for="news-email" style="display:block;font-size:14px;color:var(--c-text-2);margin-bottom:8px">Tilaa ajankohtaiset uutiset ja sovellukset.</label>
+          <div class="news">
+            <input id="news-email" type="email" placeholder="sähköposti@yritys.fi" aria-label="Sähköpostiosoite">
+            <button type="button">Tilaa</button>
+          </div>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <span>© 2026 Condite Oy · Osa Orkla Food Ingredientsia</span>
+        <div class="legal-links">
+          <a href="/tietosuoja/">Tietosuoja</a>
+          <a href="/evasteet/">Evästeet</a>
+          <a href="/saavutettavuus/">Saavutettavuusseloste</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== Rakenteinen data (SEO): CollectionPage + ItemList (omat brändit) + BreadcrumbList ===== -->
+  <script type="application/ld+json" id="ld-json"></script>
+
+  <!-- ===== Sisältökonfiguraatio + render (config-driven, ei buildia) ===== -->
+  <script>
+  (function () {
+    "use strict";
+
+    var PAGE = {
+      // S2 — OMAT brändit (4). Kukin: otsikko + logo + ingressi + tuotekaruselli + CTA "Tutustu brändiin".
+      //       Kaikki neljä yhdenmukaisia (myös Condite → sama CTA; brändisivu oletettu tulevan).
+      //       ingressi = [TÄYTTÖ] (Condite kirjoittaa). logoText + tuotteet = K-item (brändiasetit).
+      //       slug → tuotelistauksen brändifasetti ("Katso kaikki" -ruutu karusellin lopussa).
+      ownBrands: [
+        {
+          name: "Condite", slug: "condite", logoText: "[Condite-logo]", href: "/brandit/condite/",
+          ingress: "[TÄYTTÖ: Conditen oman brändin ingressi, 1–2 lausetta — mitä valikoima kattaa ja kenelle. Brändin valikoima/kuvaus = K-item.]"
+        },
+        {
+          name: "Capsi", slug: "capsi", logoText: "[Capsi-logo]", href: "/brandit/capsi/",
+          ingress: "[TÄYTTÖ: Capsi-ingressi, 1–2 lausetta — itse Naantalissa valmistettu valikoima ja sen käyttökohteet.]"
+        },
+        {
+          name: "Promix", slug: "promix", logoText: "[Promix-logo]", href: "/brandit/promix/",
+          ingress: "[TÄYTTÖ: Promix-ingressi, 1–2 lausetta — itse Naantalissa valmistettu valikoima ja sen käyttökohteet.]"
+        },
+        {
+          name: "Xocofine", slug: "xocofine", logoText: "[Xocofine-logo]", href: "/brandit/xocofine/",
+          ingress: "[TÄYTTÖ: Xocofine-ingressi, 1–2 lausetta — ammattilaissuklaat ja kuvertyyrit, mihin sopivat.]"
+        }
+      ],
+
+      // S3 — EDUSTETUT brändit (kuratoitu valikoima, EI kaikkia 173:a). + "ja yli 160 muuta".
+      //       href → tuotelistaus brändifasetilla niille joilla on tuotteita katalogissa; muut linkittöminä.
+      //       Brändi→tuote-kytkös: Condite_tuotteet.xlsx brändikenttä. logot/valinta = K-item.
+      repBrands: [
+        { name: "Dobla", href: "/tuotteet/?brandi=dobla" },
+        { name: "Credin", href: "/tuotteet/?brandi=credin" },
+        { name: "Sonneveld", href: "/tuotteet/?brandi=sonneveld" },
+        { name: "[Brändilogo]", href: "/tuotteet/?brandi=brandi-4" },
+        { name: "[Brändilogo]", href: "/tuotteet/?brandi=brandi-5" },
+        { name: "[Brändilogo]", href: "/tuotteet/?brandi=brandi-6" },
+        { name: "[Brändilogo]", href: "/tuotteet/?brandi=brandi-7" },
+        { name: "[Brändilogo]" },
+        { name: "[Brändilogo]" },
+        { name: "[Brändilogo]" },
+        { name: "[Brändilogo]" }
+      ],
+      repMore: "ja yli 160 muuta",
+
+      // S4 — strateginen arvolohko (3 USP): oma kehitys/tuotanto · Orkla-laatu/edustus · kaikki yhdestä paikasta
+      usps: [
+        { icon: "fa-solid fa-flask-vial", title: "Oma kehitys ja tuotanto", text: "[TÄYTTÖ: omat brändit kehitetään itse, Capsi & Promix valmistetaan Naantalissa — kehityskumppani, ei pelkkä toimittaja.]" },
+        { icon: "fa-solid fa-shield-halved", title: "Orkla-laatu ja -edustus", text: "[TÄYTTÖ: osa Orkla Food Ingredientsia — edustamme alan johtavia brändejä auditoidulla laadulla.]" },
+        { icon: "fa-solid fa-box-open", title: "Kaikki yhdestä paikasta", text: "[TÄYTTÖ: omat ja edustetut brändit saman katon alta — et tarvitse useampaa toimittajaa.]" }
+      ]
+    };
+
+    function el(html) { var t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstChild; }
+    function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]; }); }
+
+    // S2 Omat brändit — kukin: otsikko + logo + ingressi + tuotekaruselli + CTA "Tutustu brändiin".
+    var PRODUCTS_PER_BRAND = 8; // symmetrinen määrä placeholder-tuotteita / brändi
+    var ownWrap = document.getElementById("own-brands");
+    PAGE.ownBrands.forEach(function (b, bi) {
+      var cards = "";
+      for (var i = 0; i < PRODUCTS_PER_BRAND; i++) {
+        cards +=
+          '<div class="prod-card">' +
+            '<div class="ph"><i class="fa-regular fa-image" aria-hidden="true"></i></div>' +
+            '<div class="pc-body"><span class="pc-name">[Tuote]</span><span class="pc-meta">[koko]</span></div>' +
+          '</div>';
+      }
+      // Viimeinen ruutu: katso kaikki brändin tuotteet (tuotelistaus, brändifasetti) — ei umpikujaa
+      cards +=
+        '<a class="prod-all" href="/tuotteet/?brandi=' + esc(b.slug) + '" aria-label="Katso kaikki ' + esc(b.name) + '-tuotteet">' +
+          '<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>Katso kaikki' +
+        '</a>';
+      var cid = "carousel-" + bi;
+      ownWrap.appendChild(el(
+        '<div class="own-brand">' +
+          '<div class="ob-head">' +
+            '<span class="ob-logo">' + esc(b.logoText) + '</span>' +
+            '<div class="ob-titles">' +
+              '<h3>' + esc(b.name) + '</h3>' +
+            '</div>' +
+            '<a class="btn btn-outline ob-cta" href="' + esc(b.href) + '">Tutustu brändiin <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>' +
+          '</div>' +
+          '<p class="ob-ingress">' + esc(b.ingress) + '</p>' +
+          '<div class="ob-carousel-head">' +
+            '<span class="lbl">Esimerkkituotteita</span>' +
+            '<div class="carousel-nav">' +
+              '<button type="button" class="carousel-btn" data-dir="-1" data-target="' + cid + '" aria-label="Edelliset ' + esc(b.name) + '-tuotteet"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>' +
+              '<button type="button" class="carousel-btn" data-dir="1" data-target="' + cid + '" aria-label="Seuraavat ' + esc(b.name) + '-tuotteet"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>' +
+            '</div>' +
+          '</div>' +
+          '<div class="ob-carousel" id="' + cid + '" tabindex="0" role="group" aria-label="' + esc(b.name) + ' — esimerkkituotteita">' + cards + '</div>' +
+        '</div>'
+      ));
+    });
+
+    // Karusellin nuolinapit + disable-tilat (ei kuolleita kontrolleja)
+    document.querySelectorAll(".carousel-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var row = document.getElementById(btn.getAttribute("data-target"));
+        if (!row) return;
+        var dir = parseInt(btn.getAttribute("data-dir"), 10);
+        row.scrollBy({ left: dir * Math.round(row.clientWidth * 0.8), behavior: "smooth" });
+      });
+    });
+    document.querySelectorAll(".ob-carousel").forEach(function (row) {
+      var head = row.previousElementSibling;
+      var prev = head ? head.querySelector('[data-dir="-1"]') : null;
+      var next = head ? head.querySelector('[data-dir="1"]') : null;
+      function upd() {
+        var max = row.scrollWidth - row.clientWidth - 1;
+        if (prev) prev.disabled = row.scrollLeft <= 0;
+        if (next) next.disabled = row.scrollLeft >= max;
+      }
+      row.addEventListener("scroll", upd);
+      window.addEventListener("resize", upd);
+      upd();
+    });
+
+    // S3 Edustetut brändit — linkillinen (→ fasetti) tai linkitön (ei tuotteita katalogissa)
+    var wall = document.getElementById("logo-wall");
+    PAGE.repBrands.forEach(function (r) {
+      if (r.href) {
+        wall.appendChild(el(
+          '<a class="logo-tile-rep" href="' + esc(r.href) + '" aria-label="' + esc(r.name) + ' — katso tuotteet">' + esc(r.name) + '</a>'
+        ));
+      } else {
+        wall.appendChild(el('<div class="logo-tile-rep">' + esc(r.name) + '</div>'));
+      }
+    });
+    if (PAGE.repMore) {
+      wall.appendChild(el('<div class="logo-tile-rep more">' + esc(PAGE.repMore) + '</div>'));
+    }
+
+    // S4 USP-kortit
+    var uspGrid = document.getElementById("usp-grid");
+    PAGE.usps.forEach(function (u) {
+      uspGrid.appendChild(el(
+        '<div class="card-usp">' +
+          '<span class="ic"><i class="' + esc(u.icon) + '" aria-hidden="true"></i></span>' +
+          '<h3>' + esc(u.title) + '</h3>' +
+          '<p>' + esc(u.text) + '</p>' +
+        '</div>'
+      ));
+    });
+
+    // SEO — CollectionPage + ItemList (omat brändit) + BreadcrumbList
+    var origin = "https://www.condite.fi";
+    var ld = {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "CollectionPage",
+          "name": "Brändit — omat ja edustetut brändit yhdestä paikasta",
+          "description": "Conditen omat brändit (oma kehitys ja tuotanto) sekä edustetut brändit. Löydä brändi ja sen tuotteet.",
+          "url": origin + "/brandit/"
+        },
+        {
+          "@type": "ItemList",
+          "name": "Conditen omat brändit",
+          "itemListElement": PAGE.ownBrands.map(function (b, idx) {
+            return { "@type": "ListItem", "position": idx + 1, "name": b.name, "url": origin + b.href };
+          })
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Etusivu", "item": origin + "/" },
+            { "@type": "ListItem", "position": 2, "name": "Brändit", "item": origin + "/brandit/" }
+          ]
+        }
+      ]
+    };
+    document.getElementById("ld-json").textContent = JSON.stringify(ld);
+
+    // Mobiilinavigaation avaus/sulku (hampurilainen ei saa olla kuollut kontrolli)
+    var navToggle = document.querySelector(".nav-toggle");
+    var header = document.querySelector(".site-header");
+    if (navToggle && header) {
+      navToggle.addEventListener("click", function () {
+        var open = header.classList.toggle("nav-open");
+        navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+        navToggle.setAttribute("aria-label", open ? "Sulje valikko" : "Avaa valikko");
+      });
+    }
+    // Pudotusvalikot: mobiili-toggle (klikkaus avaa/sulkee) + Esc sulkee
+    document.querySelectorAll(".nav-list > li.has-dropdown > a[aria-haspopup]").forEach(function (a) {
+      a.addEventListener("click", function (e) {
+        if (window.matchMedia("(max-width: 760px)").matches) {
+          e.preventDefault();
+          var li = a.parentElement;
+          var op = li.classList.toggle("open");
+          a.setAttribute("aria-expanded", op ? "true" : "false");
+        }
+      });
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+        document.querySelectorAll(".nav-list > li.has-dropdown.open").forEach(function (li) {
+          li.classList.remove("open");
+          var a = li.querySelector("a[aria-haspopup]");
+          if (a) a.setAttribute("aria-expanded", "false");
+        });
+      }
+    });
+  })();
+  </script>
+</body>
+</html>

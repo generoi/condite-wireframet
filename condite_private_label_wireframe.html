@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Private label — kehitämme ja valmistamme tuotteen brändilläsi | Condite</title>
+<meta name="description" content="Condite on private label -kehitys- ja valmistuskumppani: konseptista reseptikehitykseen, valmistukseen ja toimitukseen — tuote omalla brändilläsi. Osa Orkla Food Ingredientsia.">
+<link rel="canonical" href="https://www.condite.fi/tuotekehitys/private-label/">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!--
+  CONDITE.FI — PRIVATE LABEL (TUOTEKEHITYS-OSION ALASIVU) · KIILLOTETTU WIREFRAME (FI)
+  Pohja: approved design system (condite_design_system.html) — softened tonal blue.
+  SISARSIVU / CHROME: condite_tuotekehitys_wireframe.html (sama header + crumbs + footer + render-IIFE).
+  Vaihestrippi (.chain) lainattu condite_vastuullisuus_wireframe.html:stä; orkla-banner sama.
+
+  Palettipäätös: hyväksytty DS-paletti (--c-accent #7fc8ec / --c-accent-ink #0a6e9b),
+  joka KORVAA kirkkaan sinisen (CLAUDE.md / DS = kanoninen).
+
+  TEHTÄVÄ (yksi lause): esittää Condite private label -kehitys- ja valmistuskumppanina —
+  näytä PROSESSI ja LOPPUTUOTE, ei hinnoittelulogiikkaa.
+
+  KAKSOISSIJAINTI (avoin päätös): tämä sivu = "miten kehitämme ja valmistamme PL:n"
+  (kehitys/valmistus-kulma). Toimialat/Private Label = "kenelle ja miksi" (Petra-segmenttikulma).
+  Eri näkökulma estää SEO-kannibalisaation; canonical osoittaa toistaiseksi tähän — vahvista julkaisussa.
+
+  PÄÄSYTASOT: koko sisältö avoin (prosessi + lopputuote näytetään; hinnoittelu jätetään KOKONAAN pois,
+  ei loginin taakse). Gating-siirtymät vain CTA:issa: Ota yhteyttä → liidi, Varaa Makupaja → liidi.
+
+  TODO K1/K5: kapasiteetti-, laatu- ja Orkla-signaalit — älä julkaise lukuja ilman vahvistusta.
+  PL-prosessin vaiheet vahvistettava todellisiksi ja yhdenmukaistettava Räätälöintiprosessi-sivun kanssa.
+
+  §8-TARKISTUSLISTA (täytetty):
+  · Laskeutumisvalmius: crumbs (Etusivu/Tuotekehitys/Private label) · kontekstihero · näkyvä navi → seisoo omillaan
+  · Ratkaisulähtöinen otsikointi: H1/H2 PL-valmistus/-kehitys-kulmalla (ei sisäistä nimikkeistöä)
+  · Kanava→laskeutuminen: PL-haut ("private label valmistaja"), hub, Toimialat/PL
+  · Verkkosivu vs verkkokauppa: myy prosessin + lopputuotteen; ei hinnoittelua/tilausta; konversio = yhteydenotto (liidi)
+  · Pää-CTA: Ota yhteyttä (toistuu hero + loppu); muut alisteisia
+  · Pääsytaso per lohko: kaikki avoin; gating vain CTA-siirtymissä
+  · Ei umpikujia: yhteydenotto + Makupaja + Referenssit + Toimialat/PL + paluu hubiin
+-->
+<style>
+  :root {
+    /* Taustat */
+    --c-bg:#ffffff; --c-bg-soft:#f7f7f7; --c-bg-tint:#eef6fb;
+    /* Teksti */
+    --c-text:#1d1d1f; --c-text-2:#555555; --c-text-muted:#6f6f6f;
+    /* Viivat */
+    --c-border:#e3e3e3; --c-border-strong:#cfcfcf; --c-divider:#d8d8d8;
+    /* Kuvapaikat */
+    --c-ph-bg:#ececec; --c-ph-border:#c8c8c8;
+    /* Korostus — pehmeä sininen (DS) */
+    --c-accent:#7fc8ec; --c-accent-ink:#0a6e9b; --c-on-accent:#0a4f72;
+    --c-accent-soft:#e3f2fb; --c-suits-border:#b7def4;
+    /* Pyöristykset */
+    --r-sm:4px; --r-md:8px; --r-lg:12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--c-bg); color: var(--c-text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+    font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased;
+  }
+  /* Shell-gotcha: author-display:flex ohittaa UA-säännön — pidä tämä mukana */
+  [hidden] { display: none !important; }
+  a { color: var(--c-accent-ink); }
+  img { max-width: 100%; }
+
+  /* Saavutettavuus */
+  .skip {
+    position: absolute; left: 8px; top: -48px; z-index: 100;
+    background: var(--c-accent); color: var(--c-on-accent); font-weight: 700;
+    padding: 10px 16px; border-radius: var(--r-sm); text-decoration: none; transition: top .15s;
+  }
+  .skip:focus { top: 8px; }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible {
+    outline: 2.5px solid var(--c-accent); outline-offset: 2px; border-radius: var(--r-sm);
+  }
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+
+  /* Layout */
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  .block { max-width: 1200px; margin: 0 auto; padding: 64px 24px 0; }
+  .block.first { padding-top: 40px; }
+  .block.last { padding-bottom: 64px; }
+  .band { border-top: 1px solid var(--c-suits-border); border-bottom: 1px solid var(--c-suits-border); background: var(--c-bg-tint); margin-top: 64px; }
+  .band .block { padding-top: 64px; padding-bottom: 64px; }
+
+  /* Tyypit */
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--c-accent-ink); margin: 0 0 8px; }
+  h1 { font-size: 44px; line-height: 1.12; letter-spacing: -.01em; margin: 0 0 20px; font-weight: 700; }
+  h2 { font-size: 30px; line-height: 1.18; margin: 0; font-weight: 700; }
+  .intro { margin: 16px 0 0; color: var(--c-text-2); }
+  .section-head { max-width: 760px; }
+
+  /* Painikkeet */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: var(--r-sm); font-weight: 600; font-size: 16px; text-decoration: none; line-height: 1.2; cursor: pointer; padding: 13px 22px; border: 1.5px solid transparent; }
+  .btn-primary { border-color: var(--c-accent); background: var(--c-accent); color: var(--c-on-accent); }
+  .btn-outline { border-color: var(--c-accent-ink); background: var(--c-bg); color: var(--c-accent-ink); }
+  .btn-sm { padding: 9px 16px; font-size: 14px; border-color: var(--c-accent-ink); background: var(--c-bg); color: var(--c-accent-ink); }
+  .btn-link { color: var(--c-accent-ink); text-decoration: none; font-weight: 600; font-size: 14px; display: inline-flex; gap: 6px; align-items: center; white-space: nowrap; }
+
+  /* Header */
+  .site-header { border-bottom: 1px solid var(--c-border); background: var(--c-bg); position: sticky; top: 0; z-index: 50; }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; min-height: 64px; gap: 32px; }
+  .logo { flex: none; width: 110px; height: 34px; background: var(--c-ph-bg); border: 1px dashed var(--c-ph-border); display: flex; align-items: center; justify-content: center; color: var(--c-text-2); font-size: 12px; border-radius: var(--r-sm); letter-spacing: .5px; font-weight: 700; text-decoration: none; }
+  .nav-main { display: flex; align-items: center; justify-content: center; flex: 1; }
+  .nav-list { list-style: none; margin: 0; padding: 0; display: flex; gap: 2px; }
+  .nav-list a { text-decoration: none; padding: 8px 12px; border-radius: var(--r-sm); font-weight: 500; color: var(--c-text); font-size: 14px; white-space: nowrap; position: relative; }
+  .nav-list a:hover { color: var(--c-accent-ink); }
+  .nav-list a[aria-current="page"] { color: var(--c-accent-ink); font-weight: 700; }
+  .nav-list a[aria-current="page"]::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: 0; height: 2px; background: var(--c-accent); border-radius: 2px; }
+  .nav-actions { flex: none; display: inline-flex; align-items: center; gap: 16px; }
+  .lang { display: inline-flex; align-items: center; gap: 2px; font-size: 14px; }
+  .lang a { text-decoration: none; padding: 3px 7px; border-radius: var(--r-sm); color: var(--c-text-muted); }
+  .lang a[aria-current="true"] { background: var(--c-bg-soft); color: var(--c-text); font-weight: 700; }
+  .nav-toggle { display: none; }
+
+  /* Murupolku */
+  .crumbs { max-width: 1200px; margin: 0 auto; padding: 14px 24px 0; font-size: 13px; color: var(--c-text-muted); }
+  .crumbs ol { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; }
+  .crumbs a { color: var(--c-text-2); text-decoration: none; }
+  .crumbs a:hover { color: var(--c-accent-ink); }
+  .crumbs li[aria-current="page"] { color: var(--c-text); font-weight: 600; }
+  .crumbs .sep { color: var(--c-border-strong); }
+
+  /* Hero (kuva + teksti) */
+  .hero .feature { display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px; align-items: center; }
+  .hero .intro { font-size: 18px; max-width: 560px; }
+  .hero-ctas { margin: 28px 0 0; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .hero .ph { border-radius: var(--r-lg); }
+
+  /* Yleinen kuvapaikka */
+  .ph { background: var(--c-ph-bg); border: 1px dashed var(--c-ph-border); display: flex; align-items: center; justify-content: center; color: var(--c-text-2); font-size: 13px; gap: 6px; }
+  .ph i { opacity: .6; }
+  .ph-16-10 { aspect-ratio: 16 / 10; }
+  .ph-16-9 { aspect-ratio: 16 / 9; }
+
+  /* ===== S2 / S4 USP-kortit ===== */
+  .usp-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 24px; }
+  .card-usp { border: 1px solid var(--c-border); border-radius: var(--r-md); padding: 28px 24px; background: var(--c-bg); display: flex; flex-direction: column; gap: 8px; }
+  .card-usp .ic { width: 48px; height: 48px; border-radius: var(--r-md); background: var(--c-accent-soft); color: var(--c-accent-ink); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 8px; border: 1px solid var(--c-suits-border); }
+  .card-usp h3 { font-size: 18px; margin: 0; }
+  .card-usp p { font-size: 14px; color: var(--c-text-2); margin: 0; }
+
+  /* ===== S3 PL-prosessi — numeroitu vaihestrippi (lainattu vastuullisuudesta) ===== */
+  .chain { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-top: 32px; counter-reset: step; }
+  .chain-step { position: relative; border: 1px solid var(--c-border); border-radius: var(--r-lg); background: var(--c-bg); padding: 28px 24px 24px; display: flex; flex-direction: column; gap: 8px; }
+  .chain-step .step-num { counter-increment: step; width: 40px; height: 40px; border-radius: 50%; background: var(--c-accent-soft); border: 1px solid var(--c-suits-border); color: var(--c-accent-ink); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; margin-bottom: 6px; }
+  .chain-step .step-num::before { content: counter(step); }
+  .chain-step h3 { font-size: 17px; margin: 0; display: inline-flex; align-items: center; gap: 8px; }
+  .chain-step h3 i { color: var(--c-accent-ink); font-size: 15px; }
+  .chain-step p { font-size: 14px; color: var(--c-text-2); margin: 0; }
+
+  /* Huomautus / tietopyyntö */
+  .prod-cap { margin-top: 40px; border: 1px solid var(--c-border); border-radius: var(--r-lg); padding: 28px 28px 12px; background: var(--c-bg); }
+  .prod-cap .cap-h { font-size: 12px; margin: 0; text-transform: uppercase; letter-spacing: .12em; color: var(--c-accent-ink); }
+  .prod-cap .spec { margin-top: 18px; }
+  /* Kapasiteetti-spec (jaettu komponentti Meistä-sivun kanssa — ei chip-dumppia) */
+  .spec { list-style: none; margin: 28px 0 0; padding: 0; border-top: 1px solid var(--c-border); }
+  .spec li { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; padding: 11px 0; border-bottom: 1px solid var(--c-border); font-size: 14px; }
+  .spec .k { color: var(--c-text-muted); }
+  .spec .v { color: var(--c-text); font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+  /* Avoin kysymys -merkki (sama kuin Meistä-sivulla) */
+  .q { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #8a6d1f; background: #fdf4dd; border: 1px dashed #e3c86a; border-radius: var(--r-sm); padding: 2px 7px; vertical-align: middle; }
+  .note { display: flex; align-items: flex-start; gap: 10px; border: 1px dashed var(--c-ph-border); border-radius: var(--r-md); background: var(--c-bg-soft); padding: 14px 18px; font-size: 13px; color: var(--c-text-muted); margin-top: 24px; }
+  .note i { color: var(--c-accent-ink); margin-top: 2px; }
+
+  /* ===== S4 Orkla-banneri (tumma) ===== */
+  .orkla-banner { display: flex; align-items: center; gap: 24px; background: #1f2730; color: #e3e5e8; border-radius: var(--r-lg); padding: 32px; margin-top: 32px; }
+  .orkla-banner .ob-ico { width: 56px; height: 56px; border-radius: 50%; background: #2c343d; border: 1px solid #49515b; color: #cfd5db; display: flex; align-items: center; justify-content: center; font-size: 22px; flex: none; }
+  .orkla-banner .ob-body { flex: 1; min-width: 0; }
+  .orkla-banner .ob-eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #aab2bb; margin: 0 0 6px; }
+  .orkla-banner strong { color: #fff; display: block; font-size: 20px; margin-bottom: 6px; }
+  .orkla-banner p { margin: 0; font-size: 14px; color: #aab2bb; max-width: 60ch; }
+  .orkla-banner .ob-link { color: #fff; font-weight: 600; font-size: 14px; text-decoration: none; display: inline-flex; gap: 6px; align-items: center; margin-top: 12px; }
+  .orkla-banner .ob-link:hover { text-decoration: underline; }
+
+  /* ===== S5 Referenssit-nosto (tintattu band sisällä) ===== */
+  .ref-band { display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+  .ref-band .ref-text { max-width: 640px; }
+  .ref-band h2 { margin-bottom: 0; }
+  .ref-band .intro { margin-top: 12px; }
+
+  /* ===== S6 Loppu-CTA — oma tausta (tintattu paneeli) ===== */
+  .end-cta { text-align: center; background: var(--c-bg-tint); border: 1px solid var(--c-suits-border); border-radius: var(--r-lg); padding: 56px 32px; }
+  .end-cta-inner { max-width: 660px; margin: 0 auto; }
+  .end-cta .ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 24px; align-items: center; }
+  @media (max-width: 760px) { .end-cta { padding: 40px 20px; } }
+
+  /* Footer */
+  .site-footer { background: var(--c-bg-soft); border-top: 1px solid var(--c-border); padding: 48px 0 32px; margin-top: 64px; }
+  .footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--c-border); }
+  .footer-grid h4 { font-size: 14px; text-transform: uppercase; letter-spacing: .06em; margin: 0 0 16px; }
+  .footer-grid ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .footer-grid a { text-decoration: none; color: var(--c-text-2); font-size: 14px; }
+  .footer-grid a:hover { color: var(--c-accent-ink); }
+  .footer-blurb { font-size: 14px; color: var(--c-text-2); margin: 16px 0 0; max-width: 30ch; }
+  .news { display: flex; gap: 8px; }
+  .news input { flex: 1; min-width: 0; padding: 10px 12px; border-radius: var(--r-sm); border: 1px solid var(--c-border-strong); background: var(--c-bg); color: var(--c-text); font: inherit; font-size: 14px; }
+  .news button { padding: 10px 16px; border-radius: var(--r-sm); border: 1.5px solid var(--c-accent); background: var(--c-accent); color: var(--c-on-accent); font-weight: 700; font-size: 14px; cursor: pointer; }
+  .footer-legal { display: flex; justify-content: space-between; gap: 24px; padding-top: 24px; flex-wrap: wrap; font-size: 12px; color: var(--c-text-muted); }
+  .footer-legal a { color: var(--c-text-muted); text-decoration: none; }
+  .footer-legal .legal-links { display: flex; gap: 24px; flex-wrap: wrap; }
+
+  /* ===== Responsiivisuus ===== */
+  @media (max-width: 1000px) {
+    .hero .feature { grid-template-columns: 1fr; gap: 28px; }
+    .hero .feature-media { order: -1; }
+    .usp-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .orkla-banner { flex-direction: column; align-items: flex-start; gap: 16px; }
+  }
+  @media (max-width: 760px) {
+    h1 { font-size: 34px; }
+    h2 { font-size: 26px; }
+    .nav-main { display: none; }
+    .nav-toggle { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 1px solid var(--c-border-strong); border-radius: var(--r-sm); background: var(--c-bg); color: var(--c-text); cursor: pointer; }
+    .site-header.nav-open .nav-main { display: block; position: absolute; top: 100%; left: 0; right: 0; background: var(--c-bg); border-bottom: 1px solid var(--c-border); box-shadow: 0 8px 20px rgba(0,0,0,.06); padding: 8px 24px 16px; }
+    .site-header.nav-open .nav-list { flex-direction: column; gap: 0; }
+    .site-header.nav-open .nav-list a { display: block; padding: 13px 0; border-bottom: 1px solid var(--c-border); font-size: 15px; }
+    .site-header.nav-open .nav-list a[aria-current="page"]::after { display: none; }
+    .hero-ctas .btn { flex: 1; }
+    .footer-grid { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+  <a class="skip" href="#main">Siirry sisältöön</a>
+
+  <!-- ===== HEADER (yhteinen chrome) ===== -->
+  <header class="site-header">
+    <div class="nav-inner">
+      <a href="/" class="logo" aria-label="Condite — etusivu">CONDITE</a>
+      <nav class="nav-main" id="primary-nav" aria-label="Päänavigaatio">
+        <ul class="nav-list">
+          <li><a href="/tuotteet/">Tuotteet</a></li>
+          <li><a href="/toimialat/">Toimialat</a></li>
+          <li><a href="/reseptit/">Reseptit</a></li>
+          <li><a href="/tuotekehitys/" aria-current="page">Tuotekehitys</a></li>
+          <li><a href="/yritys/">Yritys</a></li>
+          <li><a href="/yhteys/">Yhteys</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <span class="lang" role="group" aria-label="Kieli">
+          <a href="#" aria-current="true" lang="fi">FI</a>
+          <a href="#" lang="sv">SV</a>
+          <a href="#" lang="en">EN</a>
+        </span>
+        <a href="/kirjaudu/" class="btn btn-sm"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Kirjaudu</a>
+        <button class="nav-toggle" type="button" aria-label="Avaa valikko" aria-expanded="false" aria-controls="primary-nav"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Murupolku -->
+  <nav class="crumbs" aria-label="Murupolku">
+    <ol>
+      <li><a href="/">Etusivu</a></li>
+      <li class="sep" aria-hidden="true">›</li>
+      <li><a href="/tuotekehitys/">Tuotekehitys</a></li>
+      <li class="sep" aria-hidden="true">›</li>
+      <li aria-current="page">Private label</li>
+    </ol>
+  </nav>
+
+  <main id="main">
+
+    <!-- ===== S1 HERO — PL-kehitys/valmistus-kumppanuus (avoin) ===== -->
+    <!-- Pää-CTA = Ota yhteyttä (PL alkaa keskustelusta → liidi); sekundääri = ankkuri prosessiin -->
+    <section class="block first hero" aria-labelledby="hero-h1">
+      <div class="feature">
+        <div class="feature-body">
+          <p class="eyebrow">Private label</p>
+          <h1 id="hero-h1">Kehitämme ja valmistamme tuotteen omalla brändilläsi — Suomessa</h1>
+          <p class="intro">Condite on private label -kehitys- ja valmistuskumppani, jolla on oma tuotanto Naantalissa. Tuo konsepti tai tarve, niin viemme sen reseptikehityksestä valmistukseen ja toimitukseen — tuotteena, joka kantaa sinun brändiäsi. Sama kumppani hoitaa raaka-aineen, reseptin, valmistuksen ja pakkauksen.</p>
+          <div class="hero-ctas">
+            <a class="btn btn-primary" href="/yhteys/">Ota yhteyttä</a>
+            <a class="btn btn-outline" href="#prosessi">Katso miten prosessi etenee</a>
+          </div>
+        </div>
+        <div class="feature-media">
+          <div class="ph ph-16-10"><i class="fa-regular fa-image" aria-hidden="true"></i>Hero-media 16:10 — valmis PL-tuote / pakkauslinja Naantalissa</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== S2 MITÄ PALVELU KATTAA — prosessi + lopputuote, EI hinnoittelua (avoin) ===== -->
+    <section class="block" aria-labelledby="scope-h2">
+      <div class="section-head" style="margin-bottom:32px">
+        <p class="eyebrow">Mitä private label kattaa</p>
+        <h2 id="scope-h2">Konseptista valmiiseen tuotteeseen — yhdellä kumppanilla</h2>
+        <p class="intro">Kehitys tapahtuu Makupajassa, valmistus omilla linjoillamme Naantalissa. Saat kokonaisuuden etkä osasia: yksi sopimus, yksi yhteyshenkilö ja yksi laatuvastuu koko ketjusta.</p>
+      </div>
+      <div class="usp-grid" id="scope-grid"></div>
+    </section>
+
+    <!-- ===== S3 PL-PROSESSI VAIHEITTAIN — numeroitu vaihestrippi (avoin) ===== -->
+    <!-- TODO: vahvista todellinen PL-prosessi; yhdenmukaista Räätälöintiprosessi-sivun kanssa. Tila: show:false piilottaa tyhjän vaiheen. -->
+    <section class="band" id="prosessi" aria-labelledby="proc-h2">
+      <div class="block">
+        <div class="section-head">
+          <p class="eyebrow">Näin etenemme</p>
+            <h2 id="proc-h2">PL-prosessi vaihe vaiheelta</h2>
+          <p class="intro">Läpinäkyvä polku konseptista toimitukseen. Kehitys tehdään Makupajassa, valmistus omassa tuotannossamme — tiedät koko ajan, missä mennään ja kuka vastaa mistäkin.</p>
+        </div>
+        <div class="chain" id="proc-grid"></div>
+      </div>
+    </section>
+
+    <!-- ===== S4 MIKSI CONDITE PL-KUMPPANINA — uskottavuus (avoin) ===== -->
+    <!-- TODO K1/K5: kapasiteetti-/laatuväittämät — ÄLÄ julkaise lukuja ilman vahvistusta. -->
+    <section class="block" aria-labelledby="why-h2">
+      <div class="section-head" style="margin-bottom:32px">
+        <p class="eyebrow">Miksi Condite</p>
+        <h2 id="why-h2">Luotettava PL-kumppani — kehitys, kapasiteetti ja laatu</h2>
+        <p class="intro">Private label -päätös on riskipäätös: kumppanin pitää osata kehittää, pystyä valmistamaan ja kestää auditointi. Alla se, mihin väitteemme perustuvat.</p>
+      </div>
+      <div class="usp-grid" id="why-grid"></div>
+
+      <!-- ===== Kapasiteetti — konkreettiset luvut [DECK s12] ===== -->
+      <!-- Tämä on PL-ostajan (persoona Petra / Hannu) tärkein tieto: mihin te oikeasti pystytte.
+           Aiemmin tässä luki "älä julkaise lukuja vahvistamatta" — luvut saatiin yrityspresentaatiosta,
+           mutta julkaisuluvan tarve on yhä auki (KYSYMYS 8, ks. condite_meista_avoimet_kysymykset.md). -->
+      <div class="prod-cap">
+        <h3 class="cap-h">Tuotantokapasiteettimme lyhyesti</h3>
+        <ul class="spec" id="cap-spec"></ul>
+      </div>
+
+      <!-- Orkla-tausta — mittakaava ja luotettavuus (tumma banneri) -->
+      <div class="orkla-banner">
+        <span class="ob-ico" aria-hidden="true"><i class="fa-solid fa-earth-europe"></i></span>
+        <div class="ob-body">
+          <p class="ob-eyebrow">Tausta</p>
+          <strong>Suomalainen valmistaja, pohjoismainen selkänoja</strong>
+          <p>Valmistus tapahtuu Suomessa omilla linjoillamme, mutta emme ole yksin: olemme osa Orkla Food Ingredientsia, joka toimii 22 maassa. Konsernitausta tuo raaka-ainehankintaan volyymia ja vaihtoehtoisia lähteitä — ja jatkuvuutta, joka kestää yksittäisen toimittajan ongelmat.</p>
+          <a class="ob-link" href="/yritys/">Lue Conditesta ja Orkla-taustasta <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div class="note">
+        <i class="fa-solid fa-circle-question" aria-hidden="true"></i>
+        <span><span class="q">Kysymys 6 + 8</span> Kapasiteetti- ja sertifikaattitiedot ovat Conditen omasta yrityspresentaatiosta (2026). Vahvistettava vielä: saako tuotantoluvut (12,0 milj. yksikköä / 3,4 milj. kg, 2024) julkaista verkossa, ja saako sertifikaattilogoja käyttää. Katso <em>condite_meista_avoimet_kysymykset.md</em>.</span>
+      </div>
+    </section>
+
+    <!-- ===== S5 REFERENSSIT-NOSTO — todiste (valinnainen; piilota jos caseja ei vielä) ===== -->
+    <section class="band" id="referenssit" aria-labelledby="ref-h2">
+      <div class="block">
+        <div class="ref-band">
+          <div class="ref-text">
+            <p class="eyebrow">Todisteet</p>
+            <h2 id="ref-h2">Näin olemme valmistaneet asiakkaidemme brändeille</h2>
+            <p class="intro">[TÄYTTÖ: PL-caset osoittavat prosessin käytännössä. Piilota koko lohko (PAGE.refs.show = false) jos julkaistavia caseja ei vielä ole — älä julkaise asiakkaan nimeä ilman lupaa.]</p>
+          </div>
+          <a class="btn btn-outline" href="/referenssit/">Katso referenssit</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== S6 LOPPU-CTA — konversio + reitit, ei umpikujia (avoin → liidi) ===== -->
+    <section class="block last" aria-labelledby="end-h2">
+      <div class="end-cta">
+        <div class="end-cta-inner">
+          <p class="eyebrow">Mennäänkö eteenpäin?</p>
+          <h2 id="end-h2">Keskustellaan tuotteestasi</h2>
+          <p class="intro" style="margin-left:auto;margin-right:auto">Private label -kumppanuus alkaa keskustelusta: mitä olet tekemässä, millä volyymilla ja millä aikataululla. Jos konsepti on vielä auki, varaa Makupaja-sessio — kehitetään se yhdessä.</p>
+          <div class="ctas">
+            <a class="btn btn-primary" href="/yhteys/">Ota yhteyttä</a>
+            <a class="btn btn-outline" href="/tuotekehitys/makupaja/">Varaa Makupaja-sessio</a>
+            <a class="btn-link" href="/toimialat/private-label/">Private label toimialana <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER (yhteinen chrome) ===== -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <a href="/" class="logo" aria-label="Condite — etusivu">CONDITE</a>
+          <p class="footer-blurb">Elintarvikealan raaka-aineiden maahantuoja, valmistaja ja kehityskumppani. Osa Orkla Food Ingredientsia.</p>
+        </div>
+        <div>
+          <h4>Sivusto</h4>
+          <ul>
+            <li><a href="/tuotteet/">Tuotteet</a></li>
+            <li><a href="/toimialat/">Toimialat</a></li>
+            <li><a href="/reseptit/">Reseptit</a></li>
+            <li><a href="/tuotekehitys/">Tuotekehitys</a></li>
+            <li><a href="/yritys/">Yritys</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Kehitys</h4>
+          <ul>
+            <li><a href="/tuotekehitys/makupaja/">Makupaja</a></li>
+            <li><a href="/tuotekehitys/raatalointiprosessi/">Räätälöintiprosessi</a></li>
+            <li><a href="/tuotekehitys/reseptikehitys/">Resepti- ja sovelluskehitys</a></li>
+            <li><a href="/tuotekehitys/private-label/" aria-current="page">Private label</a></li>
+            <li><a href="/referenssit/">Referenssit</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Uutiskirje</h4>
+          <label for="news-email" style="display:block;font-size:14px;color:var(--c-text-2);margin-bottom:8px">Tilaa ajankohtaiset uutiset ja sovellukset.</label>
+          <div class="news">
+            <input id="news-email" type="email" placeholder="sähköposti@yritys.fi" aria-label="Sähköpostiosoite">
+            <button type="button">Tilaa</button>
+          </div>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <span>© 2026 Condite Oy · Osa Orkla Food Ingredientsia</span>
+        <div class="legal-links">
+          <a href="/tietosuoja/">Tietosuoja</a>
+          <a href="/evasteet/">Evästeet</a>
+          <a href="/saavutettavuus/">Saavutettavuusseloste</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== Rakenteinen data (SEO): Service + BreadcrumbList ===== -->
+  <script type="application/ld+json" id="ld-json"></script>
+
+  <!-- ===== Sisältökonfiguraatio + render (config-driven, ei buildia) ===== -->
+  <script>
+  (function () {
+    "use strict";
+
+    var PAGE = {
+      // LÄHDE: Condite_Yrityspresentaatio_2026_ENG_v2.pptx [DECK sN]. Avoimet kohdat:
+      // condite_meista_avoimet_kysymykset.md (KYSYMYS 6 sertifikaatit, KYSYMYS 8 tuotantoluvut).
+
+      // S2 — mitä palvelu kattaa (3 korttia). EI hinnoittelulogiikkaa.
+      scope: [
+        { icon: "fa-solid fa-lightbulb", title: "Konseptointi ja reseptikehitys",
+          text: "Kehitämme ja maistatamme tuotteen kanssasi Makupajassa — briiffistä valmiiksi reseptiksi, iteroiden." },
+        { icon: "fa-solid fa-industry", title: "Valmistus omilla linjoillamme",
+          text: "Valmistamme tuotteen Naantalissa: maustesekoitukset ja kuivaseokset omalla reseptilläsi, tasalaatuisena koesarjasta volyymiin." },
+        { icon: "fa-solid fa-box-open", title: "Pakkaus ja lopputuote",
+          text: "Pakkaamme valmiin tuotteen brändi-ilmeelläsi — zipper-pussista 1 000 kg:n säkkiin samalla talolla." }
+      ],
+
+      // S3 — PL-prosessin vaiheet. TODO: vahvista todelliset vaiheet ja yhdenmukaista
+      // Räätälöintiprosessi-sivun kanssa (prosessikuvaus ei ollut yrityspresentaatiossa).
+      process: [
+        { icon: "fa-solid fa-file-lines", title: "Konsepti ja briiffi", text: "Kartoitamme tarpeen, tavoitevolyymin, pakkausmuodon ja reunaehdot yhdessä." },
+        { icon: "fa-solid fa-flask", title: "Reseptikehitys", text: "Kehitämme reseptin Makupajassa — raaka-ainevaihtoehdot, kustannus ja valmistettavuus samassa pöydässä." },
+        { icon: "fa-solid fa-utensils", title: "Maistatus ja hyväksyntä", text: "Maistatetaan, hienosäädetään ja hyväksytään lopputuote ennen tuotantoon siirtymistä." },
+        { icon: "fa-solid fa-industry", title: "Koesarja ja skaalaus", text: "Ajamme koesarjan omalla linjallamme ja skaalaamme sen tuotantoon tasalaatuisena." },
+        { icon: "fa-solid fa-box-open", title: "Pakkaus", text: "Pakkaamme tuotteen sovittuun pakkauskokoon ja brändi-ilmeeseesi." },
+        { icon: "fa-solid fa-truck", title: "Toimitus", text: "Toimitusvarma logistiikka sovitusti — sama kumppani vastaa koko ketjusta." }
+      ],
+
+      // S4 — miksi Condite PL-kumppanina. Nämä EIVÄT ole enää placeholdereita:
+      // luvut ja sertifikaatit ovat Conditen omasta yrityspresentaatiosta.
+      why: [
+        { icon: "fa-solid fa-handshake-angle", title: "Kehitysosaaminen, ei pelkkä rahti",
+          text: "Oma Makupaja-testikeittiö ja tuotekehitystiimi: viemme briiffin koesarjaan ja tuotantoon. Kumppani, joka ehdottaa — ei odota valmista reseptiä." },
+        { icon: "fa-solid fa-gauge-high", title: "Oma tuotanto Suomessa",
+          text: "Kaksi tuotantopaikkaa Naantalissa ja 11 pakkauslinjaa. Pystymme pieneen koesarjaan ja isoon volyymiin — ilman kolmatta osapuolta välissä." },
+        { icon: "fa-solid fa-shield-halved", title: "Auditointikelpoinen laatu",
+          text: "Conditella on BRC A -sertifikaatti ja Orklan oma OFSS-tuoteturvallisuusstandardi. Toimittajiltamme vaadimme BRC-, IFS- tai vastaavan sertifikaatin." }
+      ],
+
+      // S4b — kapasiteetti-spec [DECK s12]. KYSYMYS 8: julkaisulupa 2024-lukuihin.
+      capacity: [
+        ["Tuotantopaikat",       "2 · Naantali"],
+        ["Pakkauslinjoja",       "11"],
+        ["Pakkauskoot",          "zipper-pussi → 1 000 kg säkki"],
+        ["Valmistamme",          "maustesekoitukset · kuivaseokset"],
+        ["Pakkaamme",            "siemenet · mausteet (kokonaiset, jauhetut, rouhitut)"],
+        ["Tuotettu 2024",        "12,0 milj. tuoteyksikköä · 3,4 milj. kg"],
+        ["Sertifioinnit",        "BRC A · OFSS (Orkla Food Safety Standard)"]
+      ],
+
+      // S5 — referenssit-nosto. show:false piilottaa koko lohkon jos caseja ei vielä.
+      refs: { show: true }
+    };
+
+    function el(html) { var t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstChild; }
+    function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]; }); }
+
+    // S2 Mitä palvelu kattaa
+    var scopeGrid = document.getElementById("scope-grid");
+    PAGE.scope.forEach(function (u) {
+      scopeGrid.appendChild(el(
+        '<div class="card-usp">' +
+          '<span class="ic" aria-hidden="true"><i class="' + esc(u.icon) + '"></i></span>' +
+          '<h3>' + esc(u.title) + '</h3>' +
+          '<p>' + esc(u.text) + '</p>' +
+        '</div>'
+      ));
+    });
+
+    // S3 PL-prosessi (vaiheet; show:false piilottaa)
+    var procGrid = document.getElementById("proc-grid");
+    PAGE.process.filter(function (p) { return p.show !== false; }).forEach(function (p) {
+      procGrid.appendChild(el(
+        '<div class="chain-step">' +
+          '<span class="step-num" aria-hidden="true"></span>' +
+          '<h3><i class="' + esc(p.icon) + '" aria-hidden="true"></i>' + esc(p.title) + '</h3>' +
+          '<p>' + esc(p.text) + '</p>' +
+        '</div>'
+      ));
+    });
+
+    // S4 Miksi Condite
+    var whyGrid = document.getElementById("why-grid");
+    PAGE.why.forEach(function (u) {
+      whyGrid.appendChild(el(
+        '<div class="card-usp">' +
+          '<span class="ic" aria-hidden="true"><i class="' + esc(u.icon) + '"></i></span>' +
+          '<h3>' + esc(u.title) + '</h3>' +
+          '<p>' + esc(u.text) + '</p>' +
+        '</div>'
+      ));
+    });
+
+    // S4b Kapasiteetti-spec (avain → arvo; ei chip-dumppia)
+    var capSpec = document.getElementById("cap-spec");
+    if (capSpec) {
+      PAGE.capacity.forEach(function (row) {
+        capSpec.appendChild(el('<li><span class="k">' + esc(row[0]) + '</span><span class="v">' + esc(row[1]) + '</span></li>'));
+      });
+    }
+
+    // S5 Referenssit-nosto — piilota jos ei caseja
+    if (!PAGE.refs.show) {
+      var refSection = document.getElementById("referenssit");
+      if (refSection) refSection.hidden = true;
+    }
+
+    // SEO — Service + BreadcrumbList. Kehitys/valmistus-kulma erottaa Toimialat/PL:stä.
+    var origin = "https://www.condite.fi";
+    var ld = {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Service",
+          "name": "Private label -kehitys ja valmistus",
+          "serviceType": "Private label -elintarvikkeiden sopimusvalmistus",
+          "description": "Condite kehittää ja valmistaa elintarvikkeen asiakkaan omalla brändillä: konsepti, reseptikehitys, valmistus, pakkaus ja toimitus.",
+          "url": origin + "/tuotekehitys/private-label/",
+          "provider": { "@type": "Organization", "name": "Condite Oy", "parentOrganization": "Orkla Food Ingredients" },
+          "areaServed": "FI"
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Etusivu", "item": origin + "/" },
+            { "@type": "ListItem", "position": 2, "name": "Tuotekehitys", "item": origin + "/tuotekehitys/" },
+            { "@type": "ListItem", "position": 3, "name": "Private label", "item": origin + "/tuotekehitys/private-label/" }
+          ]
+        }
+      ]
+    };
+    document.getElementById("ld-json").textContent = JSON.stringify(ld);
+
+    // Mobiilinavigaation avaus/sulku (hampurilainen ei saa olla kuollut kontrolli)
+    var navToggle = document.querySelector(".nav-toggle");
+    var header = document.querySelector(".site-header");
+    if (navToggle && header) {
+      navToggle.addEventListener("click", function () {
+        var open = header.classList.toggle("nav-open");
+        navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+        navToggle.setAttribute("aria-label", open ? "Sulje valikko" : "Avaa valikko");
+      });
+    }
+  })();
+  </script>
+</body>
+</html>

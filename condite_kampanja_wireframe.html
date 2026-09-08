@@ -1,0 +1,1476 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sadonkorjuu ammattikeittiöön ja leipomoon — kauden tuotteet ja reseptit | Condite</title>
+<meta name="description" content="Sadonkorjuun maut ammattikeittiöön ja leipomoon: kauden tuotteet, reseptit ja sovellusideat yhdessä paikassa. Condite — kehityskumppani, ei pelkkä toimittaja.">
+<meta name="robots" content="index, follow">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!--
+  CONDITE.FI — KAMPANJALÄNDÄRI / TEEMASIVU · KIILLOTETTU WIREFRAME (FI)
+  Tiedosto: condite_kampanja_wireframe.html
+  Pohja: approved design system (condite_design_system.html) — softened tonal blue.
+  Chrome (header/crumbs/footer/mobiilinavi/tokenit) forkattu sisarsivusta condite_brandihub_wireframe.html.
+
+  ============================================================================
+  MIKÄ TÄMÄ ON: UUSI SIVUTYYPPI — "kampanja / teemaländäri"
+  ============================================================================
+  Yksi sivupohja, jonka alle Condite kokoaa AJANKOHTAISTA SISÄLTÖÄ minkä tahansa
+  teeman ympärille: sadonkorjuu, halloween, joulu, pääsiäinen, kasvipohjaisuus,
+  gluteenittomuus, messut, uutuuslanseeraus. Sisältö on OLEMASSA OLEVAA sisältöä
+  (tuotteita, reseptejä, artikkeleita, brändejä, Makupaja) — kampanjasivu ei luo
+  uutta sisältötyyppiä vaan KURATOI ja KEHYSTÄÄ olemassa olevan teemaksi.
+
+  MONIKÄYTTÖISYYS RATKAISTU: KIINTEÄ SELKÄRANKA + VALINNAINEN MODUULIKIRJASTO.
+  Sama malli kuin segmenttihubissa (selkäranka + VARIABLE-keskiosa), mutta viety
+  pidemmälle: keskiosa on kokonaan konfiguroitava moduulilista, jonka JÄRJESTYS ja
+  MÄÄRÄ vaihtuvat kampanjoittain. WP-vaiheessa tämä = ACF Flexible Content -kenttä.
+
+    SELKÄRANKA (aina):  Hero  ·  Ankkurinavi ("Tällä sivulla")  ·  Loppu-CTA
+    MODUULIKIRJASTO (valitse 3–7, mikä tahansa järjestys):
+      kulmat      Teemakulmat / makusuunnat — 3–4 KUVAKORTTIA (Puratos: flavour tabs)
+      featured    Iso editorial-nosto — kauden resepti / tuote / artikkeli + spec-strip
+      tuotteet    Kuratoitu tuotekaruselli + "katso kaikki" (kampanjafasetti)
+      reseptit    Reseptimosaiikki: 1 johtokortti (2 saraketta) + tasakokoiset
+      artikkelit  Artikkelirivit (etusivun .seg-row), EI kolmatta korttiruudukkoa
+      vaiheet     Pystyvaiheistus (jaettu vsteps-komponentti) — esim. tilausaikataulu
+      lataus      Ladattava materiaali (kampanjaesite / hinnasto) — avoin TAI liidi
+      brandit     Brändinosto, jos kampanja on brändivetoinen
+      makupaja    Makupaja-nosto (liidi)
+      yhteys      Myyjä-/yhteydenottokortti (liidi)
+      kampanjat   Tulevat kampanjat — kortit kampanja-CPT:stä (ei aikadataa, ylläpito 0)
+
+  VISUAALINEN LINJAUS (Olli 28.8.2026: "aika tylsä"): kampanjasivu on markkinointi-
+  pinta, ei sisältösivu — se saa olla äänekkäämpi. Nostot tehty VARIOIMALLA olemassa
+  olevia Condite-lohkoja, ei keksimällä uutta kuvakieltä:
+   · HERO = tumma kampanjabändi #0a4f72 — sama komponentti kuin etusivun .camp-section,
+     josta tälle sivulle klikataan → visuaalinen jatkumo + erottuu sisältösivuista heti.
+     Murupolku bändin sisällä, ei erillistä valkoista kaistaa.
+   · Kausisävy siirtyi herosta vaaleisiin bändeihin: brändi pitää yläreunan, kausi värittää
+     rungon.
+   · kulmat: ikonikortit -> kuvakortit (etusivun .nost-card -rakenne). Ruoka on visuaalinen
+     ala; ikonikortti on kampanjasivulla se geneerisin mahdollinen ratkaisu.
+   · reseptit: tasakokoinen ruudukko -> mosaiikki (johtokortti 2 saraketta). Johtokortti
+     vain kun reseptejä on 5+, muuten ruudukko jää vajaaksi.
+   · artikkelit: kortit -> vaakarivit (etusivun .seg-row) — kolme peräkkäistä korttiruudukkoa
+     tappoi rytmin.
+   · Typografia clamp()-skaalalla ja väljempi pystyrytmi (88/72 px) kuin sisarsivuilla.
+
+  DEMO-KYTKIN (wireframe-only, musta kaista ylhäällä): vaihtaa koko sivun kolmen
+  esimerkkikampanjan välillä — Sadonkorjuu / Halloween / Joulu. KOLME ERI
+  MODUULIVALINTAA JA -JÄRJESTYSTÄ samasta pohjasta. Tämä on sivun varsinainen
+  demonstraatio: pohja taipuu, layout pysyy.
+
+  ============================================================================
+  KANSAINVÄLISET VIITTEET (haettu 28.8.2026 — mistä ratkaisut on lainattu)
+  ============================================================================
+  · Kespro /sesongissa ja /joulu (FI, HoReCa-tukku) — LÄHIN VERROKKI. Ankkurilinkki-
+    sisällysluettelo heti heron alla, sen jälkeen sekasisältöiset moduulit
+    (tuotekategoriat, reseptikortit, artikkelit, ladattava kalenteri, verkkokauppa-CTA).
+    → Lainattu: ankkurinavi + moduulirakenne + verkkokauppaan ohjaava loppu-CTA.
+  · Puratos /campaigns/summer (B2B-raaka-ainevalmistaja) — kampanjaländäri, jossa
+    hero + makusuuntien ryhmittely + tuotenostot + reseptiruudukko + "ota yhteyttä
+    asiantuntijaan". → Lainattu: teemakulmat (makusuunnat) omana moduulinaan.
+  · Zeelandia /inspiration (UK) — inspiraatiohubi kolmella teemalla (Insight /
+    Solutions / Sustainability), kortit + asiantuntijaesittely + yhteydenottolomake.
+    → Lainattu: asiantuntija/myyjä-kortti kampanjan lopussa.
+  · Dawn Foods /seasonal — pysyvä sesonkisivu, joka päivitetään kaudeksi kerrallaan.
+  · Seasonal landing page -käytäntö (Seventy7 / 29 Strategies): PIDÄ SAMA URL
+    VUODESTA TOISEEN ja päivitä sisältö — älä luo uutta osoitetta joka vuosi.
+    Hakukoneauktoriteetti kumuloituu yhteen osoitteeseen. → Ks. URL-linjaus alla.
+
+  ============================================================================
+  URL- JA IA-LINJAUS (ehdotus — vahvistettava)
+  ============================================================================
+  · Kampanjasivu:     /kampanjat/sadonkorjuu/     (EVERGREEN slug, ei vuosilukua)
+    Sisältö päivitetään joka vuosi samaan osoitteeseen → SEO-auktoriteetti kumuloituu.
+    Vuosi näkyy sivulla (hero-kicker "Sesonki: elo–lokakuu 2026"), ei URL:ssä.
+    Poikkeus: kertaluontoinen kampanja (messu, lanseeraus) saa oman slugin.
+  · Kampanjaindeksi:  /kampanjat/            (kaikki kampanjat, käynnissä ensin)
+    HUOM: vuosinäkymä (kampanjavuosi kerralla) EI kuulu yksittäiselle kampanjasivulle
+    eikä sitä pidä syöttää käsin. Jos se joskus halutaan, se kuuluu tälle indeksisivulle
+    ja se on JOHDETTAVA kampanja-CPT:n julkaisuikkunasta (alkaa/päättyy) — samoista
+    päivämääristä, joita sivu tarvitsee jo "kausi päättynyt" -tilaan ja etusivun nostoon.
+  · Murupolku:        Etusivu › Kampanjat › [Kampanjan nimi]
+  · EI päänavigaatiossa. Sisääntulot: etusivun nosto · uutiskirje · LinkedIn ·
+    myyjä · Google (ratkaisuhaku "sadonkorjuu reseptit ammattikeittiöön").
+    Jos kampanja on iso, siihen voi nostaa määräaikaisen linkin naviin — silloin
+    tarvitaan sisarsivujen navi-sweep (sama velka kuin Brändit-navi-item).
+  · Footeriin lisätty "Kampanjat" Sivusto-listaan — VAATII SWEEPIN sisarsivuille.
+  · Kampanjan päätyttyä: sivu EI poistu eikä 404:ää. Hero vaihtuu "kausi päättynyt,
+    katso ensi kauden sisällöt / muut kampanjat" -tilaan; sisältö jää indeksiin.
+
+  ============================================================================
+  PÄÄSYTASOT (konteksti §5) — merkitty vain koodikommentteina, ei näkyvinä lappuina
+  ============================================================================
+  · AVOIN: hero, ankkurinavi, kulmat, featured, tuotteet, reseptit, artikkelit,
+    vaiheet, brandit, kampanjat, loppu-CTA. Kampanjasivun koko idea on
+    löydettävyys ennen brändituntemusta (konteksti §7.3) → ei gatettua sisältöä.
+  · LIIDI: "lataus"-moduuli JOS gated=true (kampanjaesite yhteystietoja vastaan,
+    → Dynamics, segmenttitieto mukaan) · makupaja-moduuli · yhteys-moduuli.
+  · LOGIN (Sana): ei yhtään lohkoa. Tuotenostoista siirrytään tuotekortille;
+    hinta ja tilaus tapahtuvat vasta siellä / verkkokaupassa.
+
+  ============================================================================
+  KAMPANJASÄVY (--c-camp-tint / --c-camp-line) — AVOIN PÄÄTÖS, valinnainen
+  ============================================================================
+  Kampanjasivu on ainoa sivutyyppi, jolla on perusteltu tarve kausiluonteiselle
+  ilmeelle. Mekanismi on rajattu tarkoituksella: YKSI taustasävy + YKSI viivaväri,
+  jotka vaikuttavat VAIN hero-bändiin ja kampanjabändeihin. Kaikki toiminnalliset
+  elementit (napit, linkit, aktiivitilat, ikonit) pysyvät DS-sinisenä.
+    · sadonkorjuu = lämmin hiekka   · halloween = vaimea amber
+    · joulu       = DS:n oletussävy (todiste: sävy on VALINNAINEN, ei pakollinen)
+  Jos Olli haluaa 100 % DS-neutraalin: poista theme-objektit configista, mekanismi
+  putoaa pois itsestään (fallback = DS-tokenit).
+
+  ============================================================================
+  §8-TARKISTUSLISTA (täytetty)
+  ============================================================================
+  1. Laskeutumisvalmius: crumbs · hero kertoo mikä Condite on ja mistä kampanjassa on
+     kyse · näkyvä navi + ankkurinavi · loppu-CTA. Ei oleteta etusivua nähdyksi.
+  2. Ratkaisulähtöinen otsikointi: H1 "Sadonkorjuun maut ammattikeittiöön ja leipomoon"
+     — ei sisäistä kampanjanimeä ("Syyskampanja 2026").
+  3. Kanava → laskeutuminen: uutiskirje/LinkedIn/myyjä (tuntee Conditen → menee
+     suoraan tuotteisiin) JA Google (ei tunne → hero kehystää + ankkurinavi orientoi).
+  4. Verkkosivu vs. verkkokauppa: kampanja myy idean ja sovelluksen; siirtymä Sanaan
+     tapahtuu vasta tuotekortilta, ei kampanjasivulta.
+  5. Pää-CTA: yksi per kampanja (Sadonkorjuu: "Katso kauden tuotteet"), sekundäärit
+     alisteisia. Loppu-CTA toistaa saman.
+  6. Pääsytaso per lohko: ks. yllä — kaikki avoin paitsi lataus(gated)/makupaja/yhteys.
+  7. Ei umpikujia: jokainen moduuli päättyy linkkiin (tuotehaku, reseptipankki,
+     artikkelit, tulevat kampanjat) + loppu-CTA.
+
+  TIEDOSSA OLEVAT AUKOT (K): kampanjakalenteri (mitä teemoja Condite ajaa vuodessa),
+  kampanjatuotteiden kuratointitapa (manuaalinen valinta vs. tuotetagi "kampanja"),
+  myyjätiedot, sertifikaatit. Kaikki placeholdereina, ei keksittyjä lukuja.
+-->
+<style>
+  :root {
+    /* Taustat */
+    --c-bg:#ffffff; --c-bg-soft:#f7f7f7; --c-bg-tint:#eef6fb;
+    /* Teksti */
+    --c-text:#1d1d1f; --c-text-2:#555555; --c-text-muted:#6f6f6f;
+    /* Viivat */
+    --c-border:#e3e3e3; --c-border-strong:#cfcfcf; --c-divider:#d8d8d8;
+    /* Kuvapaikat */
+    --c-ph-bg:#ececec; --c-ph-border:#c8c8c8;
+    /* Korostus — pehmeä sininen (DS) */
+    --c-accent:#7fc8ec; --c-accent-ink:#0a6e9b; --c-on-accent:#0a4f72;
+    --c-accent-soft:#e3f2fb; --c-suits-border:#b7def4;
+    /* Tila- ja merkkivärit */
+    --c-in-bg:#e7efe9; --c-in-text:#2f5a40;
+    /* Pyöristykset */
+    --r-sm:4px; --r-md:8px; --r-lg:12px;
+
+    /* KAMPANJASÄVY — valinnainen, asetetaan JS:llä kampanjan theme-objektista.
+       Oletus = DS-tokenit, eli ilman teemaa sivu on täysin DS-neutraali. */
+    --c-camp-tint: var(--c-bg-tint);
+    --c-camp-line: var(--c-suits-border);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--c-bg); color: var(--c-text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+    font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased;
+  }
+  /* Shell-gotcha: author-display:flex ohittaa UA-säännön — pidä tämä mukana */
+  [hidden] { display: none !important; }
+  a { color: var(--c-accent-ink); }
+  img { max-width: 100%; }
+
+  /* Saavutettavuus */
+  .skip { position: absolute; left: 8px; top: -48px; z-index: 100; background: var(--c-accent); color: var(--c-on-accent); font-weight: 700; padding: 10px 16px; border-radius: var(--r-sm); text-decoration: none; transition: top .15s; }
+  .skip:focus { top: 8px; }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 2.5px solid var(--c-accent); outline-offset: 2px; border-radius: var(--r-sm); }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+  /* Layout — kampanjasivulla väljempi rytmi kuin sisältösivuilla (marketing-pinta) */
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  .block { max-width: 1200px; margin: 0 auto; padding: 88px 24px 0; }
+  .block.first { padding-top: 32px; }
+  .block.last { padding-bottom: 88px; }
+  .band { border-top: 1px solid var(--c-suits-border); border-bottom: 1px solid var(--c-suits-border); background: var(--c-bg-tint); margin-top: 88px; }
+  .band .block { padding-top: 72px; padding-bottom: 72px; }
+  /* Kampanjabändi käyttää kampanjasävyä (jos asetettu) */
+  .band.camp { background: var(--c-camp-tint); border-color: var(--c-camp-line); }
+
+  /* Tyypit — isompi kontrasti kuin sisältösivuilla: kampanja saa olla äänekkäämpi */
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--c-accent-ink); margin: 0 0 8px; }
+  h1 { font-size: clamp(34px, 4.4vw, 56px); line-height: 1.06; letter-spacing: -.022em; margin: 0 0 16px; font-weight: 700; }
+  h2 { font-size: clamp(26px, 2.7vw, 36px); line-height: 1.14; letter-spacing: -.015em; margin: 0; font-weight: 700; }
+  h3 { font-size: 18px; font-weight: 700; }
+  .intro { margin: 16px 0 0; color: var(--c-text-2); }
+  .section-head { max-width: 760px; }
+  .section-head .intro { margin-top: 12px; font-size: 17px; }
+  /* Keskitetty variantti — rikkoo "aina vasen otsikko" -metronomin */
+  .section-head.center { max-width: 720px; margin-left: auto; margin-right: auto; text-align: center; }
+  /* Otsikkorivi, jossa oikealla "katso kaikki" -linkki */
+  .head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+  .head-row .section-head { flex: 1; min-width: 260px; }
+
+  /* Painikkeet */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: var(--r-sm); font-weight: 600; font-size: 16px; text-decoration: none; line-height: 1.2; cursor: pointer; padding: 13px 22px; border: 1.5px solid transparent; font-family: inherit; }
+  .btn-primary { border-color: var(--c-accent); background: var(--c-accent); color: var(--c-on-accent); }
+  .btn-outline { border-color: var(--c-accent-ink); background: var(--c-bg); color: var(--c-accent-ink); }
+  .btn-sm { padding: 9px 16px; font-size: 14px; border-color: var(--c-accent-ink); background: var(--c-bg); color: var(--c-accent-ink); }
+  .btn-link { color: var(--c-accent-ink); text-decoration: none; font-weight: 600; font-size: 14px; display: inline-flex; gap: 6px; align-items: center; white-space: nowrap; cursor: pointer; background: none; border: 0; font-family: inherit; padding: 0; }
+  .btn-link:hover { text-decoration: underline; }
+
+  /* Demo-kaista (wireframe-only — kampanjan vaihto, EI osa sivua) */
+  .demo-bar { background: var(--c-text); color: #fff; font-size: 13px; }
+  .demo-inner { max-width: 1200px; margin: 0 auto; padding: 10px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .demo-inner .demo-label { font-weight: 700; letter-spacing: .04em; text-transform: uppercase; font-size: 11px; opacity: .85; display: inline-flex; align-items: center; gap: 8px; }
+  .demo-inner .demo-note { color: #cfe7f5; font-size: 12px; flex: 1; min-width: 240px; }
+  .segmented { display: inline-flex; border: 1px solid rgba(255,255,255,.35); border-radius: var(--r-sm); overflow: hidden; }
+  .segmented .seg { font-size: 13px; font-weight: 600; padding: 6px 14px; background: transparent; color: #fff; cursor: pointer; border: 0; font-family: inherit; }
+  .segmented .seg + .seg { border-left: 1px solid rgba(255,255,255,.35); }
+  .segmented .seg[aria-pressed="true"] { background: var(--c-accent); color: var(--c-on-accent); }
+
+  /* Header */
+  .site-header { border-bottom: 1px solid var(--c-border); background: var(--c-bg); position: sticky; top: 0; z-index: 50; }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; min-height: 64px; gap: 32px; }
+  .logo { flex: none; width: 110px; height: 34px; background: var(--c-ph-bg); border: 1px dashed var(--c-ph-border); display: flex; align-items: center; justify-content: center; color: var(--c-text-2); font-size: 12px; border-radius: var(--r-sm); letter-spacing: .5px; font-weight: 700; text-decoration: none; }
+  .nav-main { display: flex; align-items: center; justify-content: center; flex: 1; }
+  .nav-list { list-style: none; margin: 0; padding: 0; display: flex; gap: 2px; }
+  .nav-list a { text-decoration: none; padding: 8px 12px; border-radius: var(--r-sm); font-weight: 500; color: var(--c-text); font-size: 14px; white-space: nowrap; position: relative; }
+  .nav-list a:hover { color: var(--c-accent-ink); }
+  .nav-list a[aria-current="page"] { color: var(--c-accent-ink); font-weight: 700; }
+  .nav-list a[aria-current="page"]::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: 0; height: 2px; background: var(--c-accent); border-radius: 2px; }
+  .nav-list > li.has-dropdown { position: relative; }
+  .nav-list .caret { font-size: 9px; margin-left: 4px; color: var(--c-text-muted); }
+  .nav-dropdown { position: absolute; top: 100%; left: 0; min-width: 220px; background: var(--c-bg); border: 1px solid var(--c-border); border-radius: var(--r-md); box-shadow: 0 10px 26px rgba(10,79,114,.12); padding: 6px 0; margin-top: 4px; list-style: none; display: none; z-index: 60; }
+  .nav-list > li.has-dropdown:hover > .nav-dropdown,
+  .nav-list > li.has-dropdown:focus-within > .nav-dropdown,
+  .nav-list > li.has-dropdown.open > .nav-dropdown { display: block; }
+  .nav-dropdown a { display: block; padding: 9px 16px; font-size: 14px; color: var(--c-text); font-weight: 500; white-space: nowrap; }
+  .nav-dropdown a::after { display: none !important; }
+  .nav-dropdown a:hover { background: var(--c-bg-soft); color: var(--c-accent-ink); }
+  .ext-ico { font-size: 10px; margin-left: 5px; opacity: .7; vertical-align: baseline; }
+  .nav-actions { flex: none; display: inline-flex; align-items: center; gap: 16px; }
+  .lang { display: inline-flex; align-items: center; gap: 2px; font-size: 14px; }
+  .lang a { text-decoration: none; padding: 3px 7px; border-radius: var(--r-sm); color: var(--c-text-muted); }
+  .lang a[aria-current="true"] { background: var(--c-bg-soft); color: var(--c-text); font-weight: 700; }
+  .nav-toggle { display: none; }
+
+  /* Murupolku */
+  .crumbs { max-width: 1200px; margin: 0 auto; padding: 14px 24px 0; font-size: 13px; color: var(--c-text-muted); }
+  .crumbs ol { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; }
+  .crumbs a { color: var(--c-text-2); text-decoration: none; }
+  .crumbs a:hover { color: var(--c-accent-ink); }
+  .crumbs li[aria-current="page"] { color: var(--c-text); font-weight: 600; }
+  .crumbs .sep { color: var(--c-border-strong); }
+  /* Murupolku tumman hero-bändin sisällä */
+  .hero-band .crumbs { padding-top: 18px; color: #9fc6dc; }
+  .hero-band .crumbs a { color: #b3d4e6; }
+  .hero-band .crumbs a:hover { color: #fff; }
+  .hero-band .crumbs li[aria-current="page"] { color: #fff; }
+  .hero-band .crumbs .sep { color: #4f8fb3; }
+
+  /* Yleinen kuvapaikka */
+  .ph { background: var(--c-ph-bg); border: 1px dashed var(--c-ph-border); display: flex; align-items: center; justify-content: center; color: var(--c-text-2); font-size: 13px; gap: 6px; text-align: center; padding: 8px; }
+  .ph i { opacity: .6; }
+  .ph-16-10 { aspect-ratio: 16 / 10; }
+  .ph-16-9 { aspect-ratio: 16 / 9; }
+  .ph-4-3 { aspect-ratio: 4 / 3; }
+
+  /* =========================================================================
+     SELKÄRANKA 1/3 — KAMPANJAHERO (avoin) — TUMMA KAMPANJABÄNDI
+     Sama visuaalinen kieli kuin etusivun kampanjanostossa (.camp-section, #0a4f72),
+     josta tälle sivulle klikataan → jatkumo säilyy ja sivu erottuu heti
+     sisältösivuista. Kausisävy (--c-camp-tint) hoitaa kauden ilmeen alempana
+     vaaleissa bändeissä; brändi pitää yläreunan.
+     ========================================================================= */
+  .hero-band { background: #0a4f72; color: #cfe3ef; }
+  .hero-band .block { padding-top: 40px; padding-bottom: 76px; }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .95fr); gap: 56px; align-items: center; }
+  /* Kampanjamerkki — etusivun hyväksytty .camp-badge -komponentti */
+  .camp-badge { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--c-on-accent); background: var(--c-accent); border-radius: 999px; padding: 6px 13px; }
+  .hero-copy h1 { color: #fff; margin: 18px 0 16px; }
+  .hero-copy .intro { font-size: 19px; color: #cfe3ef; max-width: 52ch; margin: 0; }
+  /* Kausi-/voimassaolorivi — hienovarainen metarivi, EI pilleri */
+  .hero-kicker { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: #9fc6dc; margin: 20px 0 0; }
+  .hero-kicker i { color: #9fc6dc; font-size: 13px; }
+  .hero-ctas { margin: 30px 0 0; display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
+  /* Vaalea linkki tummalla — etusivun .camp-link */
+  .btn-on-dark { color: #cfe3ef; font-weight: 600; font-size: 15px; display: inline-flex; align-items: center; gap: 7px; text-decoration: underline; text-underline-offset: 4px; }
+  .btn-on-dark:hover { color: #fff; }
+  /* Kuvapaikka tummalla — etusivun .camp-media (vinoviivarasteri) */
+  .hero-media .ph {
+    border-radius: var(--r-lg); aspect-ratio: 4 / 3; min-height: 0;
+    border-color: rgba(255,255,255,.35); color: #b3d4e6; background: rgba(255,255,255,.06);
+    background-image: repeating-linear-gradient(45deg, transparent, transparent 9px, rgba(255,255,255,.05) 9px, rgba(255,255,255,.05) 10px);
+  }
+  .hero-media .ph i { opacity: .5; }
+
+  /* =========================================================================
+     SELKÄRANKA 2/3 — ANKKURINAVI "Tällä sivulla" (Kespro-pattern)
+     Tekee vaihtelevanpituisesta sekasisältösivusta selattavan. Sticky headerin alla.
+     ========================================================================= */
+  .jump { position: sticky; top: 64px; z-index: 40; background: var(--c-bg); border-bottom: 1px solid var(--c-border); }
+  .jump-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; gap: 20px; }
+  .jump-label { flex: none; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--c-text-muted); }
+  .jump-list { list-style: none; margin: 0; padding: 0; display: flex; gap: 4px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .jump-list a { display: inline-block; padding: 14px 12px; font-size: 14px; font-weight: 600; color: var(--c-text-2); text-decoration: none; white-space: nowrap; position: relative; }
+  .jump-list a:hover { color: var(--c-accent-ink); }
+  .jump-list a[aria-current="true"] { color: var(--c-accent-ink); }
+  .jump-list a[aria-current="true"]::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: 0; height: 2px; background: var(--c-accent); border-radius: 2px; }
+
+  /* =========================================================================
+     MODUULI: kulmat — teemakulmat / makusuunnat (avoin)
+     Puratos-pattern: kampanjateema pilkotaan 3–4 konkreettiseen suuntaan.
+     ========================================================================= */
+  /* KUVAVETOINEN kortti (ei ikonikorttia): ruoka on visuaalinen ala — ikonikortti
+     on kampanjasivulla se geneerisin mahdollinen ratkaisu. Sama korttirakenne kuin
+     etusivun .nost-card / reseptipankin .recipe-card, isommalla medialla. */
+  .kulma-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 28px; margin-top: 40px; }
+  .kulma { display: flex; flex-direction: column; border: 1px solid var(--c-border); border-radius: var(--r-lg); background: var(--c-bg); overflow: hidden; text-decoration: none; color: inherit; transition: border-color .15s, transform .15s, box-shadow .15s; }
+  .kulma:hover { border-color: var(--c-suits-border); transform: translateY(-3px); box-shadow: 0 12px 28px rgba(10,79,114,.10); }
+  .kulma .ph { aspect-ratio: 4 / 3; border: 0; border-bottom: 1px dashed var(--c-ph-border); }
+  .kulma-body { padding: 24px 24px 26px; display: flex; flex-direction: column; flex: 1; }
+  .kulma h3 { margin: 0 0 8px; font-size: 22px; letter-spacing: -.01em; }
+  .kulma p { margin: 0; font-size: 15px; color: var(--c-text-2); }
+  .kulma .go { margin-top: auto; padding-top: 18px; color: var(--c-accent-ink); font-size: 14px; font-weight: 600; display: inline-flex; gap: 6px; align-items: center; }
+
+
+  /* =========================================================================
+     MODUULI: featured — iso editorial-nosto (avoin)
+     ========================================================================= */
+  .featured { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.04fr); border: 1px solid var(--c-border); border-radius: var(--r-lg); overflow: hidden; background: var(--c-bg); margin-top: 32px; }
+  .featured .feat-media .ph { border: 0; border-radius: 0; height: 100%; min-height: 300px; }
+  .feat-body { padding: 34px 38px; display: flex; flex-direction: column; justify-content: center; }
+  .feat-body .feat-kicker { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--c-accent-ink); margin: 0; }
+  .feat-body h3 { font-size: 26px; margin: 8px 0 0; line-height: 1.2; }
+  .feat-body p { margin: 12px 0 0; color: var(--c-text-2); max-width: 52ch; }
+  /* Spec-strip: yhtenäinen mikro-otsikko + arvo (EI sekalaisia pillereitä) */
+  .spec-strip { display: flex; flex-wrap: wrap; gap: 0; margin: 22px 0 0; border-top: 1px solid var(--c-border); border-bottom: 1px solid var(--c-border); }
+  .spec-strip .spec { padding: 12px 22px 12px 0; margin-right: 22px; border-right: 1px solid var(--c-border); }
+  .spec-strip .spec:last-child { border-right: 0; margin-right: 0; padding-right: 0; }
+  .spec-strip .k { display: block; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--c-text-muted); }
+  .spec-strip .v { display: block; font-size: 15px; font-weight: 700; color: var(--c-text); margin-top: 3px; }
+  .feat-cta { margin: 24px 0 0; }
+
+  /* =========================================================================
+     MODUULI: tuotteet — kuratoitu tuotekaruselli (avoin)
+     minmax(0,1fr)-gotcha: yksisarakkeinen grid-parent sizeisi sisältöön → ylivuoto.
+     ========================================================================= */
+  .carousel-wrap { display: grid; grid-template-columns: minmax(0, 1fr); margin-top: 24px; }
+  .carousel-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 12px; }
+  .carousel-head .lbl { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--c-text-muted); }
+  .carousel-nav { display: inline-flex; gap: 8px; }
+  .carousel-btn { width: 34px; height: 34px; border-radius: 999px; border: 1px solid var(--c-border-strong); background: var(--c-bg); color: var(--c-text-2); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; }
+  .carousel-btn:hover:not(:disabled) { border-color: var(--c-accent-ink); color: var(--c-accent-ink); }
+  .carousel-btn:disabled { opacity: .35; cursor: default; }
+  .prod-row { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(232px, 1fr); gap: 20px; overflow-x: auto; scroll-behavior: smooth; min-width: 0; padding-bottom: 6px; }
+  .prod-card { border: 1px solid var(--c-border); border-radius: var(--r-md); background: var(--c-bg); overflow: hidden; text-decoration: none; color: inherit; display: flex; flex-direction: column; }
+  .prod-card:hover { border-color: var(--c-suits-border); }
+  .prod-card .ph { aspect-ratio: 4 / 3; border: 0; border-bottom: 1px dashed var(--c-ph-border); }
+  .pc-body { padding: 16px 16px 18px; display: flex; flex-direction: column; gap: 4px; }
+  .pc-brand { font-size: 10px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--c-text-muted); }
+  .pc-name { font-size: 16px; font-weight: 700; line-height: 1.3; }
+  .pc-meta { font-size: 12px; color: var(--c-text-2); }
+  .prod-all { border: 1px dashed var(--c-border-strong); border-radius: var(--r-md); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-decoration: none; color: var(--c-accent-ink); font-weight: 700; font-size: 14px; text-align: center; padding: 16px; }
+  .prod-all:hover { border-color: var(--c-accent-ink); background: var(--c-accent-soft); }
+
+  /* =========================================================================
+     MODUULI: reseptit — reseptikorttiruudukko (avoin) · sama kortti kuin reseptipankissa
+     ========================================================================= */
+  /* Mosaiikki: 1 iso johtokortti (2 saraketta, media vasemmalla) + loput normaaleina.
+     Rikkoo tasakokoisen ruudukon ilman uutta komponenttia — sama .recipe-card. */
+  .card-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; margin-top: 36px; }
+  .recipe-card.is-lead { grid-column: span 2; flex-direction: row; }
+  .recipe-card.is-lead .card-image { aspect-ratio: auto; width: 46%; flex: none; border-bottom: 0; border-right: 1px dashed var(--c-ph-border); }
+  .recipe-card.is-lead .card-body { padding: 30px 32px; gap: 10px; justify-content: center; }
+  .recipe-card.is-lead .card-name { font-size: 24px; letter-spacing: -.01em; }
+  .recipe-card.is-lead .card-go { margin-top: 14px; padding-top: 0; }
+  .recipe-card { display: flex; flex-direction: column; text-decoration: none; color: inherit; border: 1px solid var(--c-border); border-radius: var(--r-md); background: var(--c-bg); overflow: hidden; transition: border-color .15s, transform .15s, box-shadow .15s; }
+  .recipe-card:hover { border-color: var(--c-suits-border); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(10,79,114,.08); }
+  .card-image { aspect-ratio: 16 / 10; background: var(--c-ph-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; border-bottom: 1px dashed var(--c-ph-border); }
+  .card-image i { font-size: 22px; color: var(--c-text-2); opacity: .55; }
+  .card-image .label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--c-text-2); }
+  .card-body { padding: 16px 14px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .card-category { font-size: 11px; text-transform: uppercase; letter-spacing: .07em; color: var(--c-text-muted); font-weight: 700; }
+  .card-name { font-size: 17px; font-weight: 700; margin: 0; line-height: 1.28; }
+  .card-meta { list-style: none; display: flex; align-items: center; gap: 8px; margin: 0; padding: 0; font-size: 11px; color: var(--c-text-2); }
+  .card-meta li { display: inline-flex; align-items: center; gap: 4px; }
+  .card-meta li i { color: var(--c-accent-ink); font-size: 10px; }
+  /* Käänteisrekommendaattori: mikä Condite-tuote reseptin takana on */
+  .card-contains { font-size: 13px; color: var(--c-text-2); display: inline-flex; align-items: baseline; gap: 6px; }
+  .card-contains i { color: var(--c-accent-ink); font-size: 11px; position: relative; top: 1px; }
+  .card-contains strong { color: var(--c-accent-ink); font-weight: 700; }
+  .card-go { margin-top: auto; padding-top: 10px; color: var(--c-accent-ink); font-size: 13px; font-weight: 600; display: inline-flex; gap: 6px; align-items: center; }
+
+  /* =========================================================================
+     MODUULI: artikkelit — trendi-/artikkelinostot (avoin)
+     ========================================================================= */
+  /* VAAKARIVIT, ei kortteja: etusivun .seg-row -pattern. Kolmas peräkkäinen
+     korttiruudukko olisi tappanut sivun rytmin — rivilista on tiiviimpi ja
+     erottuu edeltävästä reseptimosaiikista. */
+  .art-list { list-style: none; margin: 36px 0 0; padding: 0; border-top: 1px solid var(--c-border); }
+  .art-row { display: grid; grid-template-columns: 104px minmax(160px, 1.1fr) 1.6fr auto; gap: 32px; align-items: center; padding: 22px 0; border-bottom: 1px solid var(--c-border); text-decoration: none; color: inherit; transition: background .12s ease; }
+  .art-row:hover { background: var(--c-bg-soft); }
+  .art-row .ph { width: 104px; height: 74px; border-radius: var(--r-sm); }
+  .art-kicker { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--c-text-muted); display: block; margin-bottom: 5px; }
+  .art-row h3 { margin: 0; font-size: 19px; line-height: 1.25; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; text-decoration-color: var(--c-border-strong); }
+  .art-row:hover h3 { text-decoration-color: var(--c-accent-ink); }
+  .art-row p { margin: 0; font-size: 15px; color: var(--c-text-2); }
+  .art-row .go { color: var(--c-accent-ink); font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; justify-self: end; }
+
+  /* =========================================================================
+     MODUULI: vaiheet — JAETTU KOMPONENTTI vsteps (condite_komponentti_vaiheistus.html)
+     ========================================================================= */
+  .vproc { max-width: 760px; margin-top: 32px; }
+  .vsteps { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+  .vstep { display: grid; grid-template-columns: 48px 1fr; gap: 20px; position: relative; padding-bottom: 28px; }
+  .vstep:last-child { padding-bottom: 0; }
+  .vstep-node { display: flex; align-items: flex-start; justify-content: center; position: relative; }
+  .vstep-ic { width: 48px; height: 48px; border-radius: 999px; background: var(--c-accent-soft); border: 1px solid var(--c-suits-border); color: var(--c-accent-ink); display: flex; align-items: center; justify-content: center; font-size: 18px; position: relative; z-index: 1; }
+  .vstep:not(:last-child) .vstep-node::after { content: ""; position: absolute; top: 52px; bottom: -28px; left: 50%; transform: translateX(-50%); border-left: 2px dotted var(--c-border-strong); }
+  .vstep-body { padding-top: 10px; }
+  .vstep-body h3 { font-size: 18px; margin: 0 0 6px; }
+  .vstep-body p { font-size: 14px; color: var(--c-text-2); margin: 0; max-width: 56ch; }
+
+  /* =========================================================================
+     MODUULI: lataus — ladattava kampanjamateriaali (avoin TAI liidi)
+     ========================================================================= */
+  .dl { display: grid; grid-template-columns: 200px 1fr auto; gap: 32px; align-items: center; border: 1px solid var(--c-border); border-radius: var(--r-lg); background: var(--c-bg); padding: 28px 32px; margin-top: 28px; }
+  .dl .ph { aspect-ratio: 210 / 297; border-radius: var(--r-md); }
+  .dl-body h3 { margin: 0; font-size: 21px; }
+  .dl-body p { margin: 10px 0 0; color: var(--c-text-2); font-size: 15px; max-width: 56ch; }
+  .dl-file { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--c-text-muted); margin: 14px 0 0; }
+  .dl-file i { color: var(--c-accent-ink); }
+  /* Liidi-tila: pieni lomakevihje (ei upotettua lomaketta wireframessa) */
+  .dl-lead-note { font-size: 13px; color: var(--c-text-2); margin: 12px 0 0; border-top: 1px solid var(--c-border); padding-top: 12px; max-width: 56ch; }
+
+  /* =========================================================================
+     MODUULI: brandit — brändinosto (avoin)
+     ========================================================================= */
+  .logo-wall { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; margin-top: 28px; }
+  .logo-tile { height: 74px; border: 1px solid var(--c-border); border-radius: var(--r-md); background: var(--c-bg); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--c-text-2); text-decoration: none; text-align: center; padding: 8px; }
+  a.logo-tile:hover { border-color: var(--c-accent-ink); color: var(--c-accent-ink); }
+
+  /* =========================================================================
+     MODUULI: makupaja (liidi) · yhteys (liidi)
+     ========================================================================= */
+  .split { display: grid; grid-template-columns: 1fr 1.05fr; gap: 48px; align-items: center; }
+  .split .split-media { order: 2; }
+  .split .ph { border-radius: var(--r-lg); }
+  .split-body h2 { margin-bottom: 0; }
+  .split-ctas { margin: 24px 0 0; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+
+  .person { display: grid; grid-template-columns: 96px 1fr; gap: 22px; align-items: center; border: 1px solid var(--c-border); border-radius: var(--r-lg); background: var(--c-bg); padding: 26px 28px; margin-top: 28px; max-width: 720px; }
+  .person .ph { width: 96px; height: 96px; border-radius: 999px; }
+  .person h3 { margin: 0; font-size: 19px; }
+  .person .role { font-size: 14px; color: var(--c-text-2); margin: 3px 0 0; }
+  .person .contact { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 5px; font-size: 14px; }
+  .person .contact li { display: inline-flex; align-items: center; gap: 8px; color: var(--c-text-2); }
+  .person .contact i { color: var(--c-accent-ink); font-size: 13px; width: 15px; }
+
+  /* =========================================================================
+     MODUULI: kampanjat — tulevat kampanjat (avoin)
+     Korvasi vuosikellon (Olli 28.8.2026: kehät vaikealukuisia + ylläpito raskas).
+     Ei omaa komponenttia: käyttää kulmat-moduulin .kulma-korttia + tilarivin.
+     YLLÄPITO = 0: kaikki kentät tulevat kampanja-CPT:n omista tiedoista, jotka on
+     joka tapauksessa täytettävä (nimi, pääkuva, kausiteksti, ingressi). Uusi kampanja
+     ilmestyy listalle julkaistaessa, päättynyt putoaa pois — ei erillistä aikadataa,
+     ei kuukausitaulukkoa, ei "nyt"-logiikkaa ylläpidettäväksi.
+     ========================================================================= */
+  .kulma.k-camp .ph { aspect-ratio: 16 / 9; }
+  .kulma.k-camp h3 { font-size: 19px; }
+  .kulma.k-camp .kulma-body { padding: 20px 22px 22px; }
+  .k-status { display: inline-flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--c-text-muted); margin-bottom: 10px; }
+  .k-status.is-live { color: var(--c-accent-ink); }
+  .k-status.is-live::before { content: ""; width: 7px; height: 7px; border-radius: 999px; background: var(--c-accent-ink); flex: none; }
+
+  /* =========================================================================
+     SELKÄRANKA 3/3 — LOPPU-CTA (avoin)
+     ========================================================================= */
+  .end-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 32px; justify-content: space-between; border: 1px solid var(--c-border); border-radius: var(--r-lg); padding: 30px 34px; background: var(--c-bg); }
+  .end-cta .end-copy { max-width: 56ch; }
+  .end-cta h2 { font-size: 23px; }
+  .end-cta p { margin: 8px 0 0; color: var(--c-text-2); font-size: 15px; }
+  .end-cta .end-actions { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+
+  /* Footer */
+  .site-footer { background: var(--c-bg-soft); border-top: 1px solid var(--c-border); padding: 48px 0 32px; margin-top: 64px; }
+  .footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--c-border); }
+  .footer-grid h4 { font-size: 14px; text-transform: uppercase; letter-spacing: .06em; margin: 0 0 16px; }
+  .footer-grid ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .footer-grid a { text-decoration: none; color: var(--c-text-2); font-size: 14px; }
+  .footer-grid a:hover { color: var(--c-accent-ink); }
+  .footer-blurb { font-size: 14px; color: var(--c-text-2); margin: 16px 0 0; max-width: 30ch; }
+  .news { display: flex; gap: 8px; }
+  .news input { flex: 1; min-width: 0; padding: 10px 12px; border-radius: var(--r-sm); border: 1px solid var(--c-border-strong); background: var(--c-bg); color: var(--c-text); font: inherit; font-size: 14px; }
+  .news button { padding: 10px 16px; border-radius: var(--r-sm); border: 1.5px solid var(--c-accent); background: var(--c-accent); color: var(--c-on-accent); font-weight: 700; font-size: 14px; cursor: pointer; }
+  .footer-legal { display: flex; justify-content: space-between; gap: 24px; padding-top: 24px; flex-wrap: wrap; font-size: 12px; color: var(--c-text-muted); }
+  .footer-legal a { color: var(--c-text-muted); text-decoration: none; }
+  .footer-legal .legal-links { display: flex; gap: 24px; flex-wrap: wrap; }
+
+  /* ===== Responsiivisuus ===== */
+  @media (max-width: 1000px) {
+    /* minmax(0,1fr) + min-width:0: pelkkä 1fr sizeisi min-contentiin (CTA-rivi)
+       ja työntäisi sivun vaakavieritykseen kapealla näytöllä. */
+    .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+    .hero-copy, .hero-media, .split-body, .split-media { min-width: 0; }
+    .hero-media { order: -1; }
+    /* GOTCHA: aspect-ratio + min-height yhdessä levittää laatikkoa LEVEYSSUUNNASSA
+       (leveys lasketaan korkeudesta: 200px * 16/9 = 356px) → sivu vaakavieritykseen
+       kapealla näytöllä. Kun aspect-ratio on käytössä, min-height pois. */
+    .hero-media .ph { min-height: 0; aspect-ratio: 16 / 9; }
+    .featured { grid-template-columns: 1fr; }
+    .featured .feat-media .ph { min-height: 0; aspect-ratio: 16 / 9; }
+    .feat-body { padding: 26px 24px; }
+    .split { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+    .split .split-media { order: 0; }
+    .dl { grid-template-columns: 140px 1fr; }
+    .dl .dl-action { grid-column: 1 / -1; }
+    /* Mosaiikki purkautuu: johtokortti koko leveydelle, mutta yhä media vasemmalla */
+    .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .recipe-card.is-lead { grid-column: 1 / -1; }
+    /* Artikkeliriviltä pois erillinen kuvaus-sarake */
+    .art-row { grid-template-columns: 88px 1fr auto; gap: 20px; }
+    .art-row .ph { width: 88px; height: 64px; }
+    .art-row p { display: none; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 760px) {
+    h1 { font-size: 32px; }
+    h2 { font-size: 26px; }
+    .nav-main { display: none; }
+    .nav-toggle { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 1px solid var(--c-border-strong); border-radius: var(--r-sm); background: var(--c-bg); color: var(--c-text); cursor: pointer; }
+    .site-header.nav-open .nav-main { display: block; position: absolute; top: 100%; left: 0; right: 0; background: var(--c-bg); border-bottom: 1px solid var(--c-border); box-shadow: 0 8px 20px rgba(0,0,0,.06); padding: 8px 24px 16px; }
+    .site-header.nav-open .nav-list { flex-direction: column; gap: 0; }
+    .site-header.nav-open .nav-list a { display: block; padding: 13px 0; border-bottom: 1px solid var(--c-border); font-size: 15px; }
+    .site-header.nav-open .nav-list a[aria-current="page"]::after { display: none; }
+    .site-header.nav-open .nav-dropdown { position: static; display: block; box-shadow: none; border: 0; padding: 0 0 6px 14px; margin: 0; min-width: 0; }
+    .nav-list .caret { display: none; }
+    /* CHROME-KORJAUS (uusi tässä tiedostossa — kannattaa sweepata sisarsivuille):
+       headerin oikea reuna (kielivalitsin + Kirjaudu + hampurilainen) ylivuoti
+       375 px:n leveydellä ja työnsi koko sivun vaakavieritykseen. Kavennetaan
+       välit ja pudotetaan Kirjaudu-napista teksti pois — ikoni + aria-label jää. */
+    .nav-inner { gap: 12px; padding: 0 16px; }
+    .nav-actions { gap: 10px; }
+    .lang a { padding: 3px 5px; font-size: 13px; }
+    .nav-actions .btn-sm { padding: 9px 12px; }
+    .nav-actions .btn-sm .lbl { display: none; }
+    .jump-label { display: none; }
+    .jump-inner { padding: 0 16px; }
+    .hero-ctas .btn { flex: 1; }
+    .dl { grid-template-columns: 1fr; gap: 20px; }
+    .dl .ph { max-width: 150px; }
+    .person { grid-template-columns: 1fr; text-align: left; }
+    .card-grid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+    .recipe-card.is-lead { flex-direction: column; }
+    .recipe-card.is-lead .card-image { width: 100%; aspect-ratio: 16 / 10; border-right: 0; border-bottom: 1px dashed var(--c-ph-border); }
+    .recipe-card.is-lead .card-body { padding: 18px 16px; }
+    .recipe-card.is-lead .card-name { font-size: 19px; }
+    .kulma-grid { gap: 20px; }
+    .art-row { grid-template-columns: 64px 1fr; gap: 16px; padding: 18px 0; }
+    .art-row .ph { width: 64px; height: 52px; }
+    .art-row .go { display: none; }
+    .end-cta { flex-direction: column; align-items: flex-start; }
+    .footer-grid { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .prod-row { scroll-behavior: auto; }
+    .kulma, .recipe-card, .art-row { transition: none; }
+  }
+</style>
+</head>
+<body>
+  <a class="skip" href="#main">Siirry sisältöön</a>
+
+  <!-- ===== DEMO-KAISTA (wireframe-only) — sama pohja, kolme eri kampanjaa ===== -->
+  <div class="demo-bar" role="region" aria-label="Wireframe-demo: vaihda kampanjaa">
+    <div class="demo-inner">
+      <span class="demo-label"><i class="fa-solid fa-flask" aria-hidden="true"></i> Demo · kampanja</span>
+      <div class="segmented" role="group" aria-label="Esimerkkikampanja">
+        <button class="seg" type="button" data-campaign="sadonkorjuu" aria-pressed="true">Sadonkorjuu</button>
+        <button class="seg" type="button" data-campaign="halloween" aria-pressed="false">Halloween</button>
+        <button class="seg" type="button" data-campaign="joulu" aria-pressed="false">Joulu</button>
+      </div>
+      <span class="demo-note">Sama sivupohja, eri moduulivalinta ja -järjestys. Selkäranka (hero · ankkurinavi · loppu-CTA) pysyy, keskiosa vaihtuu.</span>
+    </div>
+  </div>
+
+  <!-- ===== HEADER (yhteinen chrome) ===== -->
+  <header class="site-header">
+    <div class="nav-inner">
+      <a href="/" class="logo" aria-label="Condite — etusivu">CONDITE</a>
+      <nav class="nav-main" id="primary-nav" aria-label="Päänavigaatio">
+        <ul class="nav-list">
+          <li><a href="/tuotteet/">Tuotteet</a></li>
+          <li><a href="/brandit/">Brändit</a></li>
+          <li><a href="/toimialat/">Toimialat</a></li>
+          <li><a href="/reseptit/">Reseptit</a></li>
+          <li><a href="/tuotekehitys/">Tuotekehitys</a></li>
+          <li><a href="/yritys/">Yritys</a></li>
+          <li class="has-dropdown">
+            <a href="/yhteys/" aria-haspopup="true" aria-expanded="false">Yhteys <span class="caret" aria-hidden="true">▾</span></a>
+            <ul class="nav-dropdown">
+              <li><a href="/yhteys/">Yhteys</a></li>
+              <li><a href="/yhteys/laskutusohjeet/">Laskutusohjeet</a></li>
+              <li><a href="https://ura.condite.fi" target="_blank" rel="noopener" aria-label="Avoimet työpaikat (avautuu ura.condite.fi)">Avoimet työpaikat <i class="fa-solid fa-arrow-up-right-from-square ext-ico" aria-hidden="true"></i></a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <span class="lang" role="group" aria-label="Kieli">
+          <a href="#" aria-current="true" lang="fi">FI</a>
+          <a href="#" lang="sv">SV</a>
+          <a href="#" lang="en">EN</a>
+        </span>
+        <a href="/kirjaudu/" class="btn btn-sm" aria-label="Kirjaudu verkkokauppaan"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> <span class="lbl">Kirjaudu</span></a>
+        <button class="nav-toggle" type="button" aria-label="Avaa valikko" aria-expanded="false" aria-controls="primary-nav"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- SELKÄRANKA 1/3 — HERO (renderöidään). Murupolku on bändin sisällä:
+         kampanjasivu alkaa suoraan tummalla, ei irrallisella valkoisella kaistalla. -->
+    <section class="hero-band" aria-labelledby="hero-h1">
+      <nav class="crumbs" aria-label="Murupolku">
+        <ol>
+          <li><a href="/">Etusivu</a></li>
+          <li class="sep" aria-hidden="true">›</li>
+          <li><a href="/kampanjat/">Kampanjat</a></li>
+          <li class="sep" aria-hidden="true">›</li>
+          <li aria-current="page" id="crumb-current">Sadonkorjuu</li>
+        </ol>
+      </nav>
+      <div class="block first">
+        <div class="hero-grid" id="hero"></div>
+      </div>
+    </section>
+
+    <!-- SELKÄRANKA 2/3 — ANKKURINAVI (renderöidään moduulilistasta) -->
+    <nav class="jump" id="jump" aria-label="Sivun sisältö">
+      <div class="jump-inner">
+        <span class="jump-label">Tällä sivulla</span>
+        <ul class="jump-list" id="jump-list"></ul>
+      </div>
+    </nav>
+
+    <!-- MODUULIKIRJASTO — kampanjakohtainen valinta ja järjestys (renderöidään) -->
+    <div id="modules"></div>
+
+    <!-- SELKÄRANKA 3/3 — LOPPU-CTA (renderöidään) -->
+    <section class="block last" aria-labelledby="end-h2">
+      <div class="end-cta" id="end"></div>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER (yhteinen chrome) ===== -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <a href="/" class="logo" aria-label="Condite — etusivu">CONDITE</a>
+          <p class="footer-blurb">Elintarvikealan raaka-aineiden maahantuoja ja kehityskumppani. Osa Orkla Food Ingredientsia.</p>
+        </div>
+        <div>
+          <h4>Sivusto</h4>
+          <ul>
+            <li><a href="/tuotteet/">Tuotteet</a></li>
+            <li><a href="/brandit/">Brändit</a></li>
+            <li><a href="/toimialat/">Toimialat</a></li>
+            <li><a href="/reseptit/">Reseptit</a></li>
+            <li><a href="/tuotekehitys/">Tuotekehitys</a></li>
+            <!-- UUSI nav-kohde: vaatii sweepin sisarsivuille (kuten Brändit aikanaan) -->
+            <li><a href="/kampanjat/">Kampanjat</a></li>
+            <li><a href="/yritys/">Yritys</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Asiakkaalle</h4>
+          <ul>
+            <li><a href="/kirjaudu/">Kirjaudu verkkokauppaan</a></li>
+            <li><a href="/tuotekehitys/makupaja/">Makupaja</a></li>
+            <li><a href="/yhteys/">Ota yhteyttä</a></li>
+            <li><a href="/yhteys/">Yhteyshenkilöt</a></li>
+            <li><a href="/yhteys/laskutusohjeet/">Laskutusohjeet</a></li>
+            <li><a href="https://ura.condite.fi" target="_blank" rel="noopener" aria-label="Avoimet työpaikat (avautuu ura.condite.fi)">Avoimet työpaikat <i class="fa-solid fa-arrow-up-right-from-square ext-ico" aria-hidden="true"></i></a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Uutiskirje</h4>
+          <label for="news-email" style="display:block;font-size:14px;color:var(--c-text-2);margin-bottom:8px">Tilaa kausisisällöt ja uutuudet sähköpostiin.</label>
+          <div class="news">
+            <input id="news-email" type="email" placeholder="sähköposti@yritys.fi" aria-label="Sähköpostiosoite">
+            <button type="button">Tilaa</button>
+          </div>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <span>© 2026 Condite Oy · Osa Orkla Food Ingredientsia</span>
+        <div class="legal-links">
+          <a href="/tietosuoja/">Tietosuoja</a>
+          <a href="/evasteet/">Evästeet</a>
+          <a href="/saavutettavuus/">Saavutettavuusseloste</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Rakenteinen data (SEO): CollectionPage + BreadcrumbList + ItemList -->
+  <script type="application/ld+json" id="ld-json"></script>
+
+  <!-- ===== Sisältökonfiguraatio + render (config-driven, ei buildia) ===== -->
+  <script>
+  (function () {
+    "use strict";
+
+    /* ======================================================================
+       KAMPANJAKONFIGURAATIO
+       Yksi objekti per kampanja. WP-vaiheessa tämä = CPT "kampanja" +
+       ACF Flexible Content -kenttä (modules[]). Moduulityyppi = ACF-layout.
+       ====================================================================== */
+    var CAMPAIGNS = {
+
+      /* ------------------------------------------------------------------
+         1) SADONKORJUU — "täysi" kampanja: 7 moduulia, sisältövetoinen.
+         ------------------------------------------------------------------ */
+      sadonkorjuu: {
+        crumb: "Sadonkorjuu",
+        url: "/kampanjat/sadonkorjuu/",
+        meta: {
+          title: "Sadonkorjuu ammattikeittiöön ja leipomoon — kauden tuotteet ja reseptit | Condite",
+          description: "Sadonkorjuun maut ammattikeittiöön ja leipomoon: kauden tuotteet, reseptit ja sovellusideat yhdessä paikassa."
+        },
+        // Valinnainen kampanjasävy (ks. head-kommentti). Poista → DS-neutraali.
+        theme: { tint: "#f6f2e8", line: "#e3dbc8" },
+        hero: {
+          eyebrow: "Kampanja · Sadonkorjuu",
+          h1: "Sadonkorjuun maut ammattikeittiöön ja leipomoon",
+          intro: "[TÄYTTÖ: 2–3 lausetta. Mistä kaudessa on kyse asiakkaan näkökulmasta — omena, juurekset, sienet, marjat ja pähkinät nousevat menuun. Kokosimme kauden tuotteet, reseptit ja sovellusideat yhteen paikkaan, jotta et joudu etsimään niitä erikseen.]",
+          kicker: "Sesonki elo–lokakuu 2026 · sisältöä täydennetään kauden aikana",
+          ctaPrimary: { label: "Katso kauden tuotteet", href: "#tuotteet" },
+          ctaSecondary: { label: "Selaa kauden reseptit", href: "#reseptit" },
+          image: "[Kampanjan pääkuva: sadonkorjuu — 4:3]"
+        },
+        modules: [
+          {
+            type: "kulmat", id: "kulmat", nav: "Kauden suunnat",
+            eyebrow: "Mistä aloittaa", h2: "Kolme suuntaa sadonkorjuun makuihin",
+            intro: "[TÄYTTÖ: kausi on laaja — pilkoimme sen kolmeen konkreettiseen suuntaan. Valitse se, joka sopii omaan valikoimaasi.]",
+            items: [
+              { image: "[Kuva: omena ja kaneli]", title: "Omena, kaneli ja karamelli", text: "[TÄYTTÖ: klassikkosuunta leipomoille — täytteet, glaseerit ja mausteet, joilla omenakausi taipuu myyviksi tuotteiksi.]", linkLabel: "Katso tuotteet ja reseptit", href: "/tuotteet/haku/?kampanja=sadonkorjuu&kulma=omena" },
+              { image: "[Kuva: juurekset ja sienet]", title: "Juurekset ja sienet", text: "[TÄYTTÖ: suolainen suunta ammattikeittiölle — liemet, mausteseokset ja kastikepohjat syksyn raaka-aineille.]", linkLabel: "Katso tuotteet ja reseptit", href: "/tuotteet/haku/?kampanja=sadonkorjuu&kulma=juurekset" },
+              { image: "[Kuva: marjat ja pähkinät]", title: "Marjat ja pähkinät", text: "[TÄYTTÖ: jälkiruokasuunta — marjatäytteet, pähkinämassat ja koristeet, jotka kestävät ammattikeittiön käsittelyn.]", linkLabel: "Katso tuotteet ja reseptit", href: "/tuotteet/haku/?kampanja=sadonkorjuu&kulma=marjat" }
+            ]
+          },
+          {
+            type: "featured", id: "kauden-resepti", nav: "Kauden resepti", band: true,
+            eyebrow: "Nostomme", h2: "Kauden resepti",
+            kicker: "Resepti · Leipomo",
+            title: "[Reseptin nimi: esim. Omena-kanelitäytteinen viineri]",
+            text: "[TÄYTTÖ: 2 lausetta siitä, miksi juuri tämä resepti on nostettu — mikä ongelma sillä ratkeaa (työvaiheet vähenevät, säilyvyys paranee, sama pohja taipuu useaksi tuotteeksi).]",
+            specs: [
+              { k: "Valmistusaika", v: "[45 min]" },
+              { k: "Saanto", v: "[24 kpl]" },
+              { k: "Segmentti", v: "[Leipomo]" }
+            ],
+            contains: "[Condite-tuote]",
+            ctaLabel: "Katso resepti",
+            href: "/reseptit/omena-kanelitayteinen-viineri/",
+            image: "[Kauden reseptin kuva — 4:3]"
+          },
+          {
+            type: "tuotteet", id: "tuotteet", nav: "Kauden tuotteet",
+            eyebrow: "Valikoima", h2: "Sadonkorjuun tuotteet",
+            intro: "[TÄYTTÖ: kuratoitu valikoima kauden tuotteita. Tuotekortilta näet tekniset tiedot ja siirryt tilaamaan verkkokauppaan.]",
+            count: 10,
+            allLabel: "Katso kaikki kauden tuotteet",
+            allHref: "/tuotteet/haku/?kampanja=sadonkorjuu"
+          },
+          {
+            type: "reseptit", id: "reseptit", nav: "Reseptit",
+            eyebrow: "Sovellukset", h2: "Kauden reseptit ja sovellusideat",
+            intro: "[TÄYTTÖ: jokainen resepti näyttää, millä Condite-tuotteella se tehdään — käänteisrekommendaattori: reseptistä tuotteeseen.]",
+            allLabel: "Kaikki reseptit",
+            allHref: "/reseptit/?sesonki=syksy",
+            items: [
+              { cat: "[Täytteet]", name: "[Reseptin nimi 1]", time: "[30 min]", yield: "[20 kpl]", contains: "[Condite-tuote]" },
+              { cat: "[Jälkiruoat]", name: "[Reseptin nimi 2]", time: "[45 min]", yield: "[12 annosta]", contains: "[Condite-tuote]" },
+              { cat: "[Suolaiset]", name: "[Reseptin nimi 3]", time: "[60 min]", yield: "[30 annosta]", contains: "[Condite-tuote]" },
+              { cat: "[Pohjat]", name: "[Reseptin nimi 4]", time: "[90 min]", yield: "[2 pellillistä]", contains: "[Condite-tuote]" },
+              { cat: "[Kuorrutukset]", name: "[Reseptin nimi 5]", time: "[20 min]", yield: "[1 kg]", contains: "[Condite-tuote]" }
+            ]
+          },
+          {
+            type: "artikkelit", id: "artikkelit", nav: "Taustaa",
+            eyebrow: "Taustaa ja trendejä", h2: "Lue lisää kaudesta",
+            intro: "[TÄYTTÖ: kampanja ei ole pelkkä tuotelista — asiantuntijasisältö tekee Conditesta kehityskumppanin. Zeelandia-tyylinen inspiraatio-osio.]",
+            allLabel: "Kaikki artikkelit",
+            allHref: "/ajankohtaista/",
+            items: [
+              { kicker: "[Trendi]", title: "[Artikkelin otsikko 1]", text: "[TÄYTTÖ: 1–2 lausetta ingressiä — mitä artikkeli antaa lukijalle.]", href: "/ajankohtaista/artikkeli-1/" },
+              { kicker: "[Sovellus]", title: "[Artikkelin otsikko 2]", text: "[TÄYTTÖ: 1–2 lausetta ingressiä.]", href: "/ajankohtaista/artikkeli-2/" },
+              { kicker: "[Asiantuntija]", title: "[Artikkelin otsikko 3]", text: "[TÄYTTÖ: 1–2 lausetta ingressiä.]", href: "/ajankohtaista/artikkeli-3/" }
+            ]
+          },
+          {
+            // PÄÄSYTASO: LIIDI (varaus yhteystiedoilla → Dynamics)
+            type: "makupaja", id: "makupaja", nav: "Makupaja", band: true,
+            eyebrow: "Kehityskumppani", h2: "Kehitetään kauden tuotteesi yhdessä",
+            text: "[TÄYTTÖ: kampanjasisältö on lähtökohta — jos haluat oman version, tule Makupajaan. Testikeittiössämme kehitetään ja maistatetaan resepti sinun tuotantoosi sopivaksi.]",
+            ctaLabel: "Varaa Makupaja-sessio",
+            href: "/tuotekehitys/makupaja/",
+            secondaryLabel: "Miten Makupaja toimii",
+            secondaryHref: "/tuotekehitys/makupaja/",
+            image: "[Makupaja-kuva — 4:3]"
+          },
+          {
+            type: "kampanjat", id: "tulevat-kampanjat", nav: "Tulevat kampanjat",
+            eyebrow: "Seuraavaksi", h2: "Tulevat kampanjat",
+            intro: "[TÄYTTÖ: näet kerralla mitä on tulossa ja pääset suoraan seuraavan kauden sisältöihin. Ei umpikujaa.]",
+            allLabel: "Kaikki kampanjat", allHref: "/kampanjat/",
+            // status = kampanjan oma vapaa kausiteksti (sama teksti kuin sen heron kickerissä).
+            // live = onko kausi jo käynnissä; WP päättelee julkaisuikkunasta, ei käsin. Käynnissä
+            //        oleva (esim. ympärivuotinen teemakampanja) saa pisteen ja nousee listalla
+            //        ensimmäiseksi — otsikko kattaa siis myös sen, vaikka demossa on vain tulevia.
+            items: [
+              { label: "Halloween", href: "/kampanjat/halloween/", image: "[Kuva: halloween]",
+                status: "Tulossa syyskuussa", live: false,
+                text: "[TÄYTTÖ: yksi lause — koristeet ja värit, joilla olemassa olevasta valikoimasta tulee kauden tuotteita.]" },
+              { label: "Joulu", href: "/kampanjat/joulu/", image: "[Kuva: joulu]",
+                status: "Suunnittelu alkaa nyt", live: false,
+                text: "[TÄYTTÖ: yksi lause — vuoden suurin kausi, tilausaikataulu ja valikoima yhdessä.]" },
+              { label: "Pääsiäinen", href: "/kampanjat/paasiainen/", image: "[Kuva: pääsiäinen]",
+                status: "Tulossa helmikuussa", live: false,
+                text: "[TÄYTTÖ: yksi lause — kevään ensimmäinen sesonki ja sen valikoima.]" }
+            ]
+          }
+        ],
+        end: {
+          eyebrow: "Mennäänkö eteenpäin?",
+          h2: "Etkö löytänyt etsimääsi kauden tuotetta?",
+          text: "[TÄYTTÖ: 630 tuotetta ja 173 brändiä — kauden nostot ovat vain osa valikoimaa. Kysy meiltä, niin etsimme oikean raaka-aineen sovellukseesi.]",
+          ctaPrimary: { label: "Selaa koko valikoimaa", href: "/tuotteet/haku/" },
+          ctaLink: { label: "Kysy kauden tuotteista", href: "/yhteys/" }
+        }
+      },
+
+      /* ------------------------------------------------------------------
+         2) HALLOWEEN — kevyt, tuotevetoinen: 5 moduulia, ei artikkeleita,
+            ei Makupajaa, ei kampanjanostoja. Mukana ladattava materiaali (LIIDI).
+         ------------------------------------------------------------------ */
+      halloween: {
+        crumb: "Halloween",
+        url: "/kampanjat/halloween/",
+        meta: {
+          title: "Halloween-tuotteet ja -koristeet ammattikeittiöön ja leipomoon | Condite",
+          description: "Halloween-kauden koristeet, täytteet ja värit ammattilaisille. Kauden tuotteet ja reseptit yhdessä paikassa."
+        },
+        theme: { tint: "#f7efe7", line: "#e8d6c2" },
+        hero: {
+          eyebrow: "Kampanja · Halloween",
+          h1: "Halloween-kauden koristeet ja maut ammattilaisille",
+          intro: "[TÄYTTÖ: 2–3 lausetta. Halloween on lyhyt mutta myyvä kausi — koristeilla ja väreillä saa olemassa olevasta valikoimasta kauden tuotteita ilman uutta reseptiikkaa. Kokosimme tarvittavan yhteen.]",
+          kicker: "Tilaukset viimeistään [pvm] · toimitus ennen kauden alkua",
+          ctaPrimary: { label: "Katso Halloween-tuotteet", href: "#tuotteet" },
+          ctaSecondary: { label: "Lataa kampanjaesite", href: "#esite" },
+          image: "[Kampanjan pääkuva: halloween — 4:3]"
+        },
+        modules: [
+          {
+            type: "featured", id: "nosto", nav: "Kauden nosto",
+            eyebrow: "Nostomme", h2: "Kauden nosto",
+            kicker: "Tuote · Koristeet",
+            title: "[Tuotteen nimi: esim. Dobla Halloween -suklaakoristeet]",
+            text: "[TÄYTTÖ: 2 lausetta — miksi tämä tuote ratkaisee kauden: valmis koriste tekee olemassa olevasta leivonnaisesta kauden tuotteen ilman lisätyötä.]",
+            specs: [
+              { k: "Brändi", v: "[Dobla]" },
+              { k: "Pakkauskoko", v: "[xxx kpl]" },
+              { k: "Saatavuus", v: "[Kausituote]" }
+            ],
+            ctaLabel: "Katso tuotekortti",
+            href: "/tuotteet/dobla-halloween/",
+            image: "[Kauden tuotekuva — 4:3]"
+          },
+          {
+            type: "tuotteet", id: "tuotteet", nav: "Tuotteet",
+            eyebrow: "Valikoima", h2: "Halloween-kauden tuotteet",
+            intro: "[TÄYTTÖ: koristeet, värit, täytteet ja mausteet, joilla kausi hoituu. Kausituotteet ovat rajoitetusti saatavilla — tarkista tilausaikataulu tuotekortilta.]",
+            count: 8,
+            allLabel: "Katso kaikki Halloween-tuotteet",
+            allHref: "/tuotteet/haku/?kampanja=halloween"
+          },
+          {
+            type: "reseptit", id: "reseptit", nav: "Reseptit",
+            eyebrow: "Sovellukset", h2: "Ideat kauden tuotteiksi",
+            intro: "[TÄYTTÖ: kolme nopeaa sovellusta olemassa olevasta valikoimasta — pieni muutos, kauden tuote.]",
+            allLabel: "Kaikki reseptit",
+            allHref: "/reseptit/?sesonki=halloween",
+            items: [
+              { cat: "[Leivonnaiset]", name: "[Reseptin nimi 1]", time: "[25 min]", yield: "[24 kpl]", contains: "[Condite-tuote]" },
+              { cat: "[Jälkiruoat]", name: "[Reseptin nimi 2]", time: "[40 min]", yield: "[12 annosta]", contains: "[Condite-tuote]" },
+              { cat: "[Kuorrutukset]", name: "[Reseptin nimi 3]", time: "[15 min]", yield: "[1 kg]", contains: "[Condite-tuote]" }
+            ]
+          },
+          {
+            // PÄÄSYTASO: LIIDI — esite yhteystietoja vastaan (gated:true → Dynamics).
+            // Aseta gated:false, jos materiaali halutaan täysin avoimeksi (SEO + kitka).
+            type: "lataus", id: "esite", nav: "Kampanjaesite", band: true,
+            eyebrow: "Materiaali", h2: "Halloween-kampanjaesite",
+            title: "[Esitteen nimi: Halloween 2026 — tuotteet ja tilausaikataulu]",
+            text: "[TÄYTTÖ: koko kauden valikoima, pakkauskoot ja tilauspäivämäärät yhdessä PDF:ssä — helppo jakaa keittiölle tai ostajalle.]",
+            file: "PDF · [x] sivua · [x] Mt",
+            gated: true,
+            ctaLabel: "Lataa esite",
+            href: "/kampanjat/halloween/esite/",
+            image: "[Esitteen kansi — A4]"
+          },
+          {
+            // PÄÄSYTASO: LIIDI (yhteydenotto → Dynamics)
+            type: "yhteys", id: "yhteys", nav: "Yhteys",
+            eyebrow: "Apua kauden suunnitteluun", h2: "Kysy kauden valikoimasta",
+            intro: "[TÄYTTÖ: kausituotteiden saatavuus on rajallinen — ota yhteyttä ajoissa, niin varmistamme toimituksen.]",
+            person: {
+              name: "[Yhteyshenkilön nimi]",
+              role: "[Titteli / vastuualue]",
+              phone: "[+358 xx xxx xxxx]",
+              email: "[etunimi.sukunimi@condite.fi]",
+              image: "[Kuva]"
+            },
+            ctaLabel: "Ota yhteyttä",
+            ctaHref: "/yhteys/"
+          }
+        ],
+        end: {
+          eyebrow: "Mennäänkö eteenpäin?",
+          h2: "Kausi lähestyy — varmista valikoima ajoissa",
+          text: "[TÄYTTÖ: kausituotteet myydään loppuun. Selaa valikoima tai kysy meiltä, mitä kannattaa tilata milloinkin.]",
+          ctaPrimary: { label: "Katso Halloween-tuotteet", href: "#tuotteet" },
+          ctaLink: { label: "Katso muut kampanjat", href: "/kampanjat/" }
+        }
+      },
+
+      /* ------------------------------------------------------------------
+         3) JOULU — aikataulu-/logistiikkavetoinen: 6 moduulia. Mukana
+            vsteps-vaiheistus (tilausaikataulu) ja brändinosto.
+            EI kampanjasävyä → todiste siitä, että sävy on valinnainen.
+         ------------------------------------------------------------------ */
+      joulu: {
+        crumb: "Joulu",
+        url: "/kampanjat/joulu/",
+        meta: {
+          title: "Joulukauden raaka-aineet ammattikeittiöön ja leipomoon | Condite",
+          description: "Joulukauden tuotteet, reseptit ja tilausaikataulu ammattilaisille. Varmista valikoima ajoissa."
+        },
+        // theme puuttuu tarkoituksella → DS-oletussävy
+        hero: {
+          eyebrow: "Kampanja · Joulu",
+          h1: "Joulukauden raaka-aineet — suunnittele ajoissa, tilaa ajallaan",
+          intro: "[TÄYTTÖ: 2–3 lausetta. Joulu on vuoden suurin kausi ja samalla se, jossa myöhästyminen maksaa eniten. Tällä sivulla on kauden valikoima, reseptit ja tilausaikataulu yhdessä.]",
+          kicker: "Suunnittelu alkaa syyskuussa · tilaukset viimeistään [pvm]",
+          ctaPrimary: { label: "Katso tilausaikataulu", href: "#aikataulu" },
+          ctaSecondary: { label: "Selaa joulun tuotteet", href: "#tuotteet" },
+          image: "[Kampanjan pääkuva: joulu — 4:3]"
+        },
+        modules: [
+          {
+            type: "kulmat", id: "kulmat", nav: "Kauden suunnat",
+            eyebrow: "Mistä aloittaa", h2: "Joulukausi neljästä kulmasta",
+            intro: "[TÄYTTÖ: valitse se kulma, joka koskee omaa valikoimaasi — jokainen vie suoraan tuotteisiin ja resepteihin.]",
+            items: [
+              { image: "[Kuva: joulun leivonnaiset]", title: "Joulun leivonnaiset", text: "[TÄYTTÖ: täytteet, taikinat ja mausteet perinteisiin joulutuotteisiin.]", linkLabel: "Katso tuotteet", href: "/tuotteet/haku/?kampanja=joulu&kulma=leivonnaiset" },
+              { image: "[Kuva: suklaa ja koristeet]", title: "Suklaa ja koristeet", text: "[TÄYTTÖ: kuvertyyrit ja valmiit koristeet, joilla kauden ilme syntyy nopeasti.]", linkLabel: "Katso tuotteet", href: "/tuotteet/haku/?kampanja=joulu&kulma=suklaa" },
+              { image: "[Kuva: suolainen joulupöytä]", title: "Suolainen joulupöytä", text: "[TÄYTTÖ: liemet, kastikepohjat ja mausteseokset ammattikeittiön joulumenuun.]", linkLabel: "Katso tuotteet", href: "/tuotteet/haku/?kampanja=joulu&kulma=suolainen" },
+              { image: "[Kuva: kasvipohjainen joulu]", title: "Kasvipohjainen joulu", text: "[TÄYTTÖ: vegaaniset ja maidottomat vaihtoehdot kauden klassikoihin.]", linkLabel: "Katso tuotteet", href: "/tuotteet/haku/?kampanja=joulu&kulma=kasvipohjainen" }
+            ]
+          },
+          {
+            // Jaettu vsteps-komponentti (condite_komponentti_vaiheistus.html)
+            type: "vaiheet", id: "aikataulu", nav: "Tilausaikataulu", band: true,
+            eyebrow: "Näin ehdit ajoissa", h2: "Joulukauden aikataulu",
+            intro: "[TÄYTTÖ: kausituotteiden saatavuus on rajallinen ja toimitusajat pitenevät loppuvuotta kohti. Näin varmistat valikoiman.]",
+            steps: [
+              { icon: "fa-solid fa-clipboard-list", title: "[Elo–syyskuu: suunnittele valikoima]", desc: "[TÄYTTÖ: käy kauden valikoima läpi ja päätä, mitkä tuotteet menuun tulevat.]" },
+              { icon: "fa-solid fa-utensils", title: "[Syyskuu: testaa ja maistata]", desc: "[TÄYTTÖ: pyydä näytteet tai varaa Makupaja-sessio, jos kehität oman version.]" },
+              { icon: "fa-solid fa-truck-fast", title: "[Loka–marraskuu: tilaa kausituotteet]", desc: "[TÄYTTÖ: kausituotteet tilataan ennen viimeistä tilauspäivää — sen jälkeen saatavuutta ei voi taata.]" },
+              { icon: "fa-solid fa-circle-check", title: "[Marras–joulukuu: myy]", desc: "[TÄYTTÖ: täydennystilaukset normaalin toimitusrytmin mukaan verkkokaupasta.]" }
+            ]
+          },
+          {
+            type: "tuotteet", id: "tuotteet", nav: "Tuotteet",
+            eyebrow: "Valikoima", h2: "Joulukauden tuotteet",
+            intro: "[TÄYTTÖ: kauden kuratoitu valikoima. Kausituotteet on merkitty tuotekortilla — tarkista viimeinen tilauspäivä.]",
+            count: 10,
+            allLabel: "Katso kaikki joulun tuotteet",
+            allHref: "/tuotteet/haku/?kampanja=joulu"
+          },
+          {
+            type: "reseptit", id: "reseptit", nav: "Reseptit",
+            eyebrow: "Sovellukset", h2: "Joulun reseptit",
+            intro: "[TÄYTTÖ: reseptit on valittu niin, että sama pohja taipuu useaksi kauden tuotteeksi — vähemmän työvaiheita kiireisimpään aikaan.]",
+            allLabel: "Kaikki reseptit",
+            allHref: "/reseptit/?sesonki=joulu",
+            items: [
+              { cat: "[Leivonnaiset]", name: "[Reseptin nimi 1]", time: "[60 min]", yield: "[40 kpl]", contains: "[Condite-tuote]" },
+              { cat: "[Täytteet]", name: "[Reseptin nimi 2]", time: "[20 min]", yield: "[2 kg]", contains: "[Condite-tuote]" },
+              { cat: "[Jälkiruoat]", name: "[Reseptin nimi 3]", time: "[50 min]", yield: "[16 annosta]", contains: "[Condite-tuote]" },
+              { cat: "[Suolaiset]", name: "[Reseptin nimi 4]", time: "[90 min]", yield: "[30 annosta]", contains: "[Condite-tuote]" },
+              { cat: "[Kuorrutukset]", name: "[Reseptin nimi 5]", time: "[25 min]", yield: "[1,5 kg]", contains: "[Condite-tuote]" }
+            ]
+          },
+          {
+            type: "brandit", id: "brandit", nav: "Brändit",
+            eyebrow: "Kauden brändit", h2: "Joulukauden brändit",
+            intro: "[TÄYTTÖ: kauden valikoima nojaa näihin brändeihin — klikkaa brändiä nähdäksesi sen tuotteet.]",
+            brands: [
+              { name: "Dobla", href: "/tuotteet/haku/?brandi=dobla" },
+              { name: "Credin", href: "/tuotteet/haku/?brandi=credin" },
+              { name: "Xocofine", href: "/brandit/xocofine/" },
+              { name: "Capsi", href: "/brandit/capsi/" },
+              { name: "[Brändilogo]", href: "/tuotteet/haku/?brandi=brandi-5" },
+              { name: "[Brändilogo]", href: "/tuotteet/haku/?brandi=brandi-6" }
+            ],
+            allLabel: "Kaikki brändit",
+            allHref: "/brandit/"
+          },
+          {
+            // PÄÄSYTASO: LIIDI
+            type: "makupaja", id: "makupaja", nav: "Makupaja", band: true,
+            eyebrow: "Kehityskumppani", h2: "Oma jouluklassikko — kehitetään se yhdessä",
+            text: "[TÄYTTÖ: jos haluat kauteen jotain, mitä kilpailijalla ei ole, kehitetään se Makupajassa. Syyskuu on viimeinen hetki, jotta tuote ehtii tuotantoon.]",
+            ctaLabel: "Varaa Makupaja-sessio",
+            href: "/tuotekehitys/makupaja/",
+            secondaryLabel: "Miten Makupaja toimii",
+            secondaryHref: "/tuotekehitys/makupaja/",
+            image: "[Makupaja-kuva — 4:3]"
+          }
+        ],
+        end: {
+          eyebrow: "Mennäänkö eteenpäin?",
+          h2: "Varmista joulukauden valikoima",
+          text: "[TÄYTTÖ: kausituotteet loppuvat, ja viimeinen tilauspäivä tulee nopeasti. Selaa valikoima tai kysy myyjältä, mitä kannattaa varata nyt.]",
+          ctaPrimary: { label: "Selaa joulun tuotteet", href: "#tuotteet" },
+          ctaLink: { label: "Ota yhteyttä myyjään", href: "/yhteys/" }
+        }
+      }
+    };
+
+    /* ====================== apurit ====================== */
+    function el(html) { var t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstChild; }
+    function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]; }); }
+    function sectionHead(m) {
+      return '<div class="section-head">' +
+        (m.eyebrow ? '<p class="eyebrow">' + esc(m.eyebrow) + '</p>' : "") +
+        '<h2 id="' + esc(m.id) + '-h2">' + esc(m.h2) + '</h2>' +
+        (m.intro ? '<p class="intro">' + esc(m.intro) + '</p>' : "") +
+        '</div>';
+    }
+    // Otsikkorivi + oikean reunan "katso kaikki" -linkki (ei umpikujia)
+    function headRow(m) {
+      if (!m.allHref) return sectionHead(m);
+      return '<div class="head-row">' + sectionHead(m) +
+        '<a class="btn-link" href="' + esc(m.allHref) + '">' + esc(m.allLabel || "Katso kaikki") +
+        ' <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div>';
+    }
+
+    /* ====================== MODUULIRENDERÖIJÄT ======================
+       Jokainen palauttaa sisällön (ilman <section>-kuorta). Kuoren ja
+       bändityksen hoitaa mountModules(). Uusi moduulityyppi = uusi avain tähän.
+       ================================================================ */
+    var RENDER = {
+
+      kulmat: function (m) {
+        var cards = m.items.map(function (k) {
+          return '<a class="kulma" href="' + esc(k.href) + '">' +
+            '<div class="ph"><i class="fa-regular fa-image" aria-hidden="true"></i> ' + esc(k.image) + '</div>' +
+            '<div class="kulma-body">' +
+              '<h3>' + esc(k.title) + '</h3>' +
+              '<p>' + esc(k.text) + '</p>' +
+              '<span class="go">' + esc(k.linkLabel) + ' <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>' +
+            '</div>' +
+            '</a>';
+        }).join("");
+        return sectionHead(m) + '<div class="kulma-grid">' + cards + '</div>';
+      },
+
+
+      featured: function (m) {
+        var specs = (m.specs || []).map(function (s) {
+          return '<div class="spec"><span class="k">' + esc(s.k) + '</span><span class="v">' + esc(s.v) + '</span></div>';
+        }).join("");
+        return sectionHead(m) +
+          '<div class="featured">' +
+            '<div class="feat-media"><div class="ph"><i class="fa-regular fa-image" aria-hidden="true"></i> ' + esc(m.image) + '</div></div>' +
+            '<div class="feat-body">' +
+              '<p class="feat-kicker">' + esc(m.kicker) + '</p>' +
+              '<h3>' + esc(m.title) + '</h3>' +
+              '<p>' + esc(m.text) + '</p>' +
+              (specs ? '<div class="spec-strip">' + specs + '</div>' : "") +
+              (m.contains ? '<p class="card-contains" style="margin-top:16px"><i class="fa-solid fa-flask" aria-hidden="true"></i> Sisältää: <strong>' + esc(m.contains) + '</strong></p>' : "") +
+              '<div class="feat-cta"><a class="btn btn-primary" href="' + esc(m.href) + '">' + esc(m.ctaLabel) + '</a></div>' +
+            '</div>' +
+          '</div>';
+      },
+
+      tuotteet: function (m) {
+        var cards = "";
+        for (var i = 0; i < (m.count || 8); i++) {
+          cards +=
+            '<a class="prod-card" href="/tuotteet/tuote-' + (i + 1) + '/">' +
+              '<div class="ph"><i class="fa-regular fa-image" aria-hidden="true"></i></div>' +
+              '<div class="pc-body">' +
+                '<span class="pc-brand">[Brändi]</span>' +
+                '<span class="pc-name">[Tuotteen nimi]</span>' +
+                '<span class="pc-meta">[pakkauskoko]</span>' +
+              '</div>' +
+            '</a>';
+        }
+        cards += '<a class="prod-all" href="' + esc(m.allHref) + '" aria-label="' + esc(m.allLabel) + '">' +
+          '<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>Katso kaikki</a>';
+        var cid = "row-" + m.id;
+        return headRow(m) +
+          '<div class="carousel-wrap">' +
+            '<div class="carousel-head">' +
+              '<span class="lbl">Kauden nostot</span>' +
+              '<div class="carousel-nav">' +
+                '<button type="button" class="carousel-btn" data-dir="-1" data-target="' + cid + '" aria-label="Edelliset tuotteet"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>' +
+                '<button type="button" class="carousel-btn" data-dir="1" data-target="' + cid + '" aria-label="Seuraavat tuotteet"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>' +
+              '</div>' +
+            '</div>' +
+            '<div class="prod-row" id="' + cid + '" tabindex="0" role="group" aria-label="Kauden tuotteet">' + cards + '</div>' +
+          '</div>';
+      },
+
+      reseptit: function (m) {
+        // Johtokortti vie 2 saraketta → ruudukko täyttyy tasan vasta 5+ reseptillä.
+        // Lyhyemmässä kampanjassa käytetään tasakokoista ruudukkoa.
+        var useLead = m.items.length >= 5;
+        var cards = m.items.map(function (r, i) {
+          return '<a class="recipe-card' + (useLead && i === 0 ? " is-lead" : "") + '" href="/reseptit/resepti/">' +
+            '<div class="card-image"><i class="fa-regular fa-image" aria-hidden="true"></i><span class="label">Reseptikuva</span></div>' +
+            '<div class="card-body">' +
+              '<span class="card-category">' + esc(r.cat) + '</span>' +
+              '<h3 class="card-name">' + esc(r.name) + '</h3>' +
+              '<ul class="card-meta">' +
+                '<li><i class="fa-regular fa-clock" aria-hidden="true"></i>' + esc(r.time) + '</li>' +
+                '<li><i class="fa-solid fa-layer-group" aria-hidden="true"></i>' + esc(r["yield"]) + '</li>' +
+              '</ul>' +
+              '<span class="card-contains"><i class="fa-solid fa-flask" aria-hidden="true"></i> Sisältää: <strong>' + esc(r.contains) + '</strong></span>' +
+              '<span class="card-go">Katso resepti <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>' +
+            '</div>' +
+          '</a>';
+        }).join("");
+        return headRow(m) + '<div class="card-grid">' + cards + '</div>';
+      },
+
+      artikkelit: function (m) {
+        var rows = m.items.map(function (a) {
+          return '<li><a class="art-row" href="' + esc(a.href) + '">' +
+            '<span class="ph"><i class="fa-regular fa-image" aria-hidden="true"></i></span>' +
+            '<span><span class="art-kicker">' + esc(a.kicker) + '</span><h3>' + esc(a.title) + '</h3></span>' +
+            '<p>' + esc(a.text) + '</p>' +
+            '<span class="go">Lue <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>' +
+          '</a></li>';
+        }).join("");
+        return headRow(m) + '<ul class="art-list">' + rows + '</ul>';
+      },
+
+      // Jaettu komponentti — ks. condite_komponentti_vaiheistus.html
+      vaiheet: function (m) {
+        var steps = m.steps.map(function (s) {
+          return '<li class="vstep">' +
+            '<span class="vstep-node"><span class="vstep-ic"><i class="' + esc(s.icon) + '" aria-hidden="true"></i></span></span>' +
+            '<div class="vstep-body"><h3>' + esc(s.title) + '</h3><p>' + esc(s.desc) + '</p></div>' +
+          '</li>';
+        }).join("");
+        return sectionHead(m) + '<div class="vproc"><ol class="vsteps" aria-label="Kauden aikataulu">' + steps + '</ol></div>';
+      },
+
+      // PÄÄSYTASO: avoin (gated:false) tai LIIDI (gated:true → lomake, Dynamics)
+      lataus: function (m) {
+        return sectionHead(m) +
+          '<div class="dl">' +
+            '<div class="ph"><i class="fa-regular fa-file-pdf" aria-hidden="true"></i> ' + esc(m.image) + '</div>' +
+            '<div class="dl-body">' +
+              '<h3>' + esc(m.title) + '</h3>' +
+              '<p>' + esc(m.text) + '</p>' +
+              '<span class="dl-file"><i class="fa-regular fa-file-pdf" aria-hidden="true"></i>' + esc(m.file) + '</span>' +
+              (m.gated ? '<p class="dl-lead-note">Lataus avaa lyhyen lomakkeen (nimi, yritys, sähköposti, segmentti). Tiedot siirtyvät Dynamicsiin. Wireframessa lomaketta ei ole toteutettu.</p>' : "") +
+            '</div>' +
+            '<div class="dl-action"><a class="btn btn-primary" href="' + esc(m.href) + '"><i class="fa-solid fa-download" aria-hidden="true"></i> ' + esc(m.ctaLabel) + '</a></div>' +
+          '</div>';
+      },
+
+      brandit: function (m) {
+        var tiles = m.brands.map(function (b) {
+          return '<a class="logo-tile" href="' + esc(b.href) + '">' + esc(b.name) + '</a>';
+        }).join("");
+        return headRow(m) + '<div class="logo-wall">' + tiles + '</div>';
+      },
+
+      // PÄÄSYTASO: LIIDI (varaus yhteystiedoilla → Dynamics)
+      makupaja: function (m) {
+        return '<div class="split">' +
+            '<div class="split-media"><div class="ph ph-4-3"><i class="fa-regular fa-image" aria-hidden="true"></i> ' + esc(m.image) + '</div></div>' +
+            '<div class="split-body">' +
+              '<p class="eyebrow">' + esc(m.eyebrow) + '</p>' +
+              '<h2 id="' + esc(m.id) + '-h2">' + esc(m.h2) + '</h2>' +
+              '<p class="intro">' + esc(m.text) + '</p>' +
+              '<div class="split-ctas">' +
+                '<a class="btn btn-primary" href="' + esc(m.href) + '">' + esc(m.ctaLabel) + '</a>' +
+                '<a class="btn-link" href="' + esc(m.secondaryHref) + '">' + esc(m.secondaryLabel) + ' <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+      },
+
+      // PÄÄSYTASO: LIIDI (yhteydenotto → Dynamics)
+      yhteys: function (m) {
+        var p = m.person;
+        return sectionHead(m) +
+          '<div class="person">' +
+            '<div class="ph"><i class="fa-regular fa-user" aria-hidden="true"></i></div>' +
+            '<div>' +
+              '<h3>' + esc(p.name) + '</h3>' +
+              '<p class="role">' + esc(p.role) + '</p>' +
+              '<ul class="contact">' +
+                '<li><i class="fa-solid fa-phone" aria-hidden="true"></i>' + esc(p.phone) + '</li>' +
+                '<li><i class="fa-solid fa-envelope" aria-hidden="true"></i>' + esc(p.email) + '</li>' +
+              '</ul>' +
+              '<div class="split-ctas"><a class="btn btn-outline" href="' + esc(m.ctaHref) + '">' + esc(m.ctaLabel) + '</a></div>' +
+            '</div>' +
+          '</div>';
+      },
+
+      // TULEVAT KAMPANJAT — kaikki kentät kampanja-CPT:stä, ei erillistä aikadataa.
+      // WP: query kampanja-CPT, järjestys = käynnissä ensin, sitten tulevat; nykyinen
+      // kampanja suodatetaan pois. Ei manuaalista listaa ylläpidettäväksi.
+      kampanjat: function (m) {
+        var cards = m.items.map(function (k) {
+          return '<a class="kulma k-camp" href="' + esc(k.href) + '">' +
+            '<div class="ph"><i class="fa-regular fa-image" aria-hidden="true"></i> ' + esc(k.image) + '</div>' +
+            '<div class="kulma-body">' +
+              '<span class="k-status' + (k.live ? " is-live" : "") + '">' + esc(k.status) + '</span>' +
+              '<h3>' + esc(k.label) + '</h3>' +
+              '<p>' + esc(k.text) + '</p>' +
+              '<span class="go">Tutustu kampanjaan <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>' +
+            '</div>' +
+          '</a>';
+        }).join("");
+        return headRow(m) + '<div class="kulma-grid">' + cards + '</div>';
+      }
+    };
+
+    /* ====================== RENDERÖINTI ====================== */
+    var heroMount = document.getElementById("hero");
+    var jumpMount = document.getElementById("jump-list");
+    var modMount = document.getElementById("modules");
+    var endMount = document.getElementById("end");
+    var crumbCurrent = document.getElementById("crumb-current");
+
+    function renderHero(c) {
+      var h = c.hero;
+      heroMount.innerHTML =
+        '<div class="hero-copy">' +
+          '<span class="camp-badge">' + esc(h.eyebrow) + '</span>' +
+          '<h1 id="hero-h1">' + esc(h.h1) + '</h1>' +
+          '<p class="intro">' + esc(h.intro) + '</p>' +
+          '<p class="hero-kicker"><i class="fa-regular fa-calendar" aria-hidden="true"></i> ' + esc(h.kicker) + '</p>' +
+          '<div class="hero-ctas">' +
+            '<a class="btn btn-primary" href="' + esc(h.ctaPrimary.href) + '">' + esc(h.ctaPrimary.label) + '</a>' +
+            '<a class="btn-on-dark" href="' + esc(h.ctaSecondary.href) + '">' + esc(h.ctaSecondary.label) + ' <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>' +
+          '</div>' +
+        '</div>' +
+        '<div class="hero-media"><div class="ph ph-16-10"><i class="fa-regular fa-image" aria-hidden="true"></i> ' + esc(h.image) + '</div></div>';
+    }
+
+    function mountModules(c) {
+      modMount.innerHTML = "";
+      jumpMount.innerHTML = "";
+      c.modules.forEach(function (m) {
+        var fn = RENDER[m.type];
+        if (!fn) return; // tuntematon moduulityyppi ohitetaan hiljaisesti
+        var inner = fn(m);
+        var html = m.band
+          ? '<section class="band camp" id="' + esc(m.id) + '" aria-labelledby="' + esc(m.id) + '-h2"><div class="block">' + inner + '</div></section>'
+          : '<section class="block" id="' + esc(m.id) + '" aria-labelledby="' + esc(m.id) + '-h2">' + inner + '</section>';
+        modMount.appendChild(el(html));
+        if (m.nav) {
+          jumpMount.appendChild(el('<li><a href="#' + esc(m.id) + '">' + esc(m.nav) + '</a></li>'));
+        }
+      });
+    }
+
+    function renderEnd(c) {
+      var e = c.end;
+      endMount.innerHTML =
+        '<div class="end-copy">' +
+          '<p class="eyebrow">' + esc(e.eyebrow) + '</p>' +
+          '<h2 id="end-h2">' + esc(e.h2) + '</h2>' +
+          '<p>' + esc(e.text) + '</p>' +
+        '</div>' +
+        '<div class="end-actions">' +
+          '<a class="btn btn-primary" href="' + esc(e.ctaPrimary.href) + '">' + esc(e.ctaPrimary.label) + '</a>' +
+          '<a class="btn-link" href="' + esc(e.ctaLink.href) + '">' + esc(e.ctaLink.label) + ' <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>' +
+        '</div>';
+    }
+
+    // Kampanjasävy — vain hero-bändi + kampanjabändit. Ilman theme-objektia DS-oletus.
+    function applyTheme(c) {
+      var root = document.documentElement;
+      if (c.theme) {
+        root.style.setProperty("--c-camp-tint", c.theme.tint);
+        root.style.setProperty("--c-camp-line", c.theme.line);
+      } else {
+        root.style.removeProperty("--c-camp-tint");
+        root.style.removeProperty("--c-camp-line");
+      }
+    }
+
+    function renderSEO(c) {
+      var origin = "https://www.condite.fi";
+      var ld = {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "CollectionPage",
+            "name": c.meta.title,
+            "description": c.meta.description,
+            "url": origin + c.url
+          },
+          {
+            "@type": "ItemList",
+            "name": c.crumb + " — sivun sisällöt",
+            "itemListElement": c.modules.filter(function (m) { return m.nav; }).map(function (m, i) {
+              return { "@type": "ListItem", "position": i + 1, "name": m.nav, "url": origin + c.url + "#" + m.id };
+            })
+          },
+          {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Etusivu", "item": origin + "/" },
+              { "@type": "ListItem", "position": 2, "name": "Kampanjat", "item": origin + "/kampanjat/" },
+              { "@type": "ListItem", "position": 3, "name": c.crumb, "item": origin + c.url }
+            ]
+          }
+        ]
+      };
+      document.getElementById("ld-json").textContent = JSON.stringify(ld);
+    }
+
+    // Karusellin nuolinapit + disable-tilat (ei kuolleita kontrolleja)
+    function wireCarousels() {
+      document.querySelectorAll(".carousel-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var row = document.getElementById(btn.getAttribute("data-target"));
+          if (!row) return;
+          var dir = parseInt(btn.getAttribute("data-dir"), 10);
+          row.scrollBy({ left: dir * Math.round(row.clientWidth * 0.8), behavior: "smooth" });
+        });
+      });
+      document.querySelectorAll(".prod-row").forEach(function (row) {
+        var head = row.previousElementSibling;
+        var prev = head ? head.querySelector('[data-dir="-1"]') : null;
+        var next = head ? head.querySelector('[data-dir="1"]') : null;
+        function upd() {
+          var max = row.scrollWidth - row.clientWidth - 1;
+          if (prev) prev.disabled = row.scrollLeft <= 0;
+          if (next) next.disabled = row.scrollLeft >= max;
+        }
+        row.addEventListener("scroll", upd);
+        window.addEventListener("resize", upd);
+        upd();
+      });
+    }
+
+    // Ankkurinavin aktiivitila (scrollspy) — orientaatio pitkällä sekasisältösivulla
+    var spy = null;
+    function wireScrollSpy() {
+      if (spy) spy.disconnect();
+      var links = Array.prototype.slice.call(jumpMount.querySelectorAll("a"));
+      if (!links.length || !("IntersectionObserver" in window)) return;
+      spy = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (!en.isIntersecting) return;
+          links.forEach(function (a) {
+            a.setAttribute("aria-current", a.getAttribute("href") === "#" + en.target.id ? "true" : "false");
+          });
+        });
+      }, { rootMargin: "-120px 0px -70% 0px", threshold: 0 });
+      links.forEach(function (a) {
+        var sec = document.getElementById(a.getAttribute("href").slice(1));
+        if (sec) spy.observe(sec);
+      });
+    }
+
+    function renderCampaign(key) {
+      var c = CAMPAIGNS[key];
+      if (!c) return;
+      applyTheme(c);
+      crumbCurrent.textContent = c.crumb;
+      document.title = c.meta.title;
+      var md = document.querySelector('meta[name="description"]');
+      if (md) md.setAttribute("content", c.meta.description);
+      document.documentElement.lang = "fi";
+      renderHero(c);
+      mountModules(c);
+      renderEnd(c);
+      renderSEO(c);
+      wireCarousels();
+      wireScrollSpy();
+    }
+
+    // Demo-kytkin
+    document.querySelectorAll("[data-campaign]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll("[data-campaign]").forEach(function (b) {
+          b.setAttribute("aria-pressed", b === btn ? "true" : "false");
+        });
+        renderCampaign(btn.getAttribute("data-campaign"));
+        window.scrollTo({ top: 0, behavior: "auto" });
+      });
+    });
+
+    // Demo-linkitys: ?kampanja=halloween avaa sivun suoraan kyseiseen kampanjaan
+    // (helpottaa katselmointia — yksi linkki per esimerkkikampanja).
+    var q = (location.search.match(/[?&]kampanja=([a-z]+)/) || [])[1];
+    var startKey = CAMPAIGNS[q] ? q : "sadonkorjuu";
+    document.querySelectorAll("[data-campaign]").forEach(function (b) {
+      b.setAttribute("aria-pressed", b.getAttribute("data-campaign") === startKey ? "true" : "false");
+    });
+    renderCampaign(startKey);
+
+    /* ====================== Chrome-JS (yhteinen sisarsivujen kanssa) ====================== */
+    var navToggle = document.querySelector(".nav-toggle");
+    var header = document.querySelector(".site-header");
+    if (navToggle && header) {
+      navToggle.addEventListener("click", function () {
+        var open = header.classList.toggle("nav-open");
+        navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+        navToggle.setAttribute("aria-label", open ? "Sulje valikko" : "Avaa valikko");
+      });
+    }
+    document.querySelectorAll(".nav-list > li.has-dropdown > a[aria-haspopup]").forEach(function (a) {
+      a.addEventListener("click", function (e) {
+        if (window.matchMedia("(max-width: 760px)").matches) {
+          e.preventDefault();
+          var li = a.parentElement;
+          var op = li.classList.toggle("open");
+          a.setAttribute("aria-expanded", op ? "true" : "false");
+        }
+      });
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+        document.querySelectorAll(".nav-list > li.has-dropdown.open").forEach(function (li) {
+          li.classList.remove("open");
+          var a = li.querySelector("a[aria-haspopup]");
+          if (a) a.setAttribute("aria-expanded", "false");
+        });
+      }
+    });
+  })();
+  </script>
+</body>
+</html>

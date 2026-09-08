@@ -1,0 +1,1124 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Promix Maitokiisseliaines 1,72 kg — jälkiruoka-aines ammattikäyttöön | Condite</title>
+<meta name="description" content="Maitokiisseliaines ammattikeittiöille ja leipomoille. Annostelu, valmistus ja säilytys, tilausyksikkö ja tukkurikoodit. Tilaa verkkokaupasta tai kysy myynnistä.">
+<link rel="canonical" href="https://www.condite.fi/tuotteet/jalkiruoka-ainekset/promix-maitokiisseliaines-1-72kg/">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!--
+  CONDITE.FI — TUOTEKORTTI v3 · KIILLOTETTU WIREFRAME (FI)
+  ============================================================================
+  MIKÄ MUUTTUI v2 → v3:  v3 on suunniteltu TODELLISEN Sana-tuotefeedin pohjalta
+  (productfeed-f22ffbd134017189c002a8ed86c572e8.json, 672 tuotetta, luettu 28.8.2026).
+  v2 oletti PIM-tason tuotedataa (ainesosat, ravintoarvot, dokumentit, pakkausvariantit,
+  varastosaldo). Feedissä ei ole mitään näistä. v3 rakentuu sille mitä oikeasti on.
+
+  FEEDIN KATTAVUUS (n=672) — mitattu, ei arvattu:
+    100 %  Tuotekoodi (Id/SkuId) · Nimi · Sana-URL · Tilausyksikkö (ea/kg/li) · Tilattavuus
+     98 %  Minimitilausmäärä        90 %  Tilausväli (QuantityStep)
+     95 %  Kategoriapolku (18 pääkategoriaa, 64 polkua, max 3 tasoa)
+     94 %  Tuotekuva (7 %:lla 2. kuva, 1 %:lla 3.)
+     99 %  Pakkauskoko luettavissa nimestä (regex, 666/672)
+     53 %  EAN            48 %  Englanninkielinen nimi
+     41 %  Aito kuvaus (276 kpl) — 54 % kuvauksista on kopio tuotenimestä
+     17 %  Ominaisuustagit (113 kpl, FI-käännettynä feedissä)
+      9 %  Keskusliikekoodit kuvauksen sisällä (63 kpl)
+      7 %  Tuotetyyppi "Tilaustuote" (50 kpl) · SEO-meta (45 kpl)
+      0 %  Ainesosat · Ravintoarvot · Allergeeniluettelo · Alkuperämaa · Sertifikaatit
+      0 %  Dokumentit (TDS/spec) · Säilyvyysaika · Varastosaldo · Toimitusaika · Hinta
+      0 %  Brändi kenttänä (nimestä tunnistettavissa n. 61 %:lle)
+      0 %  Pakkausvariantit: HasVariants=false KAIKILLA, GroupId==Id KAIKILLA.
+             Vain 19 nimirunkoa esiintyy useammassa koossa (42 SKU:ta / 672).
+
+  KOLME SEURAUSTA, JOTKA MÄÄRITTÄVÄT TÄMÄN SIVUN:
+   1. Tuotesivu ei voi olla spec sheet. Se on TUNNISTE + TILAUSREITTI + KONTEKSTI.
+   2. Sivun on kestettävä ohut data. Mediaanituotteella on kuva, koodi, kategoria ja
+      tilausyksikkö — ei muuta. Siksi jokainen datalähtöinen lohko katoaa kokonaan kun
+      dataa ei ole (ei tyhjiä otsikoita), ja Conditen oma konteksti kantaa loput.
+   3. Pakkauskoon valitsin poistuu. Jokainen koko on oma SKU omalla sivullaan; v2:n
+      kaksitasoinen tuote/pakkaus-URL ei saa feedistä katetta (630/672 on singleton).
+
+  DEMO: ylhäällä kolme OIKEAA tuotetta feedistä, jotka edustavat datan kolmea tasoa
+  (Rikas 15 % · Tyypillinen 57 % · Ohut 5 %) + kytkin joka merkitsee jokaisen kentän
+  lähteen: FEED · JOHDETTU · WP · PUUTTUU. Sama layout, kolme datatilaa.
+
+  PÄÄSYTASOT: 🟢 avoin · 🟡 liidi (Dynamics/Makupaja) · 🔵 login (Sana verkkokauppa).
+  Paletti = projektin kanoninen DS (condite_design_system.html), pehmeä tonaalinen sininen.
+-->
+<style>
+  :root {
+    --c-bg:#ffffff; --c-bg-soft:#f7f7f7; --c-bg-tint:#eef6fb;
+    --c-text:#1d1d1f; --c-text-2:#555555; --c-text-muted:#6f6f6f;
+    --c-border:#e3e3e3; --c-border-strong:#cfcfcf; --c-divider:#d8d8d8;
+    --c-ph-bg:#ececec; --c-ph-border:#c8c8c8;
+    --c-accent:#7fc8ec; --c-accent-ink:#0a6e9b; --c-on-accent:#0a4f72;
+    --c-accent-soft:#e3f2fb; --c-suits-border:#b7def4;
+    --c-in-bg:#e7efe9; --c-in-text:#2f5a40;
+    --c-warn-bg:#fff5f0; --c-warn-border:#f3d3c1; --c-warn-text:#c0451c;
+    --c-tulossa-bg:#fff4cc; --c-tulossa-border:#f0d885; --c-tulossa-text:#6b4d00;
+    --r-sm:4px; --r-md:8px; --r-lg:12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--c-bg); color: var(--c-text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+    font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--c-accent-ink); }
+  img { max-width: 100%; }
+  /* Gotcha (CLAUDE.md): author-display ohittaa UA-säännön — pidä tämä mukana */
+  [hidden] { display: none !important; }
+  .num { font-variant-numeric: tabular-nums; }
+
+  /* Saavutettavuus */
+  .skip { position: absolute; left: 8px; top: -48px; z-index: 100; background: var(--c-accent); color: var(--c-on-accent); font-weight: 700; padding: 10px 16px; border-radius: var(--r-sm); text-decoration: none; transition: top .15s; }
+  .skip:focus { top: 8px; }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 2.5px solid var(--c-accent); outline-offset: 2px; border-radius: var(--r-sm); }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+  /* Layout */
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  .block { max-width: 1200px; margin: 0 auto; padding: 64px 24px 0; }
+  .block.first { padding-top: 32px; }
+  .block.last { padding-bottom: 64px; }
+  .band { border-top: 1px solid var(--c-suits-border); border-bottom: 1px solid var(--c-suits-border); background: var(--c-bg-tint); margin-top: 64px; }
+  .band .block { padding-top: 64px; padding-bottom: 64px; }
+  .band-soft { border-top: 1px solid var(--c-border); border-bottom: 1px solid var(--c-border); background: var(--c-bg-soft); margin-top: 64px; }
+  .band-soft .block { padding-top: 64px; padding-bottom: 64px; }
+
+  /* Tyypit */
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--c-accent-ink); margin: 0 0 8px; }
+  .eyebrow a { color: inherit; text-decoration: none; }
+  .eyebrow a:hover { text-decoration: underline; }
+  h1 { font-size: 40px; line-height: 1.14; letter-spacing: -.01em; margin: 0 0 8px; font-weight: 700; }
+  h1 .h1-size { display: block; font-size: 22px; font-weight: 500; color: var(--c-text-2); letter-spacing: 0; margin-top: 6px; }
+  h2 { font-size: 30px; line-height: 1.18; margin: 0; font-weight: 700; }
+  h3.sub { font-size: 18px; margin: 0 0 12px; font-weight: 700; }
+  .intro { margin: 16px 0 0; color: var(--c-text-2); }
+  .section-head { max-width: 760px; }
+  .head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 32px; }
+  .muted { color: var(--c-text-muted); }
+
+  /* Painikkeet */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: var(--r-sm); font-weight: 600; font-size: 16px; text-decoration: none; line-height: 1.2; cursor: pointer; padding: 13px 22px; border: 1.5px solid transparent; font-family: inherit; }
+  .btn-primary { border-color: var(--c-accent); background: var(--c-accent); color: var(--c-on-accent); }
+  .btn-outline { border-color: var(--c-accent-ink); background: var(--c-bg); color: var(--c-accent-ink); }
+  .btn-sm { padding: 9px 16px; font-size: 14px; border-color: var(--c-accent-ink); background: var(--c-bg); color: var(--c-accent-ink); }
+  .btn-link { color: var(--c-accent-ink); text-decoration: none; font-weight: 600; font-size: 14px; display: inline-flex; gap: 6px; align-items: center; white-space: nowrap; }
+
+  /* Header — sama chrome kuin sisarsivuilla */
+  .site-header { border-bottom: 1px solid var(--c-border); background: var(--c-bg); position: sticky; top: 0; z-index: 50; }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; min-height: 64px; gap: 32px; }
+  .logo { flex: none; width: 110px; height: 34px; background: var(--c-ph-bg); border: 1px dashed var(--c-ph-border); display: flex; align-items: center; justify-content: center; color: var(--c-text-2); font-size: 12px; border-radius: var(--r-sm); letter-spacing: .5px; font-weight: 700; text-decoration: none; }
+  .nav-main { display: flex; align-items: center; justify-content: center; flex: 1; }
+  .nav-list { list-style: none; margin: 0; padding: 0; display: flex; gap: 2px; }
+  .nav-list a { text-decoration: none; padding: 8px 12px; border-radius: var(--r-sm); font-weight: 500; color: var(--c-text); font-size: 14px; white-space: nowrap; position: relative; }
+  .nav-list a:hover { color: var(--c-accent-ink); }
+  .nav-list a[aria-current="page"] { color: var(--c-accent-ink); font-weight: 700; }
+  .nav-list a[aria-current="page"]::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: 0; height: 2px; background: var(--c-accent); border-radius: 2px; }
+  .nav-list > li.has-dropdown { position: relative; }
+  .nav-list .caret { font-size: 9px; margin-left: 4px; color: var(--c-text-muted); }
+  .nav-dropdown { position: absolute; top: 100%; left: 0; min-width: 220px; background: var(--c-bg); border: 1px solid var(--c-border); border-radius: var(--r-md); box-shadow: 0 10px 26px rgba(10,79,114,.12); padding: 6px 0; margin-top: 4px; list-style: none; display: none; z-index: 60; }
+  .nav-list > li.has-dropdown:hover > .nav-dropdown,
+  .nav-list > li.has-dropdown:focus-within > .nav-dropdown { display: block; }
+  .nav-dropdown a { display: block; padding: 9px 16px; font-size: 14px; color: var(--c-text); font-weight: 500; white-space: nowrap; }
+  .nav-dropdown a::after { display: none !important; }
+  .nav-dropdown a:hover { background: var(--c-bg-soft); color: var(--c-accent-ink); }
+  .ext-ico { font-size: 10px; margin-left: 5px; opacity: .7; vertical-align: baseline; }
+  .nav-actions { flex: none; display: inline-flex; align-items: center; gap: 16px; }
+  .lang { display: inline-flex; align-items: center; gap: 2px; font-size: 14px; }
+  .lang a { text-decoration: none; padding: 3px 7px; border-radius: var(--r-sm); color: var(--c-text-muted); }
+  .lang a[aria-current="true"] { background: var(--c-bg-soft); color: var(--c-text); font-weight: 700; }
+  .nav-toggle { display: none; }
+
+  /* Demo-kaista (wireframe-only) */
+  .demo-bar { background: var(--c-text); color: #fff; font-size: 13px; }
+  .demo-inner { max-width: 1200px; margin: 0 auto; padding: 10px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .demo-label { font-weight: 700; letter-spacing: .04em; text-transform: uppercase; font-size: 11px; opacity: .85; display: inline-flex; align-items: center; gap: 8px; }
+  .demo-note { color: #cfe7f5; font-size: 12px; flex: 1; min-width: 200px; }
+  .segmented { display: inline-flex; border: 1px solid rgba(255,255,255,.35); border-radius: var(--r-sm); overflow: hidden; }
+  .segmented .seg { font-size: 13px; font-weight: 600; padding: 6px 14px; background: transparent; color: #fff; cursor: pointer; border: 0; font-family: inherit; }
+  .segmented .seg + .seg { border-left: 1px solid rgba(255,255,255,.35); }
+  .segmented .seg[aria-pressed="true"] { background: var(--c-accent); color: var(--c-on-accent); }
+  .seg .pct { font-weight: 400; opacity: .75; font-size: 11px; margin-left: 5px; }
+  .segmented .seg[aria-pressed="true"] .pct { opacity: .8; }
+  .demo-switch { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: #cfe7f5; cursor: pointer; }
+  .demo-switch input { accent-color: var(--c-accent); width: 15px; height: 15px; }
+
+  /* Murupolku */
+  .crumbs { max-width: 1200px; margin: 0 auto; padding: 14px 24px 0; font-size: 13px; color: var(--c-text-muted); }
+  .crumbs ol { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; }
+  .crumbs a { color: var(--c-text-2); text-decoration: none; }
+  .crumbs a:hover { color: var(--c-accent-ink); }
+  .crumbs li[aria-current="page"] { color: var(--c-text); font-weight: 600; }
+  .crumbs .sep { color: var(--c-border-strong); }
+
+  /* Lähdemerkinnät (wireframe-only, kytkin demo-kaistassa) */
+  .src { display: none; font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 1px 6px; border-radius: 3px; vertical-align: middle; margin-left: 7px; white-space: nowrap; }
+  body.show-src .src { display: inline-block; }
+  .src.feed { background: #dfeee4; color: #24603c; }
+  .src.derived { background: var(--c-accent-soft); color: var(--c-accent-ink); }
+  .src.wp { background: #ece4f5; color: #57377d; }
+  .src.missing { background: var(--c-warn-bg); color: var(--c-warn-text); border: 1px solid var(--c-warn-border); }
+  /* PUUTTUU-rivit näkyvät vain lähdetilassa: ne eivät ole sivun sisältöä vaan sen speksiä */
+  /* Specificity: .spec-strip > div asettaa display:flex, joten sitä on vastattava */
+  .missing-row, .spec-strip > div.missing-row { display: none; }
+  body.show-src .missing-row,
+  body.show-src .spec-strip > div.missing-row { display: flex; }
+
+  /* Pääsytasomerkki */
+  .tier { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 2px 9px; border-radius: 999px; vertical-align: middle; }
+  .tier .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .tier.open { background: var(--c-in-bg); color: var(--c-in-text); } .tier.open .dot { background: #4a8f63; }
+  .tier.lead { background: var(--c-tulossa-bg); color: var(--c-tulossa-text); } .tier.lead .dot { background: #c79a14; }
+  .tier.login { background: var(--c-accent-soft); color: var(--c-accent-ink); } .tier.login .dot { background: var(--c-accent-ink); }
+  .tier-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+  /* ===== LOHKO 1 — TUNNISTE ===== */
+  .id-hero { display: grid; grid-template-columns: minmax(0,440px) minmax(0,1fr); gap: 56px; align-items: start; }
+  .shot { border: 1px solid var(--c-border); border-radius: var(--r-lg); background: var(--c-bg); aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; padding: 24px; overflow: hidden; }
+  .shot img { max-width: 100%; max-height: 100%; object-fit: contain; }
+  /* Kuvaton tila (37 tuotetta / 5,5 %): suunniteltu tila, ei rikkinäinen kuva */
+  .shot.noimg { background: var(--c-bg-soft); border-style: dashed; border-color: var(--c-ph-border); flex-direction: column; gap: 10px; color: var(--c-text-muted); text-align: center; }
+  .shot.noimg .gl { font-size: 44px; color: var(--c-border-strong); }
+  .shot.noimg .lbl { font-size: 13px; max-width: 24ch; line-height: 1.4; }
+  .shot-cap { font-size: 12px; color: var(--c-text-muted); margin: 10px 2px 0; }
+
+  .brandline { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0 0 10px; }
+  .lede { margin: 14px 0 0; color: var(--c-text-2); font-size: 17px; max-width: 52ch; }
+
+  /* Ominaisuustagit — vain positiiviset, vain jos feedissä (17 %) */
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; padding: 0; list-style: none; }
+  .tags li { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; font-size: 13.5px; font-weight: 600; background: var(--c-accent-soft); border: 1px solid var(--c-suits-border); color: var(--c-accent-ink); }
+
+  /* Tilausfaktat — spec strip, ei chip-dumppi */
+  .spec-strip { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); margin: 28px 0 0; border-top: 1px solid var(--c-border); }
+  .spec-strip > div { padding: 16px 20px 16px 0; border-bottom: 1px solid var(--c-border); display: flex; flex-direction: column; gap: 3px; }
+  .spec-strip > div + div { border-left: 1px solid var(--c-border); padding-left: 20px; }
+  .spec-strip > div:nth-child(3n+1) { border-left: 0; padding-left: 0; }
+  .spec-strip dt { font-size: 11.5px; color: var(--c-text-muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 700; }
+  .spec-strip dd { margin: 0; font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums; }
+  .spec-strip dd .hint { font-weight: 400; font-size: 13px; color: var(--c-text-muted); font-variant-numeric: normal; }
+  .spec-strip .missing-row { color: var(--c-text-muted); }
+  .spec-strip .missing-row dd { font-weight: 400; font-style: italic; font-size: 14px; color: var(--c-text-muted); }
+  .copy-btn { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border: 1px solid var(--c-border-strong); border-radius: var(--r-sm); background: var(--c-bg); color: var(--c-accent-ink); font-size: 12px; cursor: pointer; }
+  .copy-btn:hover { background: var(--c-accent-soft); border-color: var(--c-suits-border); }
+  .copy-btn.copied { background: var(--c-in-bg); border-color: var(--c-in-bg); color: var(--c-in-text); }
+
+  /* Saatavuus + CTA */
+  .avail { display: inline-flex; align-items: center; gap: 9px; font-weight: 600; font-size: 14.5px; padding: 7px 14px; border-radius: 999px; margin: 26px 0 0; }
+  .avail .dot { width: 9px; height: 9px; border-radius: 50%; background: currentColor; flex: none; }
+  .avail.stock { background: var(--c-in-bg); color: var(--c-in-text); }
+  .avail.order { background: var(--c-tulossa-bg); color: var(--c-tulossa-text); }
+  .avail.out { background: var(--c-warn-bg); color: var(--c-warn-text); border: 1px solid var(--c-warn-border); }
+  .avail-note { font-size: 13px; color: var(--c-text-muted); margin: 8px 0 0; max-width: 52ch; }
+  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 22px 0 0; }
+  .cta-micro { font-size: 13px; color: var(--c-text-2); margin: 12px 0 0; }
+
+  /* ===== LOHKO 2 — KUVAUS JA KÄYTTÖ ===== */
+  .desc-lead { max-width: 68ch; color: var(--c-text-2); font-size: 16.5px; margin: 0; }
+  .desc-body { max-width: 72ch; margin: 0 0 8px; }
+  .desc-body p { margin: 0 0 14px; color: var(--c-text-2); font-size: 16.5px; }
+  .desc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 28px; margin-top: 32px; }
+  .desc-sec h3 { font-size: 15px; margin: 0 0 8px; display: flex; align-items: center; gap: 9px; }
+  .desc-sec h3 i { color: var(--c-accent-ink); font-size: 15px; width: 18px; text-align: center; }
+  .desc-sec p { margin: 0; font-size: 15px; color: var(--c-text-2); }
+  .parse-note { font-size: 12.5px; color: var(--c-text-muted); margin: 28px 0 0; padding-top: 14px; border-top: 1px dashed var(--c-border-strong); max-width: 78ch; display: none; }
+  body.show-src .parse-note { display: block; }
+
+  /* ===== LOHKO 3 — TUKKURIKOODIT ===== */
+  /* Flex eikä auto-fit-grid: tuotteella voi olla 1–5 koodia, eivätkä kaksi korttia
+     saa venyä koko leveydelle. Kortti kasvaa vain rajaan asti. */
+  .wh-grid { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .wh { border: 1px solid var(--c-border); border-radius: var(--r-md); background: var(--c-bg); padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex: 1 1 190px; max-width: 260px; }
+  .wh .n { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--c-text-muted); font-weight: 700; display: block; }
+  .wh .c { font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .wh .n a { color: var(--c-accent-ink); text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
+  .wh .n a:hover { text-decoration: underline; }
+  .wh .n a .ext-ico { margin-left: 0; font-size: 9px; }
+  .wh:has(.n a:hover) { border-color: var(--c-suits-border); }
+  .wh-note { font-size: 12.5px; color: var(--c-text-muted); margin: 20px 0 0; padding-top: 14px; border-top: 1px dashed var(--c-border-strong); max-width: 78ch; display: none; }
+  body.show-src .wh-note { display: block; }
+
+  /* ===== LOHKO 4 — SAMAN KATEGORIAN TUOTTEET ===== */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 20px; }
+  .card { border: 1px solid var(--c-border); border-radius: var(--r-md); background: var(--c-bg); overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: inherit; transition: border-color .15s, box-shadow .15s, transform .15s; }
+  .card:hover { border-color: var(--c-suits-border); box-shadow: 0 6px 20px rgba(10,79,114,.08); transform: translateY(-2px); }
+  .card .thumb { aspect-ratio: 1/1; background: var(--c-bg-soft); border-bottom: 1px solid var(--c-border); display: flex; align-items: center; justify-content: center; padding: 16px; }
+  .card .thumb img { max-width: 100%; max-height: 100%; object-fit: contain; }
+  .card .thumb.noimg { border-bottom-style: dashed; color: var(--c-border-strong); font-size: 26px; }
+  .card .body { padding: 14px 16px 18px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .card h3 { font-size: 15px; margin: 0; font-weight: 600; line-height: 1.35; }
+  .card .sku { font-size: 12px; color: var(--c-text-muted); font-variant-numeric: tabular-nums; margin-top: auto; padding-top: 8px; }
+  /* Reseptikortti — leveämpi kuvasuhde ja kicker erottavat sen tuotekortista */
+  .card .thumb.rec { aspect-ratio: 16/10; border-bottom-style: dashed; border-color: var(--c-ph-border); background: var(--c-bg-soft); flex-direction: column; gap: 6px; color: var(--c-text-muted); font-size: 12px; }
+  .card .thumb.rec i { font-size: 24px; color: var(--c-border-strong); }
+  .card .rk { font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--c-accent-ink); font-weight: 700; }
+  .card .go { margin-top: auto; padding-top: 10px; color: var(--c-accent-ink); font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; }
+
+  /* ===== LOHKO 5 — CONDITE-KAISTA ===== */
+  .next-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 24px; align-items: start; margin-top: 32px; }
+  .next-card { border: 1px solid var(--c-suits-border); border-radius: var(--r-lg); padding: 26px; background: var(--c-bg); display: flex; flex-direction: column; height: 100%; }
+  .next-card .ic { font-size: 20px; color: var(--c-accent-ink); margin-bottom: 12px; }
+  .next-card h3 { font-size: 17px; margin: 0 0 6px; }
+  .next-card p { font-size: 14.5px; color: var(--c-text-2); margin: 0 0 18px; }
+  .next-card .go { margin-top: auto; }
+  .seller { display: flex; align-items: center; gap: 12px; margin: 0 0 18px; }
+  .seller .av { width: 44px; height: 44px; border-radius: 50%; background: var(--c-ph-bg); border: 1px dashed var(--c-ph-border); flex: none; }
+  .seller .nm { font-weight: 600; font-size: 15px; line-height: 1.3; }
+  .seller .rl { font-size: 13px; color: var(--c-text-muted); }
+
+  /* ===== DATAKATTAVUUS-PANEELI (wireframe-only) ===== */
+  .cov { display: none; }
+  body.show-src .cov { display: block; }
+  .cov-inner { border: 1px solid var(--c-border-strong); border-radius: var(--r-lg); background: var(--c-bg-soft); padding: 28px; }
+  .cov h2 { font-size: 20px; margin: 0 0 6px; }
+  .cov .lead { font-size: 14.5px; color: var(--c-text-2); margin: 0 0 22px; max-width: 80ch; }
+  .cov-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 28px; }
+  .cov-cols h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; margin: 0 0 12px; color: var(--c-text-muted); }
+  .cov-cols ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
+  .cov-cols li { font-size: 14px; display: flex; gap: 9px; align-items: baseline; color: var(--c-text-2); }
+  .cov-cols li .pc { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--c-text); min-width: 42px; text-align: right; flex: none; }
+  .cov-cols li.gap .pc { color: var(--c-warn-text); }
+
+  /* Footer */
+  .site-footer { background: var(--c-bg-soft); border-top: 1px solid var(--c-border); padding: 48px 0 32px; margin-top: 64px; }
+  .footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--c-border); }
+  .footer-grid h4 { font-size: 14px; text-transform: uppercase; letter-spacing: .06em; margin: 0 0 16px; }
+  .footer-grid ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .footer-grid a { text-decoration: none; color: var(--c-text-2); font-size: 14px; }
+  .footer-grid a:hover { color: var(--c-accent-ink); }
+  .footer-blurb { font-size: 14px; color: var(--c-text-2); margin: 16px 0 0; max-width: 30ch; }
+  .news { display: flex; gap: 8px; }
+  .news input { flex: 1; min-width: 0; padding: 10px 12px; border-radius: var(--r-sm); border: 1px solid var(--c-border-strong); background: var(--c-bg); color: var(--c-text); font: inherit; font-size: 14px; }
+  .news button { padding: 10px 16px; border-radius: var(--r-sm); border: 1.5px solid var(--c-accent); background: var(--c-accent); color: var(--c-on-accent); font-weight: 700; font-size: 14px; cursor: pointer; }
+  .footer-legal { display: flex; justify-content: space-between; gap: 24px; padding-top: 24px; flex-wrap: wrap; font-size: 12px; color: var(--c-text-muted); }
+  .footer-legal a { color: var(--c-text-muted); text-decoration: none; }
+  .footer-legal .legal-links { display: flex; gap: 24px; flex-wrap: wrap; }
+
+  /* Responsiivisuus */
+  @media (max-width: 1000px) {
+    .id-hero { grid-template-columns: 1fr; gap: 32px; }
+    .shot { max-width: 420px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 760px) {
+    h1 { font-size: 30px; }
+    h1 .h1-size { font-size: 18px; }
+    h2 { font-size: 25px; }
+    .nav-main { display: none; }
+    .nav-toggle { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 1px solid var(--c-border-strong); border-radius: var(--r-sm); background: var(--c-bg); color: var(--c-text); cursor: pointer; }
+    .site-header.nav-open .nav-main { display: block; position: absolute; top: 100%; left: 0; right: 0; background: var(--c-bg); border-bottom: 1px solid var(--c-border); box-shadow: 0 8px 20px rgba(0,0,0,.06); padding: 8px 24px 16px; }
+    .site-header.nav-open .nav-list { flex-direction: column; gap: 0; }
+    .site-header.nav-open .nav-list a { display: block; padding: 13px 0; border-bottom: 1px solid var(--c-border); font-size: 15px; }
+    .site-header.nav-open .nav-list a[aria-current="page"]::after { display: none; }
+    .site-header.nav-open .nav-dropdown { position: static; display: block; box-shadow: none; border: 0; padding: 0 0 6px 14px; margin: 0; min-width: 0; }
+    .nav-list .caret { display: none; }
+    /* Chrome-korjaus: nav-actions ei mahtunut ja tarttui oikeaan reunaan ilman
+       padding-varaa. Kandidaatti sisarwireframejen chrome-sweeppiin. */
+    .nav-inner { gap: 12px; }
+    .nav-actions { gap: 10px; }
+    .spec-strip { grid-template-columns: 1fr 1fr; }
+    .spec-strip > div:nth-child(3n+1) { border-left: 1px solid var(--c-border); padding-left: 20px; }
+    .spec-strip > div:nth-child(odd) { border-left: 0; padding-left: 0; }
+    .cta-row .btn { width: 100%; }
+    .footer-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .lang { display: none; }              /* kielivalitsin on ei-toiminnallinen — väistyy ensin */
+    .btn-sm { padding: 9px 12px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .card { transition: none; }
+  }
+</style>
+</head>
+<body data-view="rikas">
+  <a class="skip" href="#main">Siirry sisältöön</a>
+
+  <!-- ===== DEMO-KAISTA (wireframe-only) ===== -->
+  <div class="demo-bar" role="region" aria-label="Wireframe-demo: datatilan vaihto">
+    <div class="demo-inner">
+      <span class="demo-label"><i class="fa-solid fa-database" aria-hidden="true"></i> Demo · datataso</span>
+      <div class="segmented" role="group" aria-label="Tuotteen datataso">
+        <button class="seg" type="button" data-set-view="rikas"   aria-pressed="true">Rikas <span class="pct">15 %</span></button>
+        <button class="seg" type="button" data-set-view="kuvaus"  aria-pressed="false">Kuvaus <span class="pct">23 %</span></button>
+        <button class="seg" type="button" data-set-view="tyyppi"  aria-pressed="false">Tyypillinen <span class="pct">57 %</span></button>
+        <button class="seg" type="button" data-set-view="ohut"    aria-pressed="false">Ohut <span class="pct">5 %</span></button>
+      </div>
+      <label class="demo-switch"><input type="checkbox" id="src-toggle"> Näytä datalähteet ja puutteet</label>
+      <span class="demo-note" id="demo-note"></span>
+    </div>
+  </div>
+
+  <!-- ===== HEADER (sama chrome kuin sisarsivuilla) ===== -->
+  <header class="site-header">
+    <div class="nav-inner">
+      <a href="/" class="logo" aria-label="Condite — etusivu">CONDITE</a>
+      <nav class="nav-main" id="primary-nav" aria-label="Päänavigaatio">
+        <ul class="nav-list">
+          <li><a href="/tuotteet/" aria-current="page">Tuotteet</a></li>
+          <li><a href="/brandit/">Brändit</a></li>
+          <li><a href="/toimialat/">Toimialat</a></li>
+          <li><a href="/reseptit/">Reseptit</a></li>
+          <li><a href="/tuotekehitys/">Tuotekehitys</a></li>
+          <li><a href="/yritys/">Yritys</a></li>
+          <li class="has-dropdown">
+            <a href="/yhteys/" aria-haspopup="true" aria-expanded="false">Yhteys <span class="caret" aria-hidden="true">▾</span></a>
+            <ul class="nav-dropdown">
+              <li><a href="/yhteys/">Yhteys</a></li>
+              <li><a href="/yhteys/laskutusohjeet/">Laskutusohjeet</a></li>
+              <li><a href="https://ura.condite.fi" target="_blank" rel="noopener">Avoimet työpaikat <i class="fa-solid fa-arrow-up-right-from-square ext-ico" aria-hidden="true"></i></a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <span class="lang" role="group" aria-label="Kieli">
+          <a href="#" aria-current="true" lang="fi">FI</a><a href="#" lang="sv">SV</a><a href="#" lang="en">EN</a>
+        </span>
+        <a href="https://condite.fi" class="btn btn-sm"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Kirjaudu</a>
+        <button class="nav-toggle" type="button" aria-label="Avaa valikko" aria-expanded="false" aria-controls="primary-nav"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="crumbs" aria-label="Murupolku"><ol id="crumbs-list"></ol></nav>
+
+  <main id="main"></main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <a href="/" class="logo" aria-label="Condite — etusivu">CONDITE</a>
+          <p class="footer-blurb">Elintarvikealan raaka-aineiden maahantuoja ja kehityskumppani. Osa Orkla Food Ingredientsia.</p>
+        </div>
+        <div>
+          <h4>Sivusto</h4>
+          <ul>
+            <li><a href="/tuotteet/">Tuotteet</a></li>
+            <li><a href="/brandit/">Brändit</a></li>
+            <li><a href="/toimialat/">Toimialat</a></li>
+            <li><a href="/reseptit/">Reseptit</a></li>
+            <li><a href="/tuotekehitys/">Tuotekehitys</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Asiakkaalle</h4>
+          <ul>
+            <li><a href="https://condite.fi">Verkkokauppa</a></li>
+            <li><a href="/tuotekehitys/makupaja/">Makupaja</a></li>
+            <li><a href="/yhteys/">Yhteyshenkilöt</a></li>
+            <li><a href="/yhteys/laskutusohjeet/">Laskutusohjeet</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Uutiskirje</h4>
+          <label for="news-email" style="display:block;font-size:14px;color:var(--c-text-2);margin-bottom:8px">Tilaa ajankohtaiset uutiset ja sovellukset.</label>
+          <div class="news">
+            <input id="news-email" type="email" placeholder="sähköposti@yritys.fi" aria-label="Sähköpostiosoite">
+            <button type="button">Tilaa</button>
+          </div>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <span>© 2026 Condite Oy · Osa Orkla Food Ingredientsia · <span class="muted">Tuotetiedot: Sana-tuotefeed 28.8.2026</span></span>
+        <div class="legal-links">
+          <a href="/tietosuoja/">Tietosuoja</a><a href="/evasteet/">Evästeet</a><a href="/saavutettavuus/">Saavutettavuusseloste</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script type="application/ld+json" id="ld-json"></script>
+
+  <!-- ===== SISÄLTÖKONFIGURAATIO + RENDER (config-driven, ei buildia) ===== -->
+  <script>
+  (function () {
+    "use strict";
+
+    /* ==========================================================================
+       PAGE.views — KOLME OIKEAA TUOTETTA Sana-feedistä.
+       Kentät on nimetty feedin mukaan, jotta WP-importin mäppäys on suoraan luettavissa.
+       null / puuttuva kenttä = feedissä ei ole arvoa → lohko tai rivi ei renderöidy.
+       ========================================================================== */
+    var PAGE = {
+
+      views: {
+        /* --- RIKAS (feedin täydellisin tuote): kuvausteksti + osiot + tukut + EAN + tagit
+           F00542 valittiin pisteyttämällä KAIKKI 672 tuotetta. Se on ainoa jolla on yhtä aikaa
+           (a) aito kuvaileva kuvausteksti, (b) jäsentyvät osiot, (c) keskusliikekoodit,
+           (d) EAN, (e) ominaisuustagit ja (f) valmis SEO-meta. Rikkaampaa ei feedissä ole. --- */
+        rikas: {
+          note: "Feedin täydellisin tuote (F00542): kuvausteksti, 3 jäsentyvää osiota, tukkurikoodit, EAN, tagit ja valmis SEO-meta. Näin täyttä dataa on vain kourallisella 672:sta — tämä on katto, ei keskiarvo.",
+          Id: "F00542",
+          Title: "Promix kanaliemijauhe 5 kg",
+          BarCodes: "6430061520263",
+          CategoryIds: "Liemijauheet",
+          Url: "https://condite.fi/promix-kanaliemijauhe-5-kg-f00542",
+          UnitOfMeasureId: "ea",
+          MinimumQuantity: 1.0,
+          QuantityStep: 1.0,
+          GrossWeight: 5.0,
+          IsOrderable: true,
+          Tuotetyyppi: null,
+          Tags: ["Gluteeniton", "Laktoositon", "Maidoton"],
+          Image: "https://condite.fi/product/image/large/f00542_promix_kanaliemijauhe_1.jpg",
+          ImageCount: 1,
+          /* SEO-meta on feedissä vain 45 tuotteella (7 %) — tällä se on. */
+          MetaTitle: "Kanaliemijauhe 5 kg | Liemijauhe ammattikäyttöön \u2013 Condite",
+          MetaDescription: "Kanaliemijauhe keittoihin ja ruoanvalmistukseen ammattikäyttöön. Promix kanaliemijauhe 5 kg sopii ammattikeittiöihin.",
+          /* Description = feedin RAAKA sisältö sellaisenaan, ei käsin siistitty. */
+          Description: "Promix kanaliemijauhe 5 kg on ammattikäyttöön suunniteltu liemijauhe ammattikeittiöihin ja foodservice-ympäristöihin. Se antaa täyteläisen ja tasapainoisen kanan maun ja liukenee helposti kuumaan veteen.<br id=\"isPasted\"><br>Kanaliemijauhe soveltuu keittoihin, kastikkeisiin, patoihin, risottoihin ja monipuoliseen ruoanvalmistukseen. Se tukee tehokasta työskentelyä ja varmistaa tasalaatuisen maun päivittäisessä ammattikäytössä.<br><br>Promix kanaliemijauhe 5 kg on käytännöllinen suurpakkaus ammattilaisille, jotka arvostavat helppokäyttöisyyttä, tehokkuutta ja luotettavaa laatua ruoanvalmistuksessa.<br><br>EAN : 6430061520263<br id=\"isPasted\"><br>Keskusliikekoodit:<br>Meira Nova: 1105054<br>Kespro: 21671133<br><br>Annostelu: 8 g liemiainesta + 1 l vettä = 1 l valmista lientä.<br><br>Valmistus: Kiehauta vesi, lisää jauhe sekoittaen joukkoon.<br><br>Säilytys huoneenlämmössä.",
+          recipes: [
+            { title:"Kanaliemipohjainen juureskeitto, 100 annosta", kicker:"Food Service" },
+            { title:"Risotto ammattikeittiön mitoituksella",        kicker:"Food Service" },
+            { title:"Vaalea peruskastike liemijauheesta",           kicker:"Food Service" }
+          ],
+          related: [
+            { id:"F00444", title:"Promix PP kalaliemijauhe 12g/l 600g", img:"https://condite.fi/product/image/medium/f00444_promix_pp_kalaliemijauhe_1.jpg" },
+            { id:"F00445", title:"Promix PP kanaliemijauhe 12g/l 600g", img:"https://condite.fi/product/image/medium/f00445_promix_pp_kanaliemijauhe_1.jpg" },
+            { id:"F00446", title:"Promix PP kasvisliemijauhe 12g/l 600g", img:"https://condite.fi/product/image/medium/f00446_promix_pp_kasvisliemijauhe_1.jpg" },
+            { id:"F00447", title:"Promix PP lihaliemijauhe 12g/l 600g", img:"https://condite.fi/product/image/medium/f00447_promix_pp_lihaliemi_1.jpg" }
+          ]
+        },
+
+        /* --- KUVAUS (n≈155 / 23 %): aito kuvaus proosana, ei jäsennystä, ei tageja --- */
+        kuvaus: {
+          note: "Yleisin kuvauksellinen taso: pari lausetta vapaata tekstiä, ei \"Otsikko:\"-jäsennystä, ei tageja eikä EAN:ia. Kuvaus nousee heroon myyväksi lauseeksi — omaa käyttölohkoa ei synny, koska jäsennettävää ei ole.",
+          Id: "048031",
+          Title: "Marsipaani oranssi 4x2.5kg",
+          BarCodes: null,
+          CategoryIds: "Konditoriatuotteet__Marsipaanit ja massat",
+          Url: "https://condite.fi/marsipaani-oranssi-4x2-5kg-048031",
+          UnitOfMeasureId: "kg",
+          MinimumQuantity: 2.5,
+          QuantityStep: 2.5,
+          GrossWeight: 1.0,
+          IsOrderable: true,
+          Tuotetyyppi: null,
+          Tags: null,
+          Image: "https://condite.fi/product/image/large/048031_Marsipaani_oranssi_1.jpg",
+          ImageCount: 1,
+          Description: "Hienoksi raastettu marsipaani, jonka rakenne on kiinteä ja sileä. Helppo kaulia.<br><br>" +
+                       "Kakkuihin, leivonnaisiin, kekseihin ja muihin makeistuotteisiin.<br><br>",
+          recipes: [
+            { title:"Marsipaanikuorrutettu täytekakku",     kicker:"Leipomot" },
+            { title:"Laskiaispulla marsipaanitäytteellä",   kicker:"Leipomot" },
+            { title:"Marsipaaniruusut kakun koristeeksi",   kicker:"Konditoria" }
+          ],
+          related: [
+            { id:"048191", title:"Marsipaani keltainen 4x2.5kg", img:"https://condite.fi/product/image/medium/048191_marsipaani_keltainen_1.jpg" },
+            { id:"048291", title:"Marsipaani rosa 4x2.5kg", img:"https://condite.fi/product/image/medium/048291_Marsipan_rosa_1.jpg" },
+            { id:"101866", title:"Kaulintamassa ruskea 4x2,5kg", img:"https://condite.fi/product/image/medium/101866_kaulintamassa_ruskea_1.jpg" },
+            { id:"101119", title:"Laskiaistäyte mantelia 38% GF 12.5kg", img:"https://condite.fi/product/image/medium/101119_laskiaist%C3%A4yte_mantelia_38%25_1.jpg" }
+          ]
+        },
+
+        /* --- TYYPILLINEN (n≈381 / 57 %): kuva, koodi, kategoria — ei kuvausta ------ */
+        tyyppi: {
+          note: "Feedin mediaani: kuva, koodi, kategoria ja tilausyksikkö. Kuvaus on kopio tuotenimestä (54 % kaikista). Kuvaus- ja tukkurilohko katoavat kokonaan — sivu ei jää tyhjäksi otsikoksi.",
+          Id: "1000005",
+          Title: "Riisijauho 25kg",
+          BarCodes: "08719747990780",
+          CategoryIds: "Viljatuotteet__Riisi__Riisijauhot",
+          Url: "https://condite.fi/riisijauho-25kg-1000005",
+          UnitOfMeasureId: "kg",
+          MinimumQuantity: 25.0,
+          QuantityStep: 25.0,
+          GrossWeight: 1.0,                          /* 1.0 = ERP:n oletusarvo, 48 %:lla → ei näytetä */
+          IsOrderable: true,
+          Tuotetyyppi: null,
+          Tags: null,
+          Image: "https://condite.fi/product/image/large/1000005_riisijauho_1.jpg",
+          ImageCount: 1,
+          Description: "Riisijauho 25kg",            /* == Title → tulkitaan puuttuvaksi */
+          recipes: null,          /* ei reseptilinkitystä → lohko katoaa kokonaan */
+          related: [
+            { id:"1000027", title:"Riisi Basmati 25kg", img:"https://condite.fi/product/image/medium/1000027_riisi_basmati_1.jpg" },
+            { id:"1000041", title:"Riisijauho 160 25kg", img:"https://condite.fi/product/image/medium/1000041_riisijauho_160_1.jpg" },
+            { id:"1000043", title:"Riisijauho 250 25kg", img:"https://condite.fi/product/image/medium/1000043_riisijauho_250_1.jpg" },
+            { id:"1000044", title:"Riisijauho 500 25kg", img:"https://condite.fi/product/image/medium/1000044_riisijauho_500_1.jpg" }
+          ]
+        },
+
+        /* --- OHUT (n≈35 / 5 %): ei kuvaa, ei kuvausta, ei tageja, ei EAN:ia -------- */
+        ohut: {
+          note: "Feedin pohja: pelkkä nimi, koodi, kategoria ja tilausyksikkö. 35 tuotteella ei ole edes kuvaa. Tämä on se tila, jonka sivun on kestettävä ilman että se näyttää rikkinäiseltä.",
+          Id: "4400176",
+          Title: "Oregano 10kg",
+          BarCodes: null,
+          CategoryIds: "Mausteet__Yrtit",
+          Url: "https://condite.fi/oregano-10kg-4400176",
+          UnitOfMeasureId: "kg",
+          MinimumQuantity: 10.0,
+          QuantityStep: 10.0,
+          GrossWeight: 1.0,
+          IsOrderable: true,
+          Tuotetyyppi: null,
+          Tags: null,
+          Image: null,
+          ImageCount: 0,
+          Description: "Oregano 10kg",
+          recipes: null,
+          related: [
+            { id:"4400184", title:"Timjami 20kg", img:"https://condite.fi/product/image/medium/4400184_Timjami_1.jpg" },
+            { id:"F00040", title:"Capsi PP Italian yrtit 150g", img:"https://condite.fi/product/image/medium/F00040_Capsi_PP_Italianyrtit_1.png" },
+            { id:"F00054", title:"Capsi PP Kirveli 80 g", img:"https://condite.fi/product/image/medium/F00054_Capsi_PP_Kirveli_1.png" },
+            { id:"F00069", title:"Capsi PP Minttu 150g", img:"https://condite.fi/product/image/medium/f00069_capsi_pp_minttu_1.jpg" }
+          ]
+        }
+      },
+
+      /* ---- Brändisanasto: feedissä EI ole brändikenttää. Tunnistus nimestä (n. 61 %). --- */
+      brands: ["Capsi","Promix","Dobla","Bonne","Credin","Irca","Sonneveld","Fazer","Xocofine","KåKå"],
+
+      /* ---- Pääsytasomerkit: mitkä piilotetaan (Olli 28.8.2026) --------------------
+         "Avoin" pois — se on oletus lähes joka lohkossa, joten merkki ei kerro mitään
+         ja vie huomiota otsikolta. Taso pysyy §6:n mukaisena tietona koodissa;
+         poista "open" listalta jos merkit halutaan takaisin esim. asiakaskatselmukseen. */
+      hideTiers: ["open"],
+
+      /* ---- Tukkurisanasto: nimi kuvaustekstissä → tukun oma sivu -------------------
+         URLit EIVÄT tule feedistä, vaan ovat tätä listaa. TARKISTETTAVA ennen julkaisua.
+         Paras versio olisi syvälinkki tukun tuotehakuun koodilla, ei etusivulle —
+         se vaatii jokaiselta tukulta hakusivun URL-muodon. */
+      wholesalers: {
+        "PATU":       { url: "https://patunetti.fi/" },                 /* Palvelutukkurit — Patunetti-verkkokauppa (Olli 28.8.2026) */
+        "Wihuri":     { url: "https://www.metrotukku.fi" },             /* Wihuri Aarnio = Metro-tukku */
+        "Meira Nova": { url: "https://www.meiranova.fi" },
+        "Kespro":     { url: "https://www.kespro.com" },
+        "Valio Aimo": { url: "https://www.valio.fi/ammattilaiset/" }
+      },
+
+      /* ---- Yksikkösanasto (UnitOfMeasureId) ---- */
+      units: { ea: { one:"kpl",  label:"Kappale (kpl)" },
+               kg: { one:"kg",   label:"Kilo (kg)" },
+               li: { one:"l",    label:"Litra (l)" } },
+
+      /* ---- Kuvauksesta tunnistettavat osiot (esiintymät 276 aidosta kuvauksesta) ---- */
+      descSections: [
+        { key:"Annostelu",  icon:"fa-solid fa-scale-balanced", n:48 },
+        { key:"Valmistus",  icon:"fa-solid fa-blender",        n:47 },
+        { key:"Käyttö",     icon:"fa-solid fa-utensils",       n:78 },
+        { key:"Säilytys",   icon:"fa-solid fa-temperature-low",n:58 },
+        { key:"Pakkaus",    icon:"fa-solid fa-box",            n:42 },
+        { key:"Maku",       icon:"fa-solid fa-wine-glass",     n:43 },
+        { key:"Rakenne",    icon:"fa-solid fa-layer-group",    n:20 }
+      ],
+
+      /* ---- Lohkojen kiinteä copy (sama kaikilla tuotteilla) ---- */
+      copy: {
+        descHead:   { eyebrow:"Tuotetiedot", h2:"Näin tuotetta käytetään",
+                      intro:"Valmistajan tuotetiedot sellaisina kuin ne ovat tuotejärjestelmässä." },
+        whHead:     { eyebrow:"Toinen tilausreitti", h2:"Tilaa myös tukun kautta",
+                      intro:"Tuote on saatavana keskusliikkeiden valikoimissa. Käytä oman tukkurisi koodia, jos tilaat sitä kautta." },
+        recHead:    { eyebrow:"Sovellukset", h2:"Reseptit, joissa tätä tuotetta käytetään",
+                      intro:"Reseptit ovat Conditen omaa sisältöä — ne kertovat mihin raaka-aine taipuu, kun tuotedata ei kerro." },
+        relHead:    { eyebrow:"Sama tuoteryhmä", h2:"Muut tuotteet ryhmässä" },
+        /* Otsikko vaihdettu (Olli 28.8.2026): "Emmekö vielä osuneet oikeaan?" oletti
+           epäonnistumista lukijalta joka juuri löysi etsimänsä, ja kehysti Makupajan
+           ja räätälöinnin vara-suunnitelmaksi — vaikka ne ovat Conditen erottautuja.
+           Uusi otsikko nimeää kolme korttia, joten se toimii myös navigaationa.
+           Intron tuotemäärä poistettu: lähteet ovat ristiriidassa (630 / 672 / 1871). */
+        nextHead:   { eyebrow:"Kehityskumppanuus", h2:"Kokeile, räätälöi tai kysy",
+                      intro:"Sama raaka-aine käyttäytyy eri tavalla jokaisessa reseptissä. Siksi meillä on oma testikeittiö, oma tuotekehitys ja myyjä, joka tuntee toimialasi." }
+      },
+
+      /* next[].tier = pääsytaso (§6). Sisäinen luokittelu — EI renderöidä korttiin. */
+      next: [
+        { ic:"fa-solid fa-flask",        h:"Kokeile Makupajassa",
+          t:"Varaa aika omaan testikeittiöömme ja kokeile raaka-ainetta oikeassa reseptissä yhdessä tuotekehittäjämme kanssa.",
+          cta:"Varaa Makupaja", href:"/tuotekehitys/makupaja/", tier:"lead" },
+        { ic:"fa-solid fa-sliders",      h:"Räätälöi resepti",
+          t:"Kehitämme reseptin, maun tai koostumuksen tarpeeseesi — omalla tai sinun brändilläsi. Sama prosessi toimii yhdestä erästä vakiotuotteeksi.",
+          cta:"Katso miten kehitämme", href:"/tuotekehitys/raatalointiprosessi/", tier:"open" },
+        { ic:"fa-solid fa-user-tie",     h:"Kysy myynnistä",
+          t:"Näytteet, hinnat, saatavuus ja korvaavat tuotteet: myyjämme vastaa arkisin saman päivän aikana.",
+          cta:"Ota yhteyttä", href:"/yhteys/", tier:"lead",
+          seller: { name:"Anders Borg", role:"Myyntipäällikkö · Leipomot ja Food Service" } }
+      ],
+
+      /* ---- Datakattavuus (wireframe-only paneeli). Mitattu feedistä, n = 672. ---- */
+      coverage: {
+        h2: "Mitä feedistä oikeasti tulee",
+        lead: "Mitattu Sana-tuotefeedistä 28.8.2026 (n = 672). Vasen sarake on tämän sivun kantava data. Oikea sarake on se, mitä v2-tuotekortti oletti olevan olemassa — sitä ei ole missään järjestelmässä, joten se on joko WP-rikastuksen työjono tai poistettava suunnitelmasta.",
+        have: [
+          { pc:"100 %", t:"Tuotekoodi, nimi, verkkokaupan URL" },
+          { pc:"100 %", t:"Tilausyksikkö (kpl / kg / l)" },
+          { pc:"98 %",  t:"Minimitilausmäärä" },
+          { pc:"90 %",  t:"Tilausväli (erän monikerta)" },
+          { pc:"99 %",  t:"Pakkauskoko — johdettu nimestä" },
+          { pc:"95 %",  t:"Kategoriapolku (18 pääryhmää, 64 polkua)" },
+          { pc:"94 %",  t:"Tuotekuva" },
+          { pc:"53 %",  t:"EAN-koodi" },
+          { pc:"41 %",  t:"Aito tuotekuvaus (276 kpl)" },
+          { pc:"17 %",  t:"Ominaisuustagit — valmiiksi suomeksi" },
+          { pc:"9 %",   t:"Keskusliikekoodit (kuvauksen sisällä)" }
+        ],
+        gaps: [
+          { pc:"0 %", t:"Ainesosaluettelo" },
+          { pc:"0 %", t:"Ravintoarvot" },
+          { pc:"0 %", t:"Allergeeniluettelo (tagit ≠ luettelo)" },
+          { pc:"0 %", t:"Alkuperämaa" },
+          { pc:"0 %", t:"Sertifikaatit ja laatujärjestelmät" },
+          { pc:"0 %", t:"Dokumentit: tuotetietolomake, spec sheet" },
+          { pc:"0 %", t:"Säilyvyysaika ja säilytyslämpötila kenttänä (säilytysohje vain kuvaustekstissä)" },
+          { pc:"0 %", t:"Varastosaldo, toimitusaika, hinta" },
+          { pc:"0 %", t:"Brändi kenttänä (nimestä n. 61 %)" },
+          { pc:"0 %", t:"Pakkausvariantit — jokainen koko on oma SKU" },
+          { pc:"0 %", t:"Reseptilinkitys ja korvaavat tuotteet" }
+        ]
+      }
+    };
+
+    /* ======================= APURIT ======================= */
+    function esc(s) {
+      return String(s == null ? "" : s)
+        .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+    }
+    function src(kind, label) {   /* lähdemerkki — näkyy vain demo-kytkimellä */
+      return '<span class="src ' + kind + '">' + esc(label) + '</span>';
+    }
+    function sectionHead(c, id) {
+      return '<div class="section-head">' +
+        (c.eyebrow ? '<p class="eyebrow">' + esc(c.eyebrow) + '</p>' : '') +
+        '<h2 id="' + id + '">' + esc(c.h2) + '</h2>' +
+        (c.intro ? '<p class="intro">' + esc(c.intro) + '</p>' : '') + '</div>';
+    }
+    /* Ei tyhjää flex-lasta otsikkoriviin, jos kaikki merkit on piilotettu. */
+    function tierRow() {
+      var h = Array.prototype.slice.call(arguments).join("");
+      return h ? '<div class="tier-row">' + h + '</div>' : "";
+    }
+    function tier(kind) {
+      if (PAGE.hideTiers.indexOf(kind) !== -1) return "";
+      /* Ei emoji-palloa: .dot piirtää pallon jo CSS:llä — emoji oli sen kaksoiskappale. */
+      var m = { open:["open","Avoin"], lead:["lead","Liidi"], login:["login","Verkkokauppa"] }[kind];
+      return '<span class="tier ' + m[0] + '"><span class="dot" aria-hidden="true"></span>' + esc(m[1]) + '</span>';
+    }
+    /* Numero suomalaisittain: 25.0 → "25", 1.72 → "1,72" */
+    function fmtNum(n) {
+      if (n == null) return null;
+      return String(Math.round(n * 1000) / 1000).replace(".", ",");
+    }
+
+    /* ---- Pakkauskoko erotetaan nimen lopusta (toimii 666/672 nimelle) ------------
+       Miksi: nimi on ERP-rivi ("Riisijauho 25kg"), ei tuotenimi. Erottelu tekee
+       H1:stä luettavan ja antaa pakkauskoon omaksi tiedokseen — ilman että keksitään
+       dataa: molemmat palaset tulevat samasta merkkijonosta. */
+    var SIZE_RE = /\s*(?:(\d+)\s*[xX×]\s*)?([\d]+(?:[.,][\d]+)?)\s*(kg|g|l|dl|ml|kpl|pkt|prk|ltk)\s*$/i;
+    function splitTitle(title) {
+      var m = SIZE_RE.exec(title);
+      if (!m) return { name: title, size: null };
+      var num = m[2].replace(".", ",");
+      var size = (m[1] ? m[1] + " × " : "") + num + " " + m[3].toLowerCase();
+      return { name: title.replace(SIZE_RE, "").trim(), size: size };
+    }
+
+    /* ---- Brändi tunnistetaan nimestä (feedissä ei ole brändikenttää) ---- */
+    function detectBrand(title) {
+      for (var i = 0; i < PAGE.brands.length; i++) {
+        var b = PAGE.brands[i];
+        if (new RegExp("(^|\\s)" + b + "(\\s|$)", "i").test(title)) return b;
+      }
+      return null;
+    }
+
+    /* ---- Kuvauksen jäsennys ---------------------------------------------------
+       Feedin Description on WYSIWYG-tekstiä, ei kenttiä. Nämä samat säännöt
+       ajetaan WP-importissa kerran: tunnista "Otsikko:" -rivit, EAN ja
+       keskusliikekoodit, ja tallenna ne omiin ACF-kenttiinsä. */
+    function parseDescription(html, title) {
+      var out = { isReal:false, lead:"", leadParas:[], sections:[], ean:null, wholesale:[] };
+      if (!html) return out;
+      /* HUOM: 49 tuotteen kuvauksessa on WYSIWYG-inline-styleä, jolloin tagit ovat
+         muotoa <br style="..."> ja <p style="...">. Ilman [^>]* nämä eivät täsmää
+         ja koko kuvaus jää yhdeksi riviksi → osiot ja tukkurikoodit katoavat. */
+      var txt = String(html)
+        .replace(/<br[^>]*>/gi, "\n")
+        .replace(/<\/(p|div|li)[^>]*>/gi, "\n")
+        .replace(/<[^>]+>/g, "")
+        .replace(/&nbsp;/g, " ").replace(/&amp;/g, "&")
+        .replace(/[ \t]+/g, " ");
+      var lines = txt.split("\n").map(function (l) { return l.trim(); }).filter(Boolean);
+      var flat = lines.join(" ").toLowerCase().replace(/\s+/g, " ");
+      /* 54 % kuvauksista on kopio nimestä → kohdellaan puuttuvana, lohko katoaa */
+      if (!lines.length || flat === title.toLowerCase().replace(/\s+/g, " ")) return out;
+
+      var known = {}; PAGE.descSections.forEach(function (s) { known[s.key.toLowerCase()] = s; });
+      var cur = null, leadLines = [], mode = null;
+
+      lines.forEach(function (line) {
+        var lm = /^([A-Za-zÅÄÖåäö\- ]{3,22})\s*:\s*(.*)$/.exec(line);
+        var key = lm ? lm[1].trim().toLowerCase() : null;
+
+        if (key === "ean") { out.ean = lm[2].trim(); mode = null; cur = null; return; }
+        if (key === "keskusliikekoodit" || key === "wholesale codes") { mode = "wh"; cur = null; return; }
+        if (key && known[key]) {
+          cur = { key: known[key].key, icon: known[key].icon, text: lm[2].trim() };
+          out.sections.push(cur); mode = "sec"; return;
+        }
+        if (mode === "wh") {
+          var wm = /^(.+?)\s*:\s*([0-9][0-9\s\-]*)$/.exec(line);
+          if (wm) { out.wholesale.push({ name: wm[1].trim(), code: wm[2].trim() }); return; }
+          mode = null;   /* koodilohko päättyi */
+        }
+        /* Feedissä säilytys on useimmiten otsikoton lause ilman kaksoispistettä
+           ("Säilytys kuivassa, viileässä.") — tunnistetaan silti omaksi osiokseen. */
+        var sm = /^(Säilytys|Säilyvyys)\s+(.+)$/i.exec(line);
+        if (!key && sm && known["säilytys"]) {
+          var body = sm[2].charAt(0).toUpperCase() + sm[2].slice(1);
+          cur = { key: "Säilytys", icon: known["säilytys"].icon, text: body };
+          out.sections.push(cur); mode = "sec"; return;
+        }
+        if (mode === "sec" && cur) { cur.text += (cur.text ? " " : "") + line; return; }
+        leadLines.push(line);
+      });
+
+      /* Kappaleet pidetään erillään: 1. kappale on heron myyvä lause, loput kuuluvat
+         sisältölohkoon. Yhdeksi möykyksi liitettynä hero työntäisi CTA:n alas. */
+      out.leadParas = leadLines;
+      out.lead = leadLines[0] || "";
+      out.isReal = !!(out.lead || out.sections.length);
+      return out;
+    }
+
+    /* ---- Tuotteen johdetut kentät yhteen paikkaan ---- */
+    function derive(p) {
+      var t = splitTitle(p.Title);
+      var d = parseDescription(p.Description, p.Title);
+      var unit = PAGE.units[p.UnitOfMeasureId] || { one: p.UnitOfMeasureId, label: p.UnitOfMeasureId };
+      var cats = (p.CategoryIds || "").split("__").filter(Boolean);
+      var avail = !p.IsOrderable ? { cls:"out",   label:"Väliaikaisesti ei tilattavissa",
+                                     note:"Tuote on toimittajan toimitusesteen vuoksi tilapäisesti poissa valikoimasta. Myyntimme kertoo korvaavan vaihtoehdon." }
+                : p.Tuotetyyppi === "Tilaustuote" ? { cls:"order", label:"Tilaustuote",
+                                     note:"Tuotetta ei pidetä varastossa vaan se tilataan toimittajalta. Kysy toimitusaika myynnistä tai verkkokaupasta." }
+                : { cls:"stock", label:"Tilattavissa", note:null };
+      return { t:t, d:d, unit:unit, cats:cats, avail:avail,
+               brand: detectBrand(p.Title),
+               ean: p.BarCodes || d.ean || null,
+               wholesale: d.wholesale };
+    }
+
+    /* ======================= LOHKOT ======================= */
+
+    /* --- LOHKO 1 · TUNNISTE 🟢 -------------------------------------------------
+       Vastaa yhteen kysymykseen: "onko tämä oikea tuote ja miten saan sen?"
+       Kaikki tässä tulee feedistä 90–100 %:n kattavuudella. */
+    function renderIdentity(p, x) {
+      var catHref = "/tuotteet/" + x.cats.map(slug).join("/") + "/";
+
+      var shot = p.Image
+        ? '<div class="shot"><img src="' + esc(p.Image) + '" alt="' + esc(p.Title) + '" loading="eager"></div>'
+        : '<div class="shot noimg"><i class="fa-solid fa-image gl" aria-hidden="true"></i>' +
+          '<span class="lbl">Tuotekuvaa ei ole vielä saatavilla</span></div>';
+
+      var tags = (p.Tags && p.Tags.length)
+        ? '<ul class="tags">' + p.Tags.map(function (t) {
+            return '<li><i class="fa-solid fa-check" aria-hidden="true"></i>' + esc(t) + '</li>'; }).join("") +
+          '</ul>' + src("feed", "Feed 17 %")
+        : '';
+
+      /* Tilausfaktat — spec strip. Vain rivit joilla on arvo; puuttuvat näkyvät
+         ainoastaan lähdetilassa, jotta ne eivät ole sivun sisältöä vaan sen speksiä. */
+      var specs = [];
+      specs.push(fact("Tuotekoodi", esc(p.Id), "feed", "Feed", true));
+      if (x.t.size) specs.push(fact("Pakkauskoko", esc(x.t.size), "derived", "Nimestä"));
+      /* Tilausyksikkö, pienin tilausmäärä ja tilausväli POISTETTU (Olli 28.8.2026):
+         ne ovat tilaamisen mekaniikkaa ja kuuluvat verkkokauppaan, eivät tunnistesivulle.
+         Kentät ovat yhä feedissä (100 % / 98 % / 90 %) jos ne halutaan takaisin. */
+      if (x.ean) specs.push(fact("EAN", esc(x.ean), "feed", "Feed 53 %", true));
+      /* Puuttuvat kentät — dokumentoitu suoraan siihen kohtaan mihin ne kuuluisivat */
+      specs.push(fact("Alkuperämaa", "ei tuotedatassa", "missing", "Puuttuu", false, true));
+      specs.push(fact("Säilyvyysaika", "ei tuotedatassa", "missing", "Puuttuu", false, true));
+      specs.push(fact("Varastosaldo", "vain verkkokaupassa", "missing", "Sana", false, true));
+
+      var cta =
+        '<div class="cta-row">' +
+          '<a class="btn btn-primary" href="' + esc(p.Url) + '" target="_blank" rel="noopener">' +
+            '<i class="fa-solid fa-cart-shopping" aria-hidden="true"></i> Tilaa verkkokaupassa' +
+            '<i class="fa-solid fa-arrow-up-right-from-square ext-ico" aria-hidden="true"></i></a>' +
+          '<a class="btn btn-outline" href="/yhteys/?tuote=' + esc(p.Id) + '">' +
+            '<i class="fa-regular fa-comment" aria-hidden="true"></i> Kysy tästä tuotteesta</a>' +
+        '</div>' +
+        '<p class="cta-micro">Hinnat, saldot ja toimitusajat näet kirjautuneena verkkokaupassa. ' +
+        'Uusi asiakas? <a href="/yhteys/">Aloita tästä</a>.</p>';
+
+      return '<section class="block first" aria-labelledby="tuote-h1"><div class="id-hero">' +
+        '<div>' + shot +
+          (p.ImageCount > 1 ? '<p class="shot-cap">' + p.ImageCount + ' kuvaa</p>' : '') +
+        '</div>' +
+        '<div>' +
+          '<div class="brandline">' +
+            '<p class="eyebrow" style="margin:0"><a href="' + esc(catHref) + '">' +
+              esc(x.cats[x.cats.length - 1] || "Tuotteet") + '</a></p>' +
+            (x.brand ? '<span class="eyebrow" style="margin:0;color:var(--c-text-muted)">·</span>' +
+                       '<p class="eyebrow" style="margin:0"><a href="/brandit/' + slug(x.brand) + '/">' +
+                       esc(x.brand) + '</a></p>' + src("derived", "Nimestä 61 %")
+                     : '<span class="src missing">Brändi puuttuu</span>') +
+          '</div>' +
+          '<h1 id="tuote-h1">' + esc(x.t.name) +
+            (x.t.size ? '<span class="h1-size">' + esc(x.t.size) + '</span>' : '') + '</h1>' +
+          (x.d.lead ? '<p class="lede">' + esc(x.d.lead) + '</p>' + src("feed", "Feed 41 %") : '') +
+          tags +
+          '<dl class="spec-strip">' + specs.join("") + '</dl>' +
+          '<div class="avail ' + x.avail.cls + '"><span class="dot" aria-hidden="true"></span>' +
+            esc(x.avail.label) + '</div>' + src("feed", "Feed") +
+          (x.avail.note ? '<p class="avail-note">' + esc(x.avail.note) + '</p>' : '') +
+          cta +
+        '</div></div></section>';
+    }
+    function fact(k, v, kind, label, copy, isMissing) {
+      return '<div' + (isMissing ? ' class="missing-row"' : '') + '>' +
+        '<dt>' + esc(k) + src(kind, label) + '</dt>' +
+        '<dd>' + v + (copy ? '<button class="copy-btn" type="button" data-copy="' +
+          esc(String(v).replace(/<[^>]+>/g, "")) + '" aria-label="Kopioi ' + esc(k) +
+          '"><i class="fa-regular fa-copy" aria-hidden="true"></i></button>' : '') + '</dd></div>';
+    }
+
+    /* --- LOHKO 4 · KUVAUS JA KÄYTTÖ 🟢 — katoaa kokonaan ilman aitoa kuvausta --- */
+    function renderDescription(p, x) {
+      var rest = x.d.leadParas.slice(1);
+      if (!x.d.isReal || (!x.d.sections.length && !rest.length)) return "";
+      return '<section class="band" aria-labelledby="kuvaus-h2"><div class="block">' +
+        '<div class="head-row">' + sectionHead(PAGE.copy.descHead, "kuvaus-h2") +
+          tierRow(tier("open")) + '</div>' +
+        (rest.length ? '<div class="desc-body">' + rest.map(function (t) {
+          return '<p>' + esc(t) + '</p>'; }).join("") + '</div>' : '') +
+        (x.d.sections.length ? '<div class="desc-grid">' + x.d.sections.map(function (s) {
+          return '<div class="desc-sec"><h3><i class="' + esc(s.icon) + '" aria-hidden="true"></i>' +
+            esc(s.key) + '</h3><p>' + esc(s.text) + '</p></div>';
+        }).join("") + '</div>' : '') +
+        '<p class="parse-note"><strong>Jäsennys:</strong> nämä osiot eivät ole feedissä kenttinä. ' +
+        'Ne on tunnistettu kuvaustekstistä "Otsikko:"-rivien perusteella — sama sääntö ajetaan ' +
+        'WP-importissa kerran, jolloin osioista tulee oikeita ACF-kenttiä. 276 kuvauksesta ' +
+        'tunnistettavia osioita löytyy: Käyttö 78 · Säilytys 58 · Annostelu 48 · Valmistus 47 · Pakkaus 42.</p>' +
+        '</div></section>';
+    }
+
+    /* --- LOHKO 2 · TUKKURIKOODIT 🟢 — 62 tuotetta. Uusi lohko, ei v2:ssa. -------
+       Miksi tämä on oma lohko: Food Service -ostaja (Kaisa) ei tilaa Conditelta
+       vaan omalta tukultaan. Koodi kuvauksen keskellä on hänelle löytymätön; omana
+       lohkonaan se on toinen todellinen tilausreitti.
+       Miksi heti heron jälkeen: hero tarjoaa yhden tilausreitin ("Tilaa verkkokaupassa"),
+       tämä on sen rinnakkainen vaihtoehto — reitit kuuluvat yhteen, ennen sisältöä. */
+    function renderWholesale(p, x) {
+      if (!x.wholesale.length) return "";
+      return '<section class="band-soft" aria-labelledby="tukku-h2"><div class="block">' +
+        '<div class="head-row">' + sectionHead(PAGE.copy.whHead, "tukku-h2") +
+          tierRow(tier("open"), src("feed", "Feed 9 %")) + '</div>' +
+        '<div class="wh-grid">' + x.wholesale.map(function (w) {
+          var ws = PAGE.wholesalers[w.name] || {};
+          /* Nimi on linkki, kopiointi oma nappinsa — ei sisäkkäisiä klikkialueita */
+          var name = ws.url
+            ? '<a href="' + esc(ws.url) + '" target="_blank" rel="noopener">' + esc(w.name) +
+              '<i class="fa-solid fa-arrow-up-right-from-square ext-ico" aria-hidden="true"></i>' +
+              '<span class="visually-hidden"> (avautuu uuteen välilehteen)</span></a>'
+            : esc(w.name);
+          return '<div class="wh"><span><span class="n">' + name + '</span>' +
+            '<span class="c">' + esc(w.code) + '</span></span>' +
+            '<button class="copy-btn" type="button" data-copy="' + esc(w.code) +
+            '" aria-label="Kopioi ' + esc(w.name) + '-koodi"><i class="fa-regular fa-copy" aria-hidden="true"></i></button></div>';
+        }).join("") + '</div>' +
+        '<p class="wh-note"><strong>Tukkurien osoitteet</strong> ovat konfiguraatiossa ' +
+        '(<code>PAGE.wholesalers</code>), eivät tuotedatassa. Kaikki viisi varmistettu toimiviksi ' +
+        '28.8.2026: Patunetti (Palvelutukkurit), Metro-tukku (Wihuri), Meira Nova, Kespro ja Valio Aimo. ' +
+        'Parannus jatkoon: syvälinkki tukun omaan tuotehakuun koodilla, jolloin ostaja päätyy suoraan ' +
+        'oikealle tuotesivulle — vaatii kultakin tukulta hakusivun URL-muodon. Patunetti ja Kespro ovat ' +
+        'verkkokauppoja, joten niistä syvälinkki on todennäköisimmin saatavissa.</p>' +
+        '</div></section>';
+    }
+
+    /* --- LOHKO 3 · RESEPTIT 🟢 — WP-sisältöä, ei feedistä ----------------------
+       Feedissä ei ole reseptilinkitystä lainkaan; suhde syntyy WP:ssä resepti-CPT:n
+       ja tuotteen välille. Sama suhde toiseen suuntaan on jo reseptisivun
+       "Sisältää:"-rivillä, joten linkitys tehdään kerran ja luetaan molempiin suuntiin.
+       Ilman reseptejä lohko katoaa — sitä ei täytetä geneerisillä ehdotuksilla. */
+    function renderRecipes(p, x) {
+      if (!p.recipes || !p.recipes.length) return "";
+      return '<section class="block" aria-labelledby="reseptit-h2">' +
+        '<div class="head-row">' + sectionHead(PAGE.copy.recHead, "reseptit-h2") +
+          tierRow(tier("open"), src("wp", "WP-sisältö")) + '</div>' +
+        '<div class="card-grid">' + p.recipes.map(function (r) {
+          return '<a class="card" href="/reseptit/' + esc(slug(r.title)) + '/">' +
+            '<div class="thumb rec"><i class="fa-solid fa-image" aria-hidden="true"></i>' +
+            '<span>Reseptikuva</span></div>' +
+            '<div class="body"><span class="rk">' + esc(r.kicker) + '</span>' +
+            '<h3>' + esc(r.title) + '</h3>' +
+            '<span class="go">Katso resepti <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>' +
+            '</div></a>';
+        }).join("") + '</div>' +
+        '<p style="margin:24px 0 0"><a class="btn-link" href="/reseptit/?tuote=' + esc(p.Id) + '">' +
+        'Kaikki reseptit tällä tuotteella <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></p>' +
+        '</section>';
+    }
+
+    /* --- LOHKO 5 · SAMAN RYHMÄN TUOTTEET 🟢 — ainoa ristiinlinkitys jolle on dataa --- */
+    function renderRelated(p, x) {
+      if (!p.related || !p.related.length) return "";
+      var cat = x.cats[x.cats.length - 1] || "Tuotteet";
+      var head = { eyebrow: PAGE.copy.relHead.eyebrow, h2: PAGE.copy.relHead.h2 + ": " + cat };
+      return '<section class="block" aria-labelledby="liittyvat-h2">' +
+        '<div class="head-row">' + sectionHead(head, "liittyvat-h2") +
+          '<a class="btn-link" href="/tuotteet/' + esc(x.cats.map(slug).join("/")) + '/">' +
+          'Kaikki ryhmän tuotteet <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div>' +
+        '<div class="card-grid">' + p.related.map(function (r) {
+          return '<a class="card" href="/tuotteet/' + esc(slug(r.title)) + '-' + esc(r.id.toLowerCase()) + '/">' +
+            (r.img ? '<div class="thumb"><img src="' + esc(r.img) + '" alt="" loading="lazy"></div>'
+                   : '<div class="thumb noimg"><i class="fa-solid fa-image" aria-hidden="true"></i></div>') +
+            '<div class="body"><h3>' + esc(r.title) + '</h3>' +
+            '<span class="sku">' + esc(r.id) + '</span></div></a>';
+        }).join("") + '</div></section>';
+    }
+
+    /* --- LOHKO 6 · CONDITE-KAISTA 🟡 — sama kaikilla tuotteilla ------------------
+       Tämä lohko ei riipu tuotedatasta lainkaan, ja juuri siksi se on tässä: se
+       kantaa ohuenkin sivun ja sanoo sen mitä feed ei osaa sanoa — Condite on
+       kehityskumppani, ei rivi tuoteluettelossa. */
+    function renderNext() {
+      return '<section class="band" aria-labelledby="next-h2"><div class="block">' +
+        '<div class="head-row">' + sectionHead(PAGE.copy.nextHead, "next-h2") + '</div>' +
+        '<div class="next-grid">' + PAGE.next.map(function (n) {
+          return '<div class="next-card">' +
+            '<i class="' + esc(n.ic) + ' ic" aria-hidden="true"></i>' +
+            '<h3>' + esc(n.h) + '</h3>' +
+            (n.seller ? '<div class="seller"><span class="av" aria-hidden="true"></span><span>' +
+              '<span class="nm">' + esc(n.seller.name) + '</span><br>' +
+              '<span class="rl">' + esc(n.seller.role) + '</span></span></div>' : '') +
+            '<p>' + esc(n.t) + '</p>' +
+            '<div class="go"><a class="btn btn-outline" href="' + esc(n.href) + '">' + esc(n.cta) + '</a></div>' +
+          '</div>';
+        }).join("") + '</div></div></section>';
+    }
+
+    /* --- DATAKATTAVUUS (wireframe-only, näkyy lähdetilassa) --- */
+    function renderCoverage() {
+      var c = PAGE.coverage;
+      function list(items, cls) {
+        return '<ul>' + items.map(function (i) {
+          return '<li class="' + cls + '"><span class="pc">' + esc(i.pc) + '</span><span>' + esc(i.t) + '</span></li>';
+        }).join("") + '</ul>';
+      }
+      return '<section class="block last cov" aria-labelledby="cov-h2"><div class="cov-inner">' +
+        '<h2 id="cov-h2">' + esc(c.h2) + '</h2><p class="lead">' + esc(c.lead) + '</p>' +
+        '<div class="cov-cols">' +
+          '<div><h3>Kantaa tätä sivua</h3>' + list(c.have, "have") + '</div>' +
+          '<div><h3>Ei missään järjestelmässä</h3>' + list(c.gaps, "gap") + '</div>' +
+        '</div></div></section>';
+    }
+
+    function slug(s) {
+      return String(s).toLowerCase()
+        .replace(/[åä]/g, "a").replace(/ö/g, "o").replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "");
+    }
+
+    /* ======================= KOKOAMINEN ======================= */
+    function renderCrumbs(p, x) {
+      var parts = [{ t: "Etusivu", h: "/" }, { t: "Tuotteet", h: "/tuotteet/" }];
+      var acc = "/tuotteet/";
+      x.cats.forEach(function (c) { acc += slug(c) + "/"; parts.push({ t: c, h: acc }); });
+      var html = parts.map(function (b) {
+        return '<li><a href="' + esc(b.h) + '">' + esc(b.t) + '</a></li><li class="sep" aria-hidden="true">›</li>';
+      }).join("") + '<li aria-current="page">' + esc(x.t.name) + '</li>';
+      document.getElementById("crumbs-list").innerHTML = html;
+    }
+
+    /* Rakenteinen data — VAIN kentät jotka feedistä oikeasti tulevat.
+       Ei offers-solmua: hinta ja saatavuus asuvat Sanassa, eikä Schema.org salli
+       Offeria ilman hintaa. Ei nutrition/ingredients-solmuja: dataa ei ole. */
+    function renderJsonLd(p, x) {
+      var prod = {
+        "@context": "https://schema.org", "@type": "Product",
+        name: p.Title, sku: p.Id,
+        category: x.cats.join(" > "),
+        url: "https://www.condite.fi/tuotteet/" + x.cats.map(slug).join("/") + "/" + slug(x.t.name) + "/"
+      };
+      if (x.ean && /^\d{13}$/.test(x.ean)) prod.gtin13 = x.ean;
+      if (p.Image) prod.image = p.Image;
+      if (x.brand) prod.brand = { "@type": "Brand", name: x.brand };
+      if (x.d.lead) prod.description = x.d.lead;
+      document.getElementById("ld-json").textContent = JSON.stringify(prod, null, 2);
+    }
+
+    function render(viewKey) {
+      var p = PAGE.views[viewKey];
+      var x = derive(p);
+      document.getElementById("main").innerHTML =
+        renderIdentity(p, x) +
+        renderWholesale(p, x) +      /* tilausreitit yhdessä heron CTA:n kanssa (Olli 28.8.2026) */
+        renderRecipes(p, x) +
+        renderDescription(p, x) +
+        renderRelated(p, x) +
+        renderNext() +
+        renderCoverage();
+      renderCrumbs(p, x);
+      renderJsonLd(p, x);
+      document.getElementById("demo-note").textContent = p.note;
+      /* MetaTitle/MetaDescription tulevat feedistä 45 tuotteelle (7 %); muille johdetaan. */
+      document.title = p.MetaTitle || (p.Title + " | Condite");
+      var md = document.querySelector('meta[name="description"]');
+      if (md && p.MetaDescription) md.setAttribute("content", p.MetaDescription);
+      wireCopy();
+    }
+
+    /* ======================= INTERAKTIOT ======================= */
+    function wireCopy() {
+      Array.prototype.forEach.call(document.querySelectorAll("[data-copy]"), function (b) {
+        b.addEventListener("click", function () {
+          var v = b.getAttribute("data-copy");
+          if (navigator.clipboard) navigator.clipboard.writeText(v);
+          b.classList.add("copied");
+          b.innerHTML = '<i class="fa-solid fa-check" aria-hidden="true"></i>';
+          setTimeout(function () {
+            b.classList.remove("copied");
+            b.innerHTML = '<i class="fa-regular fa-copy" aria-hidden="true"></i>';
+          }, 1400);
+        });
+      });
+    }
+
+    Array.prototype.forEach.call(document.querySelectorAll("[data-set-view]"), function (btn) {
+      btn.addEventListener("click", function () {
+        var v = btn.getAttribute("data-set-view");
+        document.body.setAttribute("data-view", v);
+        Array.prototype.forEach.call(document.querySelectorAll("[data-set-view]"), function (b) {
+          b.setAttribute("aria-pressed", String(b === btn));
+        });
+        render(v);
+        window.scrollTo({ top: 0, behavior: "auto" });
+      });
+    });
+
+    document.getElementById("src-toggle").addEventListener("change", function () {
+      document.body.classList.toggle("show-src", this.checked);
+    });
+
+    var navToggle = document.querySelector(".nav-toggle");
+    if (navToggle) navToggle.addEventListener("click", function () {
+      var h = document.querySelector(".site-header");
+      var open = h.classList.toggle("nav-open");
+      navToggle.setAttribute("aria-expanded", String(open));
+    });
+
+    /* ?view=<id> valitsee datatason suoraan URL:sta — jaettava linkki yksittäiseen
+       tilaan ja toistettava Miro-vienti (muuten kaappaus saa aina oletustilan). */
+    var initView = (location.search.match(/[?&]view=([a-z]+)/) || [])[1];
+    if (!PAGE.views[initView]) initView = "rikas";
+    document.body.setAttribute("data-view", initView);
+    Array.prototype.forEach.call(document.querySelectorAll("[data-set-view]"), function (b) {
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-set-view") === initView));
+    });
+    render(initView);
+  })();
+  </script>
+</body>
+</html>

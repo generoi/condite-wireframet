@@ -1,0 +1,3 @@
+# Condite.fi wireframe-prototyyppi — ei indeksointia
+User-agent: *
+Disallow: /

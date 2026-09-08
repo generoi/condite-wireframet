@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Condite — Makupaja-prosessi (anna/saat-punos)</title>
+<style>
+  :root{
+    --c-bg:#ffffff; --c-bg-soft:#f7f7f7; --c-bg-tint:#eef6fb;
+    --c-text:#1d1d1f; --c-text-2:#555555; --c-text-muted:#6f6f6f;
+    --c-border:#e3e3e3; --c-border-strong:#cfcfcf; --c-divider:#d8d8d8;
+    --c-accent:#7fc8ec; --c-accent-ink:#0a6e9b; --c-on-accent:#0a4f72;
+    --c-accent-soft:#e3f2fb; --c-suits-border:#b7def4;
+    --r-md:8px; --r-lg:12px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--c-bg-soft);color:var(--c-text);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;line-height:1.5;}
+  .wrap{max-width:1180px;margin:0 auto;padding:48px 24px;}
+  .infobox{background:var(--c-bg);border:1px solid var(--c-border);border-radius:var(--r-lg);padding:32px 32px 28px;}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--c-accent-ink);margin:0 0 6px;}
+  h2{font-size:24px;line-height:1.25;margin:0 0 8px;font-weight:700;}
+  .intro{margin:0 0 14px;color:var(--c-text-2);max-width:70ch;font-size:15px;}
+
+  .s-name{font:600 14px/1 inherit;fill:var(--c-text)}
+  .s-lane{font:700 12px/1 inherit;letter-spacing:.3px}
+  .s-end{font:700 14px/1 inherit;fill:var(--c-accent-ink)}
+  svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,system-ui,sans-serif}
+  .rib-you{fill:none;stroke:var(--c-accent-ink);stroke-width:6;stroke-linecap:round}
+  .rib-con{fill:none;stroke:var(--c-accent);stroke-width:6;stroke-linecap:round}
+  .node{fill:var(--c-bg);stroke:var(--c-accent-ink);stroke-width:2}
+  .endpill{fill:var(--c-accent-soft);stroke:var(--c-suits-border);stroke-width:1.5}
+  .tick{stroke:var(--c-border-strong);stroke-width:1;stroke-dasharray:2 3}
+
+  /* give/get -taulukko */
+  .gg{width:100%;border-collapse:collapse;margin-top:6px;font-size:13px;table-layout:fixed}
+  .gg th,.gg td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--c-border);vertical-align:top;}
+  .gg thead th{font-size:12px;color:var(--c-text-muted);font-weight:600;}
+  .gg thead th.h{color:var(--c-text);font-weight:700;}
+  .gg tbody th{white-space:nowrap;font-weight:700;font-size:12px;}
+  .gg tbody td{color:var(--c-text-2);}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:middle;}
+  .dot.you{background:var(--c-accent-ink)} .dot.con{background:var(--c-accent)}
+  .row-you th{color:var(--c-accent-ink)} .row-con th{color:var(--c-accent-ink)}
+  .note{margin:16px 0 0;font-size:12px;color:var(--c-text-muted);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="infobox">
+    <p class="eyebrow">Näin yhteistyö etenee</p>
+    <h2>Briiffistä tuotantoon — sinä ja Condite, vaihe vaiheelta</h2>
+    <p class="intro">[Intro-placeholder: kehitys ei ole tilaamista vaan yhteistyötä. Sinä tuot tarpeen ja
+      maun, Condite tuo osaamisen ja testikeittiön — ne punoutuvat yhteen joka vaiheessa ja sulautuvat
+      valmiiksi tuotteeksi. Condite viimeistelee sanoituksen.]</p>
+
+    <svg width="100%" viewBox="0 0 1120 340" role="img" aria-labelledby="ig-t ig-d">
+      <title id="ig-t">Makupaja-prosessi kahden osapuolen punoksena</title>
+      <desc id="ig-d">Kaksi nauhaa — "sinä tuot" ja "Condite tuo" — punoutuvat ristiin kuudessa vaiheessa
+        (briiffi, suunnittelu, maistatus, iterointi, koesarja, tuotantoon) ja sulautuvat oikealla valmiiksi tuotteeksi.</desc>
+
+      <!-- lane-tunnisteet vasemmalla -->
+      <circle cx="74" cy="150" r="5" fill="var(--c-accent-ink)"/>
+      <text class="s-lane" x="86" y="146" fill="var(--c-accent-ink)">Sinä tuot</text>
+      <circle cx="74" cy="270" r="5" fill="var(--c-accent)"/>
+      <text class="s-lane" x="86" y="274" fill="var(--c-accent-ink)">Condite tuo</text>
+
+      <!-- nauha B (Condite, vaalea) takana -->
+      <path class="rib-con" d="M70,270 C120,270 120,210 170,210 C210,210 210,150 250,150 C290,150 290,210 330,210 C370,210 370,270 410,270 C450,270 450,210 490,210 C530,210 530,150 570,150 C610,150 610,210 650,210 C690,210 690,270 730,270 C770,270 770,210 810,210 C850,210 850,150 890,150 C930,150 930,210 970,210 C982,210 982,210 995,210"/>
+      <!-- nauha A (sinä, tumma) edessä -->
+      <path class="rib-you" d="M70,150 C120,150 120,210 170,210 C210,210 210,270 250,270 C290,270 290,210 330,210 C370,210 370,150 410,150 C450,150 450,210 490,210 C530,210 530,270 570,270 C610,270 610,210 650,210 C690,210 690,150 730,150 C770,150 770,210 810,210 C850,210 850,270 890,270 C930,270 930,210 970,210 C982,210 982,210 995,210"/>
+
+      <!-- vaihesolmut + nimet (vuorotellen ylä/ala) -->
+      <!-- 1 Briiffi (ylä) -->
+      <line class="tick" x1="170" y1="202" x2="170" y2="128"/>
+      <circle class="node" cx="170" cy="210" r="8"/>
+      <text class="s-name" x="170" y="122" text-anchor="middle">Briiffi</text>
+      <!-- 2 Suunnittelu (ala) -->
+      <line class="tick" x1="330" y1="218" x2="330" y2="296"/>
+      <circle class="node" cx="330" cy="210" r="8"/>
+      <text class="s-name" x="330" y="312" text-anchor="middle">Suunnittelu</text>
+      <!-- 3 Maistatus (ylä) -->
+      <line class="tick" x1="490" y1="202" x2="490" y2="128"/>
+      <circle class="node" cx="490" cy="210" r="8"/>
+      <text class="s-name" x="490" y="122" text-anchor="middle">Maistatus</text>
+      <!-- 4 Iterointi (ala) -->
+      <line class="tick" x1="650" y1="218" x2="650" y2="296"/>
+      <circle class="node" cx="650" cy="210" r="8"/>
+      <text class="s-name" x="650" y="312" text-anchor="middle">Iterointi</text>
+      <!-- 5 Koesarja (ylä) -->
+      <line class="tick" x1="810" y1="202" x2="810" y2="128"/>
+      <circle class="node" cx="810" cy="210" r="8"/>
+      <text class="s-name" x="810" y="122" text-anchor="middle">Koesarja</text>
+      <!-- 6 Tuotantoon (ala) -->
+      <line class="tick" x1="970" y1="218" x2="970" y2="296"/>
+      <circle class="node" cx="970" cy="210" r="8"/>
+      <text class="s-name" x="970" y="312" text-anchor="middle">Tuotantoon</text>
+
+      <!-- sulautuminen → valmis tuote -->
+      <rect class="endpill" x="998" y="188" width="116" height="44" rx="22"/>
+      <text class="s-end" x="1056" y="214" text-anchor="middle">Valmis tuote</text>
+    </svg>
+
+    <!-- give/get -detalji: lyhyet panokset per vaihe (luonnos) -->
+    <table class="gg">
+      <thead>
+        <tr>
+          <th></th>
+          <th class="h">Briiffi</th><th class="h">Suunnittelu</th><th class="h">Maistatus</th>
+          <th class="h">Iterointi</th><th class="h">Koesarja</th><th class="h">Tuotantoon</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-you">
+          <th><span class="dot you"></span>Sinä tuot</th>
+          <td>tarve &amp; tavoite</td><td>makutoive</td><td>arvio &amp; valinta</td>
+          <td>palaute</td><td>tuotannon reunaehdot</td><td>tilaus &amp; sitoutuminen</td>
+        </tr>
+        <tr class="row-con">
+          <th><span class="dot con"></span>Condite tuo</th>
+          <td>oikeat kysymykset</td><td>raaka-aineet &amp; tapa</td><td>testikeittiö &amp; versiot</td>
+          <td>hionta</td><td>koesarja pienessä mittakaavassa</td><td>skaalaus &amp; kumppanuus</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="note">Pääsytaso: avoin. Taulukon panokset ovat luonnos — Condite viimeistelee. Vaihtoehto S3:n pystysteppille (vsteps); tonaaliset DS-värit.</p>
+  </section>
+</div>
+</body>
+</html>

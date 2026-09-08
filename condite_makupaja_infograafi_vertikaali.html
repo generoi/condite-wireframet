@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Condite — Makupaja-prosessi (vertikaali)</title>
+<style>
+  :root{
+    --c-bg:#ffffff; --c-bg-soft:#f7f7f7; --c-bg-tint:#eef6fb;
+    --c-text:#1d1d1f; --c-text-2:#555555; --c-text-muted:#6f6f6f;
+    --c-border:#e3e3e3; --c-border-strong:#cfcfcf; --c-divider:#d8d8d8;
+    --c-accent:#7fc8ec; --c-accent-ink:#0a6e9b; --c-on-accent:#0a4f72;
+    --c-accent-soft:#e3f2fb; --c-suits-border:#b7def4;
+    --r-md:8px; --r-lg:12px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--c-bg-soft);color:var(--c-text);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;line-height:1.5;}
+  .wrap{max-width:760px;margin:0 auto;padding:48px 24px;}
+  .infobox{background:var(--c-bg);border:1px solid var(--c-border);border-radius:var(--r-lg);padding:32px 32px 30px;}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--c-accent-ink);margin:0 0 6px;}
+  h2{font-size:24px;line-height:1.25;margin:0 0 8px;font-weight:700;}
+  .intro{margin:0 0 24px;color:var(--c-text-2);font-size:15px;}
+
+  /* vertikaalinen vaiheistus */
+  .vflow{margin:0;padding:0;list-style:none;}
+  .vrow{display:grid;grid-template-columns:48px 1fr;gap:18px;position:relative;padding-bottom:26px;}
+  .vrow:last-child{padding-bottom:0;}
+  /* spine-yhdysviiva */
+  .vrow:not(:last-child)::before{content:"";position:absolute;left:23px;top:46px;bottom:-3px;
+    border-left:2px dotted var(--c-border-strong);}
+  .vnode{width:40px;height:40px;border-radius:999px;background:var(--c-accent-soft);
+    border:1px solid var(--c-suits-border);color:var(--c-accent-ink);font-weight:700;font-size:15px;
+    display:flex;align-items:center;justify-content:center;position:relative;z-index:1;}
+  .vbody{padding-top:7px;}
+  .vbody h3{font-size:17px;margin:0 0 5px;}
+  .vbody p{margin:0;font-size:14px;color:var(--c-text-2);line-height:1.55;}
+
+  /* maali */
+  .vrow.goal .vnode{background:var(--c-accent);border-color:var(--c-accent);color:var(--c-on-accent);}
+  .vrow.goal .vbody h3{color:var(--c-accent-ink);}
+
+  /* testaussykli-lohko (ei tasavälinen pykälä → niputettu) */
+  .vcycle{background:var(--c-accent-soft);border:1px solid var(--c-suits-border);
+    border-radius:var(--r-lg);padding:16px 18px 2px;margin:0 0 26px;position:relative;}
+  .vcycle::before{content:"";position:absolute;left:41px;top:-26px;height:26px;
+    border-left:2px dotted var(--c-border-strong);}
+  .vcycle-h{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;
+    text-transform:uppercase;letter-spacing:.5px;color:var(--c-accent-ink);margin:0 0 14px;}
+  .vcycle-h svg{flex:none;}
+  .vcycle .vnode{background:var(--c-bg);}
+  .vcycle .vrow:not(:last-child)::before{border-color:var(--c-suits-border);}
+
+  /* paluu-merkintä (proximity-tekstinä, ei hauras nuoli) */
+  .backref{display:inline-flex;align-items:center;gap:7px;margin-top:10px;font-size:12px;
+    font-weight:600;color:var(--c-accent-ink);background:var(--c-accent-soft);
+    border:1px solid var(--c-suits-border);border-radius:999px;padding:5px 12px;}
+  .backref svg{flex:none;}
+
+  .note{margin:24px 0 0;padding-top:20px;border-top:1px solid var(--c-border);font-size:12px;color:var(--c-text-muted);}
+
+  @media(max-width:560px){
+    .wrap{padding:28px 16px;}
+    .infobox{padding:24px 18px 24px;}
+    h2{font-size:21px;}
+    .vrow{grid-template-columns:42px 1fr;gap:14px;}
+    .vrow:not(:last-child)::before{left:20px;}
+    .vnode{width:36px;height:36px;font-size:14px;}
+    .vbody h3{font-size:16px;}
+    .vcycle{padding:14px 14px 2px;}
+    .vcycle::before{left:35px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="infobox">
+    <p class="eyebrow">Näin yhteistyö etenee</p>
+    <h2>Briiffistä tuotantoon — testataan kunnes toimii</h2>
+    <p class="intro">[Intro-placeholder: kehitys ei etene suoraa viivaa. Maistatus ja iterointi toistuvat
+      sykleissä Makupajassa, ja tuotantoon edetään vasta kun resepti toimii. Condite viimeistelee sanoituksen.]</p>
+
+    <ol class="vflow">
+      <li class="vrow">
+        <div class="vnode">1</div>
+        <div class="vbody">
+          <h3>Briiffi</h3>
+          <p>[Luonnos: Aloitamme kartoittamalla tarpeesi — mitä kehitetään, mihin käyttöön ja millä
+            reunaehdoilla (esim. allergeenit, säilyvyys, hinta, volyymi). Sovimme tavoitteet ja aikataulun,
+            jotta kehitystyö lähtee oikeaan suuntaan heti.]</p>
+        </div>
+      </li>
+
+      <li class="vrow">
+        <div class="vnode">2</div>
+        <div class="vbody">
+          <h3>Suunnittelu</h3>
+          <p>[Luonnos: Valitsemme sopivat raaka-aineet ja lähestymistavan tavoitteidesi pohjalta.
+            Hyödynnämme Conditen valikoimaa ja Orklan asiantuntemusta ja ehdotamme yhden tai useamman
+            suunnan, joista lähdemme kokeilemaan.]</p>
+        </div>
+      </li>
+
+      <!-- Testaussykli: Maistatus + Iterointi niputettuna (toistuu) -->
+      <li class="vcycle">
+        <p class="vcycle-h">
+          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20 11.5a8 8 0 1 1-2.4-5.7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M20 3v5h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Testaussykli — toistuu kunnes resepti toimii
+        </p>
+        <ol class="vflow">
+          <li class="vrow">
+            <div class="vnode">3</div>
+            <div class="vbody">
+              <h3>Maistatus</h3>
+              <p>[Luonnos: Valmistamme ensimmäiset versiot Makupajan testikeittiössä ja maistatamme ne
+                kanssasi. Näet, maistat ja arvioit tulokset paikan päällä — konkretia korvaa arvailun jo
+                varhaisessa vaiheessa.]</p>
+            </div>
+          </li>
+          <li class="vrow">
+            <div class="vnode">4</div>
+            <div class="vbody">
+              <h3>Iterointi</h3>
+              <p>[Luonnos: Hiomme reseptiä palautteesi perusteella — säädämme makua, koostumusta ja
+                ominaisuuksia. Maistatus ja iterointi toistuvat sykleinä, kunnes lopputulos vastaa tarvettasi.]</p>
+            </div>
+          </li>
+        </ol>
+      </li>
+
+      <li class="vrow">
+        <div class="vnode">5</div>
+        <div class="vbody">
+          <h3>Koesarja</h3>
+          <p>[Luonnos: Testaamme toimivan reseptin pienemmässä tuotantomittakaavassa ja varmistamme, että
+            ratkaisu skaalautuu ja pysyy tasalaatuisena.]</p>
+          <span class="backref">
+            <svg width="13" height="13" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20 11.5a8 8 0 1 1-2.4-5.7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+              <path d="M20 3v5h-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Voi palata testaussykliin, jos mittakaava paljastaa säätötarvetta
+          </span>
+        </div>
+      </li>
+
+      <li class="vrow goal">
+        <div class="vnode">6</div>
+        <div class="vbody">
+          <h3>Tuotantoon</h3>
+          <p>[Luonnos: Viemme valmiin tuotteen tuotantoon sovitulla volyymilla ja aikataululla. Yhteistyö ei
+            pääty tähän — jatkamme kehityskumppanina ja tuemme tuotetta myös jatkossa.]</p>
+        </div>
+      </li>
+    </ol>
+
+    <p class="note">Pääsytaso: avoin. Kuvaukset luonnos — Condite viimeistelee. Korvaa S3:n vsteps-steppin; tonaaliset DS-värit, ei klikkauksia, mobiiliystävällinen.</p>
+  </section>
+</div>
+</body>
+</html>

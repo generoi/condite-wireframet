@@ -1,0 +1,1153 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Savustettu paprikajauhe — savuinen paprikamauste ammattikäyttöön | Capsi · Condite</title>
+<meta name="description" content="Tammisavustetusta paprikasta jauhettu mauste ammattikäyttöön: ainesosat, allergeenit, ravintoarvot, käyttö ja reseptit avoimesti. Tilaa verkkokaupassa tai kysy myynnistä.">
+<link rel="canonical" href="https://www.condite.fi/tuotteet/mausteet/savustettu-paprikajauhe/">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!--
+  CONDITE.FI — TUOTEKORTTI v2 (YKSITTÄINEN TUOTE) · KIILLOTETTU WIREFRAME (FI)
+  Pohja: approved design system (condite_design_system.html) — softened tonal blue.
+  Sama chrome (sticky nav + murupolku + footer) kuin sisarsivuilla (tuotteet/tuotelistaus/etusivu).
+
+  HUOM palettipäätös: brief §13 mainitsee #00A0E0; käytämme PROJEKTIN KANONISTA DS-palettia
+  (--c-accent #7fc8ec / --c-accent-ink #0a6e9b), joka Ollin 12.6.2026 päätöksellä KORVAA kirkkaan
+  sinisen (CLAUDE.md + condite_design_system.html). Sisarwireframet noudattavat samaa.
+
+  v2:n YDIN (päivitysohjeen §2, 5 päätöstä):
+   1. Klusterointi kysymyksittäin: RAVINTOARVOT siirretty ylhäältä allergeenien+ainesosien viereen
+      (klusteri 2), kaupallinen blokki koostumustiedon JÄLKEEN — ei enää halkaise sitä.
+   2. EI WP-kirjautumista: tilaus/hinta/saldo asuvat Sanassa. Login-tasolle SIIRRYTÄÄN (handoff).
+   3. Rikas-ensin + kiinteä kaupallinen slotti: karsinta = "valmis tilaamaan → arvioimassa".
+      Slottia ei poisteta, vain sen sisältö vaihtuu (data-when="handoff|customer").
+   4. Primääri-CTA "Tilaa verkkokaupassa" + 🟡 "Kysy tuotteesta" (→ Yhteys). Näytepyyntölomake
+      EI ole tuotekortilla (Olli/Miro): yksi lomake Yhteys-sivulla → Dynamics.
+   5. Hinta heroon ehdollisena (K4): tässä demossa näytetään OHJEHINTA-variantti (hypoteesi);
+      jos K4 ratkeaa "vain asiakaskohtainen" → vaihda "Hinnat verkkokaupassa" (ks. kommentit).
+
+  KAKSITASOINEN URL (§3): tämä = TUOTE-taso (kanoninen, SEO-kärki). Pakkauskoot ovat LINKKEJÄ
+  pakkaus-tason URLeihin (.../{tuote}/{koko}); pakkaus-taso rel=canonical → tämä sivu.
+
+  PÄÄSYTASOT: 🟢 avoin · 🟡 liidi (Dynamics/Makupaja) · 🔵 login (Sana). Merkitty lohkoihin.
+  ERP-kentät = HYPOTEESEJA (ks. brief §6 / Avoimet kysymykset K1–K4). Vain positiiviset arvot.
+-->
+<style>
+  :root {
+    /* Taustat */
+    --c-bg:#ffffff; --c-bg-soft:#f7f7f7; --c-bg-tint:#eef6fb;
+    /* Teksti */
+    --c-text:#1d1d1f; --c-text-2:#555555; --c-text-muted:#6f6f6f;
+    /* Viivat */
+    --c-border:#e3e3e3; --c-border-strong:#cfcfcf; --c-divider:#d8d8d8;
+    /* Kuvapaikat */
+    --c-ph-bg:#ececec; --c-ph-border:#c8c8c8;
+    /* Korostus — pehmeä sininen (DS) */
+    --c-accent:#7fc8ec; --c-accent-ink:#0a6e9b; --c-on-accent:#0a4f72;
+    --c-accent-soft:#e3f2fb; --c-suits-border:#b7def4;
+    /* Tila- ja merkkivärit */
+    --c-in-bg:#e7efe9; --c-in-text:#2f5a40;
+    --c-warn-bg:#fff5f0; --c-warn-border:#f3d3c1; --c-warn-text:#c0451c;
+    --c-tulossa-bg:#fff4cc; --c-tulossa-border:#f0d885; --c-tulossa-text:#6b4d00;
+    /* Pyöristykset */
+    --r-sm:4px; --r-md:8px; --r-lg:12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--c-bg); color: var(--c-text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+    font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--c-accent-ink); }
+  img { max-width: 100%; }
+  /* Gotcha (CLAUDE.md): pidä globaali [hidden] mukana — author-display ohittaa UA-säännön */
+  [hidden] { display: none !important; }
+  .hatch { background-image: repeating-linear-gradient(45deg,transparent,transparent 9px,rgba(0,0,0,.035) 9px,rgba(0,0,0,.035) 10px); }
+  .num { font-variant-numeric: tabular-nums; }
+
+  /* Saavutettavuus */
+  .skip {
+    position: absolute; left: 8px; top: -48px; z-index: 100;
+    background: var(--c-accent); color: var(--c-on-accent); font-weight: 700;
+    padding: 10px 16px; border-radius: var(--r-sm); text-decoration: none; transition: top .15s;
+  }
+  .skip:focus { top: 8px; }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible {
+    outline: 2.5px solid var(--c-accent); outline-offset: 2px; border-radius: var(--r-sm);
+  }
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+
+  /* Layout */
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  .block { max-width: 1200px; margin: 0 auto; padding: 64px 24px 0; }
+  .block.first { padding-top: 32px; }
+  .block.last { padding-bottom: 64px; }
+  .band { border-top: 1px solid var(--c-suits-border); border-bottom: 1px solid var(--c-suits-border); background: var(--c-bg-tint); margin-top: 64px; }
+  .band .block { padding-top: 64px; padding-bottom: 64px; }
+
+  /* Tyypit */
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--c-accent-ink); margin: 0 0 8px; }
+  h1 { font-size: 40px; line-height: 1.12; letter-spacing: -.01em; margin: 0 0 12px; font-weight: 700; }
+  h2 { font-size: 30px; line-height: 1.18; margin: 0; font-weight: 700; }
+  h3.sub { font-size: 18px; margin: 0 0 12px; font-weight: 700; }
+  .intro { margin: 16px 0 0; color: var(--c-text-2); }
+  .section-head { max-width: 760px; }
+  .head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 32px; }
+  .muted { color: var(--c-text-muted); }
+  .access-note { font-size: 12px; color: var(--c-text-muted); margin: 8px 0 0; }
+  /* Datapuute-tila: kenttä on rakenteessa, mutta arvoa ei tuotedatasta (Miro-kommentit) */
+  .no-data { display: flex; gap: 9px; align-items: flex-start; font-size: 14px; color: var(--c-text-2); background: var(--c-bg-soft); border: 1px dashed var(--c-border-strong); border-radius: var(--r-md); padding: 12px 14px; margin: 0; }
+  .no-data i { color: var(--c-text-muted); margin-top: 3px; }
+
+  /* Painikkeet */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: var(--r-sm); font-weight: 600; font-size: 16px; text-decoration: none; line-height: 1.2; cursor: pointer; padding: 13px 22px; border: 1.5px solid transparent; }
+  .btn-primary { border-color: var(--c-accent); background: var(--c-accent); color: var(--c-on-accent); }
+  .btn-outline { border-color: var(--c-accent-ink); background: var(--c-bg); color: var(--c-accent-ink); }
+  .btn-sm { padding: 9px 16px; font-size: 14px; border-color: var(--c-accent-ink); background: var(--c-bg); color: var(--c-accent-ink); }
+  .btn-block { width: 100%; }
+  .btn-link { color: var(--c-accent-ink); text-decoration: none; font-weight: 600; font-size: 14px; display: inline-flex; gap: 6px; align-items: center; white-space: nowrap; }
+
+  /* Header */
+  .site-header { border-bottom: 1px solid var(--c-border); background: var(--c-bg); position: sticky; top: 0; z-index: 50; }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; min-height: 64px; gap: 32px; }
+  .logo { flex: none; width: 110px; height: 34px; background: var(--c-ph-bg); border: 1px dashed var(--c-ph-border); display: flex; align-items: center; justify-content: center; color: var(--c-text-2); font-size: 12px; border-radius: var(--r-sm); letter-spacing: .5px; font-weight: 700; text-decoration: none; }
+  .nav-main { display: flex; align-items: center; justify-content: center; flex: 1; }
+  .nav-list { list-style: none; margin: 0; padding: 0; display: flex; gap: 2px; }
+  .nav-list a { text-decoration: none; padding: 8px 12px; border-radius: var(--r-sm); font-weight: 500; color: var(--c-text); font-size: 14px; white-space: nowrap; position: relative; }
+  .nav-list a:hover { color: var(--c-accent-ink); }
+  .nav-list a[aria-current="page"] { color: var(--c-accent-ink); font-weight: 700; }
+  .nav-list a[aria-current="page"]::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: 0; height: 2px; background: var(--c-accent); border-radius: 2px; }
+  /* Pudotusvalikot (Yhteys) */
+  .nav-list > li.has-dropdown { position: relative; }
+  .nav-list .caret { font-size: 9px; margin-left: 4px; color: var(--c-text-muted); }
+  .nav-dropdown { position: absolute; top: 100%; left: 0; min-width: 220px; background: var(--c-bg); border: 1px solid var(--c-border); border-radius: var(--r-md); box-shadow: 0 10px 26px rgba(10,79,114,.12); padding: 6px 0; margin-top: 4px; list-style: none; display: none; z-index: 60; }
+  .nav-list > li.has-dropdown:hover > .nav-dropdown,
+  .nav-list > li.has-dropdown:focus-within > .nav-dropdown,
+  .nav-list > li.has-dropdown.open > .nav-dropdown { display: block; }
+  .nav-dropdown a { display: block; padding: 9px 16px; font-size: 14px; color: var(--c-text); font-weight: 500; white-space: nowrap; }
+  .nav-dropdown a::after { display: none !important; }
+  .nav-dropdown a:hover { background: var(--c-bg-soft); color: var(--c-accent-ink); }
+  .ext-ico { font-size: 10px; margin-left: 5px; opacity: .7; vertical-align: baseline; }
+  .nav-actions { flex: none; display: inline-flex; align-items: center; gap: 16px; }
+  .lang { display: inline-flex; align-items: center; gap: 2px; font-size: 14px; }
+  .lang a { text-decoration: none; padding: 3px 7px; border-radius: var(--r-sm); color: var(--c-text-muted); }
+  .lang a[aria-current="true"] { background: var(--c-bg-soft); color: var(--c-text); font-weight: 700; }
+  .nav-toggle { display: none; }
+
+  /* Demo-kaista (wireframe-only — kiinteän slotin todiste, EI WP-kirjautuminen) */
+  .demo-bar { background: var(--c-text); color: #fff; font-size: 13px; }
+  .demo-inner { max-width: 1200px; margin: 0 auto; padding: 10px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .demo-inner .demo-label { font-weight: 700; letter-spacing: .04em; text-transform: uppercase; font-size: 11px; opacity: .85; display: inline-flex; align-items: center; gap: 8px; }
+  .demo-inner .demo-note { color: #cfe7f5; font-size: 12px; flex: 1; min-width: 220px; }
+  .segmented { display: inline-flex; border: 1px solid rgba(255,255,255,.35); border-radius: var(--r-sm); overflow: hidden; }
+  .segmented .seg { font-size: 13px; font-weight: 600; padding: 6px 14px; background: transparent; color: #fff; cursor: pointer; border: 0; font-family: inherit; }
+  .segmented .seg + .seg { border-left: 1px solid rgba(255,255,255,.35); }
+  .segmented .seg[aria-pressed="true"] { background: var(--c-accent); color: var(--c-on-accent); }
+
+  /* Murupolku */
+  .crumbs { max-width: 1200px; margin: 0 auto; padding: 14px 24px 0; font-size: 13px; color: var(--c-text-muted); }
+  .crumbs ol { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; }
+  .crumbs a { color: var(--c-text-2); text-decoration: none; }
+  .crumbs a:hover { color: var(--c-accent-ink); }
+  .crumbs li[aria-current="page"] { color: var(--c-text); font-weight: 600; }
+  .crumbs .sep { color: var(--c-border-strong); }
+
+  /* Placeholder-media */
+  .ph { background: var(--c-ph-bg); border: 1px dashed var(--c-ph-border); display: flex; align-items: center; justify-content: center; color: var(--c-text-2); font-size: 13px; gap: 6px; }
+  .ph i { opacity: .6; }
+  .ph-1-1 { aspect-ratio: 1 / 1; }
+  .ph-16-10 { aspect-ratio: 16 / 10; }
+
+  /* ===== KLUSTERI 1 — YLÄOSA ===== */
+  .tk-hero { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 48px; align-items: start; }
+  .gallery .ph { border-radius: var(--r-lg); }
+  .thumbs { display: flex; gap: 12px; margin-top: 12px; }
+  .thumbs .ph { width: 76px; height: 76px; border-radius: var(--r-md); flex: none; font-size: 11px; }
+  .thumbs .ph.active { border-style: solid; border-color: var(--c-accent); }
+
+  .id-brand { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--c-text-muted); font-weight: 700; margin: 0 0 6px; }
+  .id-excerpt { margin: 4px 0 0; color: var(--c-text-2); font-size: 17px; max-width: 46ch; }
+
+  .badge-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 20px 0 0; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; font-size: 14px; font-weight: 500; border: 1px solid var(--c-border-strong); background: var(--c-bg); }
+  .pill.suits { font-weight: 600; background: var(--c-accent-soft); border-color: var(--c-suits-border); color: var(--c-accent-ink); }
+  .pill.stock { font-weight: 600; gap: 8px; background: var(--c-in-bg); color: var(--c-in-text); border: 0; }
+  .pill.order { font-weight: 600; gap: 8px; background: var(--c-tulossa-bg); color: var(--c-tulossa-text); border: 0; }
+  .pill.out { font-weight: 600; gap: 8px; background: var(--c-warn-bg); color: var(--c-warn-text); border: 1px solid var(--c-warn-border); }
+  .pill.stock .dot, .pill.order .dot, .pill.out .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+  .tag-new { display: inline-flex; align-items: center; background: var(--c-accent); color: var(--c-on-accent); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; padding: 3px 9px; border-radius: var(--r-sm); }
+
+  /* Pikafaktat */
+  .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 24px; margin: 24px 0 0; padding: 20px 0; border-top: 1px solid var(--c-border); border-bottom: 1px solid var(--c-border); }
+  .facts div { display: flex; flex-direction: column; gap: 1px; padding: 6px 0; }
+  .facts dt { font-size: 12px; color: var(--c-text-muted); text-transform: uppercase; letter-spacing: .04em; font-weight: 700; }
+  .facts dd { margin: 0; font-size: 15px; color: var(--c-text); display: flex; align-items: center; gap: 8px; }
+  .facts dd .fact-val { font-variant-numeric: tabular-nums; }
+  .copy-btn { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border: 1px solid var(--c-border-strong); border-radius: var(--r-sm); background: var(--c-bg); color: var(--c-accent-ink); font-size: 13px; cursor: pointer; transition: background .15s, border-color .15s, color .15s; }
+  .copy-btn:hover { background: var(--c-accent-soft); border-color: var(--c-suits-border); }
+  .copy-btn.copied { background: var(--c-in-bg); border-color: var(--c-in-bg); color: var(--c-in-text); }
+
+  /* Saatavana koot (navigaatio) */
+  .pack-inline { margin: 20px 0 0; font-size: 14px; color: var(--c-text-2); }
+  .pack-inline .lbl { font-weight: 600; color: var(--c-text); margin-right: 6px; }
+  .pack-inline a { color: var(--c-accent-ink); text-decoration: none; font-weight: 600; }
+  .pack-inline a:hover { text-decoration: underline; }
+  .pack-inline .sep { color: var(--c-border-strong); margin: 0 6px; }
+
+  /* Kaupallinen moduuli (kiinteä slotti) */
+  .commerce { margin: 24px 0 0; border: 1px solid var(--c-border); border-radius: var(--r-lg); background: var(--c-bg-soft); padding: 24px; }
+  .commerce .avail { margin-bottom: 14px; }
+  .price-now { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .price-now .val { font-size: 30px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .price-now .unit { color: var(--c-text-2); font-size: 15px; }
+  .price-tag { display: inline-block; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--c-accent-ink); background: var(--c-accent-soft); border: 1px solid var(--c-suits-border); border-radius: var(--r-sm); padding: 2px 8px; margin-bottom: 8px; }
+  .price-note { font-size: 13px; color: var(--c-text-muted); margin: 6px 0 0; }
+  .commerce-ctas { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+  .commerce-micro { font-size: 13px; color: var(--c-text-2); margin: 14px 0 0; text-align: center; }
+  .commerce-micro a { font-weight: 600; }
+  .sso-flag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: .3px; text-transform: uppercase; color: var(--c-text-2); margin-bottom: 10px; }
+  .sso-flag .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--c-accent); }
+  /* Asiakas-tilan määrävalitsin */
+  .qty-row { display: flex; gap: 10px; align-items: stretch; margin-top: 16px; }
+  .qty { display: inline-flex; align-items: center; border: 1px solid var(--c-border-strong); border-radius: var(--r-sm); background: var(--c-bg); }
+  .qty button { width: 40px; border: 0; background: transparent; font-size: 18px; cursor: pointer; color: var(--c-text); }
+  .qty input { width: 52px; border: 0; text-align: center; font: inherit; font-size: 15px; background: transparent; }
+  .qty-row .btn { flex: 1; }
+
+  /* Ankkurinavigaatio (sivun sisäinen) */
+  .anchor-nav { position: sticky; top: 64px; z-index: 40; background: var(--c-bg); border-bottom: 1px solid var(--c-border); }
+  .anchor-nav ul { max-width: 1200px; margin: 0 auto; padding: 0 24px; list-style: none; display: flex; gap: 4px; overflow-x: auto; }
+  .anchor-nav a { display: inline-block; padding: 14px 14px; font-size: 14px; font-weight: 600; color: var(--c-text-2); text-decoration: none; white-space: nowrap; border-bottom: 2px solid transparent; }
+  .anchor-nav a:hover { color: var(--c-accent-ink); }
+
+  /* Lohko-otsikko pääsytasomerkillä */
+  .tier { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 2px 9px; border-radius: 999px; vertical-align: middle; }
+  .tier .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .tier.open { background: var(--c-in-bg); color: var(--c-in-text); } .tier.open .dot { background: #4a8f63; }
+  .tier.lead { background: var(--c-tulossa-bg); color: var(--c-tulossa-text); } .tier.lead .dot { background: #c79a14; }
+  .tier.login { background: var(--c-accent-soft); color: var(--c-accent-ink); } .tier.login .dot { background: var(--c-accent-ink); }
+  .tier-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+  /* Info-paneeli (klusteri 2) */
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+  .panel { background: var(--c-bg); border: 1px solid var(--c-border); border-radius: var(--r-lg); padding: 24px; }
+  .panel + .panel { margin-top: 0; }
+  .panel h3 { font-size: 16px; margin: 0 0 12px; }
+  .panel p { margin: 0; color: var(--c-text-2); font-size: 15px; }
+  .kv { display: grid; grid-template-columns: 1fr auto; gap: 0; margin: 0; }
+  .kv > div { display: contents; }
+  .kv dt { padding: 9px 0; border-top: 1px solid var(--c-border); color: var(--c-text-2); font-size: 14px; }
+  .kv dd { padding: 9px 0; border-top: 1px solid var(--c-border); margin: 0; text-align: right; font-size: 14px; font-variant-numeric: tabular-nums; font-weight: 600; }
+  .kv .row-strong dt, .kv .row-strong dd { font-weight: 700; color: var(--c-text); }
+  .suits-line { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 16px; }
+  .allergen-callout { background: var(--c-warn-bg); border: 1px solid var(--c-warn-border); color: var(--c-warn-text); border-radius: var(--r-md); padding: 12px 14px; font-size: 14px; margin: 12px 0 0; display: flex; gap: 10px; align-items: flex-start; }
+  .allergen-callout i { margin-top: 2px; }
+  .stamp { font-size: 13px; color: var(--c-text-muted); margin: 16px 0 0; display: flex; gap: 8px; align-items: center; }
+
+  /* Dokumenttilista */
+  .doc-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .doc-list a { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border: 1px solid var(--c-border); border-radius: var(--r-md); text-decoration: none; color: var(--c-text); background: var(--c-bg); transition: border-color .15s, background .15s; }
+  .doc-list a:hover { border-color: var(--c-suits-border); background: var(--c-accent-soft); }
+  .doc-list .doc-ic { width: 38px; height: 38px; flex: none; border-radius: var(--r-md); background: var(--c-accent-soft); color: var(--c-accent-ink); display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .doc-list .doc-name { font-weight: 600; font-size: 15px; }
+  .doc-list .doc-meta { font-size: 12px; color: var(--c-text-muted); }
+  .doc-list .doc-dl { margin-left: auto; color: var(--c-accent-ink); }
+
+  /* Lukittu lohko */
+  .gated { background: var(--c-bg-soft); border: 1px solid var(--c-border); border-left: 4px solid var(--c-accent); border-radius: var(--r-md); padding: 24px; }
+  .gated .inner { display: flex; gap: 20px; align-items: flex-start; }
+  .gated .lock { flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--c-bg); border: 1px solid var(--c-border-strong); display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--c-accent-ink); }
+  .gated h3 { font-size: 16px; margin: 4px 0 6px; }
+  .gated p { font-size: 14px; color: var(--c-text-2); margin: 0 0 14px; max-width: 48ch; }
+  .gated .ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  /* Käyttö (WP enrichment) */
+  .wp-flag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--c-text-muted); border: 1px dashed var(--c-border-strong); border-radius: 999px; padding: 3px 10px; }
+  .use-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 24px; }
+  .use-col h3 { font-size: 15px; margin: 0 0 6px; }
+  .use-col p { font-size: 14px; color: var(--c-text-2); margin: 0; }
+  .use-col .ic { color: var(--c-accent-ink); font-size: 20px; margin-bottom: 8px; }
+
+  /* Korttiruudukot (reseptit, vaihtoehdot) */
+  .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .card { border: 1px solid var(--c-border); border-radius: var(--r-md); background: var(--c-bg); overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: inherit; transition: border-color .15s, box-shadow .15s, transform .15s; }
+  .card:hover { border-color: var(--c-suits-border); box-shadow: 0 6px 20px rgba(10,79,114,.08); transform: translateY(-2px); }
+  .card .ph { border: 0; border-bottom: 1px dashed var(--c-ph-border); }
+  .card .body { padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .card .kicker { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--c-text-muted); font-weight: 700; }
+  .card h3 { font-size: 16px; margin: 0; }
+  .card p { font-size: 14px; color: var(--c-text-2); margin: 0; }
+  .card .go { margin-top: auto; padding-top: 10px; color: var(--c-accent-ink); font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; }
+
+  /* Pakkauskoko-kortit (navigaatio) */
+  .pack-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .pack-card { display: flex; align-items: center; gap: 16px; border: 1px solid var(--c-border); border-radius: var(--r-md); background: var(--c-bg); padding: 18px 20px; text-decoration: none; color: inherit; transition: border-color .15s, box-shadow .15s, transform .15s; }
+  .pack-card:hover { border-color: var(--c-accent); box-shadow: 0 6px 20px rgba(10,79,114,.08); transform: translateY(-2px); }
+  .pack-card .pk-ph { width: 56px; height: 56px; flex: none; border-radius: var(--r-md); }
+  .pack-card .pk-name { font-size: 16px; font-weight: 700; margin: 0; }
+  .pack-card .pk-sku { font-size: 12px; color: var(--c-text-muted); font-variant-numeric: tabular-nums; }
+  .pack-card .pk-saldo { font-size: 13px; margin: 4px 0 0; }
+  .pack-card .pk-go { margin-left: auto; color: var(--c-accent-ink); }
+
+  /* Liittyvät tuotteet — korostuva variantti */
+  .alt-emph { border-top: 1px solid var(--c-suits-border); border-bottom: 1px solid var(--c-suits-border); background: var(--c-bg-tint); }
+
+  /* FAQ */
+  .faq { max-width: 820px; }
+  .faq details { border-bottom: 1px solid var(--c-border); }
+  .faq summary { list-style: none; cursor: pointer; padding: 18px 40px 18px 0; font-weight: 600; font-size: 16px; position: relative; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "\002B"; position: absolute; right: 6px; top: 16px; font-size: 22px; color: var(--c-accent-ink); font-weight: 400; }
+  .faq details[open] summary::after { content: "\2212"; }
+  .faq p { margin: 0 0 18px; color: var(--c-text-2); font-size: 15px; max-width: 70ch; }
+
+  /* Liidilohko */
+  /* "Miten edetä" -kortisto (näytepyyntölomake poistettu tuotekortilta) */
+  .next-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 24px; align-items: start; }
+  .aside-card { border: 1px solid var(--c-border); border-radius: var(--r-lg); padding: 24px; background: var(--c-bg); }
+  .aside-card + .aside-card { margin-top: 20px; }
+  .aside-card h3 { font-size: 17px; margin: 0 0 6px; }
+  .aside-card p { font-size: 14px; color: var(--c-text-2); margin: 0 0 14px; }
+  .aside-card .new-cust { font-size: 13.5px; margin: 14px 0 0; padding-top: 14px; border-top: 1px solid var(--c-border); }
+  .aside-card .new-cust strong { color: var(--c-text); }
+  .aside-card.makupaja { background: var(--c-bg-tint); border-color: var(--c-suits-border); }
+  .contact-line { font-size: 14px; color: var(--c-text-2); margin: 0 0 8px; }
+  .contact-line strong { color: var(--c-text); }
+
+  /* Footer */
+  .site-footer { background: var(--c-bg-soft); border-top: 1px solid var(--c-border); padding: 48px 0 32px; margin-top: 64px; }
+  .footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--c-border); }
+  .footer-grid h4 { font-size: 14px; text-transform: uppercase; letter-spacing: .06em; margin: 0 0 16px; }
+  .footer-grid ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .footer-grid a { text-decoration: none; color: var(--c-text-2); font-size: 14px; }
+  .footer-grid a:hover { color: var(--c-accent-ink); }
+  .footer-blurb { font-size: 14px; color: var(--c-text-2); margin: 16px 0 0; max-width: 30ch; }
+  .news { display: flex; gap: 8px; }
+  .news input { flex: 1; min-width: 0; padding: 10px 12px; border-radius: var(--r-sm); border: 1px solid var(--c-border-strong); background: var(--c-bg); color: var(--c-text); font: inherit; font-size: 14px; }
+  .news button { padding: 10px 16px; border-radius: var(--r-sm); border: 1.5px solid var(--c-accent); background: var(--c-accent); color: var(--c-on-accent); font-weight: 700; font-size: 14px; cursor: pointer; }
+  .footer-legal { display: flex; justify-content: space-between; gap: 24px; padding-top: 24px; flex-wrap: wrap; font-size: 12px; color: var(--c-text-muted); }
+  .footer-legal a { color: var(--c-text-muted); text-decoration: none; }
+  .footer-legal .legal-links { display: flex; gap: 24px; flex-wrap: wrap; }
+
+  /* ===== Responsiivisuus ===== */
+  @media (max-width: 1000px) {
+    .tk-hero { grid-template-columns: 1fr; gap: 32px; }
+    .gallery { max-width: 460px; }
+    .use-grid { grid-template-columns: 1fr 1fr; }
+    .card-grid { grid-template-columns: 1fr 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .next-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 760px) {
+    h1 { font-size: 32px; }
+    h2 { font-size: 26px; }
+    .nav-main { display: none; }
+    .nav-toggle { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 1px solid var(--c-border-strong); border-radius: var(--r-sm); background: var(--c-bg); color: var(--c-text); cursor: pointer; }
+    .site-header.nav-open .nav-main { display: block; position: absolute; top: 100%; left: 0; right: 0; background: var(--c-bg); border-bottom: 1px solid var(--c-border); box-shadow: 0 8px 20px rgba(0,0,0,.06); padding: 8px 24px 16px; }
+    .site-header.nav-open .nav-list { flex-direction: column; gap: 0; }
+    .site-header.nav-open .nav-list a { display: block; padding: 13px 0; border-bottom: 1px solid var(--c-border); font-size: 15px; }
+    .site-header.nav-open .nav-list a[aria-current="page"]::after { display: none; }
+    .site-header.nav-open .nav-dropdown { position: static; display: block; box-shadow: none; border: 0; padding: 0 0 6px 14px; margin: 0; min-width: 0; }
+    .site-header.nav-open .nav-dropdown a { padding: 10px 0; font-size: 14px; color: var(--c-text-2); }
+    .nav-list .caret { display: none; }
+    .anchor-nav { display: none; }
+    .info-grid { grid-template-columns: 1fr; }
+    .use-grid { grid-template-columns: 1fr; }
+    .card-grid { grid-template-columns: 1fr; }
+    .pack-grid { grid-template-columns: 1fr; }
+    .facts { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .card, .pack-card { transition: none; }
+  }
+
+  /* ===== Näkymänvaihtaja: kiinteä kaupallinen slotti, kaksi tilaa ===== */
+  /* Oletus = handoff ("Arvioiva"). data-view ohjaa kumpi sisältö näkyy. */
+  body[data-view="handoff"] [data-when="customer"] { display: none !important; }
+  body[data-view="customer"] [data-when="handoff"] { display: none !important; }
+</style>
+</head>
+<body data-view="handoff">
+  <a class="skip" href="#main">Siirry sisältöön</a>
+
+  <!-- ===== DEMO-KAISTA (wireframe-only) — kiinteän slotin todiste, EI WP-kirjautuminen ===== -->
+  <div class="demo-bar" role="region" aria-label="Wireframe-demo: näkymän vaihto">
+    <div class="demo-inner">
+      <span class="demo-label"><i class="fa-solid fa-flask" aria-hidden="true"></i> Demo · näkymä</span>
+      <div class="segmented" role="group" aria-label="Kaupallisen moduulin tila">
+        <button class="seg" type="button" data-set-view="handoff" aria-pressed="true">Arvioiva (oletus)</button>
+        <button class="seg" type="button" data-set-view="customer" aria-pressed="false">Asiakas (SSO-hypoteesi)</button>
+      </div>
+      <span class="demo-note">Vain kaupallinen slotti vaihtuu — layout pysyy. Rikas tila edellyttää WP↔Sana&nbsp;SSO:ta (P2); WP-kirjautumista ei ole.</span>
+    </div>
+  </div>
+
+  <!-- ===== HEADER (sama chrome kuin sisarsivuilla) ===== -->
+  <header class="site-header">
+    <div class="nav-inner">
+      <a href="/" class="logo" aria-label="Condite — etusivu">CONDITE</a>
+      <nav class="nav-main" id="primary-nav" aria-label="Päänavigaatio">
+        <ul class="nav-list">
+          <li><a href="/tuotteet/" aria-current="page">Tuotteet</a></li>
+          <li><a href="/toimialat/">Toimialat</a></li>
+          <li><a href="/reseptit/">Reseptit</a></li>
+          <li><a href="/tuotekehitys/">Tuotekehitys</a></li>
+          <li><a href="/yritys/">Yritys</a></li>
+          <li class="has-dropdown">
+            <a href="/yhteys/" aria-haspopup="true" aria-expanded="false">Yhteys <span class="caret" aria-hidden="true">▾</span></a>
+            <ul class="nav-dropdown">
+              <li><a href="/yhteys/">Yhteys</a></li>
+              <li><a href="/yhteys/laskutusohjeet/">Laskutusohjeet</a></li>
+              <li><a href="https://ura.condite.fi" target="_blank" rel="noopener" aria-label="Avoimet työpaikat (avautuu ura.condite.fi)">Avoimet työpaikat <i class="fa-solid fa-arrow-up-right-from-square ext-ico" aria-hidden="true"></i></a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <span class="lang" role="group" aria-label="Kieli">
+          <a href="#" aria-current="true" lang="fi">FI</a>
+          <a href="#" lang="sv">SV</a>
+          <a href="#" lang="en">EN</a>
+        </span>
+        <a href="/kirjaudu/" class="btn btn-sm"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Kirjaudu</a>
+        <button class="nav-toggle" type="button" aria-label="Avaa valikko" aria-expanded="false" aria-controls="primary-nav"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Murupolku -->
+  <nav class="crumbs" aria-label="Murupolku">
+    <ol>
+      <li><a href="/">Etusivu</a></li>
+      <li class="sep" aria-hidden="true">›</li>
+      <li><a href="/tuotteet/">Tuotteet</a></li>
+      <li class="sep" aria-hidden="true">›</li>
+      <li><a href="/tuotteet/mausteet/">Mausteet</a></li>
+      <li class="sep" aria-hidden="true">›</li>
+      <li aria-current="page">Savustettu paprikajauhe</li>
+    </ol>
+  </nav>
+
+  <main id="main">
+
+    <!-- ============================================================= -->
+    <!-- KLUSTERI 1 · YLÄOSA — "Mikä tämä on?" 🟢                       -->
+    <!-- ============================================================= -->
+    <section class="block first" aria-labelledby="prod-h1">
+      <div class="tk-hero">
+
+        <!-- Vasen: kuvagalleria -->
+        <div class="gallery">
+          <div class="ph ph-1-1"><i class="fa-regular fa-image" aria-hidden="true"></i>Tuotekuva 1:1</div>
+          <div class="thumbs" role="group" aria-label="Lisäkuvat">
+            <div class="ph active"><i class="fa-regular fa-image" aria-hidden="true"></i></div>
+            <div class="ph"><i class="fa-regular fa-image" aria-hidden="true"></i></div>
+            <div class="ph"><i class="fa-regular fa-image" aria-hidden="true"></i></div>
+            <div class="ph"><i class="fa-regular fa-box" aria-hidden="true"></i></div>
+          </div>
+        </div>
+
+        <!-- Oikea: identiteetti -->
+        <div class="identity">
+          <p class="id-brand" id="prod-brand"></p>
+          <h1 id="prod-h1"></h1>
+          <p class="id-excerpt" id="prod-excerpt"></p>
+
+          <!-- Badget: ruokavaliot/allergeenit (+ mahd. Uutuus) -->
+          <div class="badge-row" id="hero-badges"></div>
+
+          <!-- Pikafaktat -->
+          <dl class="facts" id="hero-facts"></dl>
+
+          <!-- Saatavana koot — LINKKEJÄ pakkaus-tason URLeihin (§3 navigaatio) -->
+          <p class="pack-inline" id="hero-packs"></p>
+
+          <!-- Saatavuus-label + kaupallinen moduuli (kiinteä slotti, §4) -->
+          <div class="commerce" aria-label="Saatavuus, hinta ja tilaaminen">
+            <div class="avail" id="hero-avail"></div>
+
+            <!-- TILA A · HANDOFF (oletus / "Arvioiva") -->
+            <div data-when="handoff">
+              <!-- K4-hypoteesi: OHJEHINTA saa näkyä avoimesti. Jos K4 = vain asiakaskohtainen,
+                   korvaa tämä price-block tekstillä "Hinnat verkkokaupassa".
+                   AVOIN (Olli/Miro: "näytetäänkö hinta?") — päätös vielä auki, demossa ohjehinta. -->
+              <span class="price-tag">Ohjehinta</span>
+              <div class="price-now"><span class="val num">12,90&nbsp;€</span><span class="unit">/ 500 g (alv 0 %)</span></div>
+              <p class="price-note">Asiakaskohtainen hintasi voi poiketa. Tarkka hinta verkkokaupassa.</p>
+              <div class="commerce-ctas">
+                <a class="btn btn-primary btn-block" href="https://kauppa.condite.fi/tuote/CAP-1042"><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i> Tilaa verkkokaupassa</a>
+                <a class="btn btn-outline btn-block" href="#kysy"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Kysy tuotteesta</a>
+              </div>
+              <p class="commerce-micro">Oletko jo asiakas? <a href="/kirjaudu/">Kirjaudu</a></p>
+            </div>
+
+            <!-- TILA B · ASIAKAS (SSO-hypoteesi / "Asiakas") — vain jos P2 toteutuu -->
+            <div data-when="customer">
+              <span class="sso-flag"><span class="dot"></span>Kirjautunut · SSO-hypoteesi</span>
+              <div class="price-now"><span class="val num">11,60&nbsp;€</span><span class="unit">/ 500 g (alv 0 %)</span></div>
+              <p class="price-note">Sopimushintasi. Reaaliaikainen saldo: <strong>varastossa 248 kpl</strong> · toimitus 1–2 arkipäivää.</p>
+              <div class="qty-row">
+                <span class="qty"><button type="button" aria-label="Vähennä">−</button><input type="text" value="1" aria-label="Määrä" inputmode="numeric"><button type="button" aria-label="Lisää">+</button></span>
+                <a class="btn btn-primary" href="#"><i class="fa-solid fa-cart-plus" aria-hidden="true"></i> Lisää tilaukseen</a>
+              </div>
+              <p class="commerce-micro">Hinta, saldo ja tilaus tulevat Sanasta. <a href="https://kauppa.condite.fi/tuote/CAP-1042">Avaa verkkokaupassa</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Sivun sisäinen ankkurinavigaatio ===== -->
+    <nav class="anchor-nav" aria-label="Sivun osiot">
+      <ul>
+        <li><a href="#koostumus">Koostumus &amp; ravinto</a></li>
+        <li><a href="#kaytto">Näin käytät</a></li>
+        <li><a href="#reseptit">Reseptit</a></li>
+        <li><a href="#saatavuus">Saatavuus &amp; pakkaukset</a></li>
+        <li><a href="#vaihtoehdot">Liittyvät tuotteet</a></li>
+        <li><a href="#ukk">UKK</a></li>
+        <li><a href="#kysy">Miten edetä</a></li>
+      </ul>
+    </nav>
+
+    <!-- ============================================================= -->
+    <!-- KLUSTERI 2 · KOOSTUMUS, RAVINTO & TURVALLISUUS                 -->
+    <!-- "Mistä tehty, sopiiko minulle?" 🟢 (+🔵 lukittu osa)           -->
+    <!-- ============================================================= -->
+    <section class="block" id="koostumus" aria-labelledby="koostumus-h2">
+      <div class="section-head" style="margin-bottom:28px">
+        <div class="tier-row">
+          <p class="eyebrow" style="margin:0">Tuotetiedot</p>
+          <span class="tier open"><span class="dot" aria-hidden="true"></span>Avoin</span>
+        </div>
+        <h2 id="koostumus-h2" style="margin-top:8px">Koostumus, ravinto ja turvallisuus</h2>
+        <p class="intro">Mistä tuote on tehty ja sopiiko se käyttöösi — ainesosat, allergeenit, ravintoarvot, alkuperä ja säilyvyys yhdessä paikassa. Näytetään vain vahvistetut, positiiviset arvot.</p>
+      </div>
+
+      <div class="info-grid">
+        <!-- Vasen sarake: ainesosat + allergeenit + alkuperä/säilyvyys -->
+        <div style="display:grid; gap:24px">
+          <div class="panel">
+            <h3>Ainesosat ja koostumus</h3>
+            <p id="ingredients"></p>
+            <!-- Datapuute-tila (Olli/Miro: "ei aineisosia?"): näkyy kun PAGE.ingredients on tyhjä. -->
+            <p class="no-data" id="ingredients-nodata" hidden>
+              <i class="fa-solid fa-circle-question" aria-hidden="true"></i>
+              <span>Ainesosaluetteloa ei ole tuotedatassa. Näytetään pakkauksen tiedot — tarkka koostumus tuotetietolomakkeelta (TDS) tai myynnistä.</span>
+            </p>
+            <p class="access-note">Avoin (Miro): ainesosalistaa ei saada kaikille tuotteille — päätettävä syötetäänkö WP:ssä, näytetäänkö tämä tila vai jätetäänkö kenttä pois.</p>
+          </div>
+
+          <div class="panel">
+            <h3>Allergeenit ja soveltuvuus</h3>
+            <p style="margin-bottom:6px">Soveltuu ruokavalioon:</p>
+            <div class="suits-line" id="suits-line"></div>
+            <p id="allergen-base"></p>
+            <div class="allergen-callout" id="may-contain">
+              <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+              <span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Oikea sarake: ravintoarvot (SIIRTYNYT TÄNNE ylhäältä) -->
+        <div class="panel">
+          <h3>Ravintoarvot <span class="muted" style="font-weight:400; font-size:13px">/ 100 g</span></h3>
+          <dl class="kv" id="nutrition"></dl>
+          <!-- Datapuute-tila (Olli/Miro: "ei ravintoarvoja"): näkyy kun PAGE.nutrition on tyhjä. -->
+          <p class="no-data" id="nutrition-nodata" hidden>
+            <i class="fa-solid fa-circle-question" aria-hidden="true"></i>
+            <span>Ravintoarvoja ei ole tuotedatassa tälle tuotteelle. Löydät ne tuotetietolomakkeelta (TDS) — tai pyydä myynnistä.</span>
+          </p>
+          <p class="access-note">Avoin (Miro): ravintoarvojen täyttöaste vahvistettava — jos arvoja ei ole, näytetään tämä tila (ei tyhjää taulukkoa).</p>
+        </div>
+      </div>
+
+      <!-- Dokumentit — tämän klusterin TODISTEET (avoin, nimetyt latauslinkit) -->
+      <div style="margin-top:32px">
+        <div class="tier-row" style="margin-bottom:14px">
+          <h3 class="sub" style="margin:0">Dokumentit</h3>
+          <span class="tier open"><span class="dot" aria-hidden="true"></span>Avoin</span>
+        </div>
+        <ul class="doc-list" id="doc-list"></ul>
+        <p class="access-note">K1: sertifikaatti-/laatusignaalien lopullinen dokumentaatio vahvistettavana. Avoin (Miro): onko tuote-esitteitä saatavilla — leipomopuolella käytössä, Food Servicessä vähemmän.</p>
+      </div>
+
+      <!-- 🔵 Lukittu lohko: tarkat tekniset tiedot (Sana) -->
+      <div class="gated" style="margin-top:32px">
+        <div class="inner">
+          <span class="lock"><i class="fa-solid fa-lock" aria-hidden="true"></i></span>
+          <div>
+            <span class="tier login"><span class="dot" aria-hidden="true"></span>Login · Sana</span>
+            <h3>Tarkat tekniset tiedot</h3>
+            <p>Yksityiskohtaiset speksit, eräkohtaiset analyysit ja asiakaskohtaiset dokumentit avautuvat kirjautuneille verkkokaupassa.</p>
+            <div class="ctas">
+              <a class="btn btn-sm" href="/kirjaudu/" style="border-color:var(--c-accent);background:var(--c-accent);color:var(--c-on-accent)"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Kirjaudu</a>
+              <a class="btn btn-sm" href="#kysy">Pyydä pääsy</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- KLUSTERI 3 · KÄYTTÖ & INSPIRAATIO — "Miten käytän tätä?" 🟢    -->
+    <!-- ============================================================= -->
+    <section class="band" id="kaytto" aria-labelledby="kaytto-h2">
+      <div class="block">
+        <div class="section-head" style="margin-bottom:8px">
+          <div class="tier-row">
+            <p class="eyebrow" style="margin:0">Käyttö</p>
+            <span class="tier open"><span class="dot" aria-hidden="true"></span>Avoin</span>
+            <span class="wp-flag"><i class="fa-brands fa-wordpress" aria-hidden="true"></i> Toimituksellinen sisältö</span>
+          </div>
+          <h2 id="kaytto-h2" style="margin-top:8px">Näin käytät</h2>
+          <p class="intro" id="use-intro"></p>
+        </div>
+        <div class="use-grid" id="use-grid"></div>
+      </div>
+    </section>
+
+    <!-- Reseptit tällä tuotteella -->
+    <section class="block" id="reseptit" aria-labelledby="reseptit-h2">
+      <div class="head-row">
+        <div class="section-head">
+          <p class="eyebrow">Inspiraatio</p>
+          <h2 id="reseptit-h2">Reseptit tällä tuotteella</h2>
+        </div>
+        <a class="btn-link" href="/reseptit/?tuote=savustettu-paprikajauhe">Kaikki reseptit tällä tuotteella <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      </div>
+      <div class="card-grid" id="recipe-grid" role="list"></div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- KLUSTERI 4 · SAATAVUUS, PAKKAUKSET & TILAAMINEN                -->
+    <!-- "Saanko sen, missä muodossa, mihin hintaan?" 🟢 (+🔵)          -->
+    <!-- ============================================================= -->
+    <section class="block" id="saatavuus" aria-labelledby="saatavuus-h2">
+      <div class="section-head" style="margin-bottom:28px">
+        <div class="tier-row">
+          <p class="eyebrow" style="margin:0">Saatavuus &amp; tilaaminen</p>
+          <span class="tier open"><span class="dot" aria-hidden="true"></span>Avoin</span>
+          <span class="tier login"><span class="dot" aria-hidden="true"></span>Login · saldo/hinta</span>
+        </div>
+        <h2 id="saatavuus-h2" style="margin-top:8px">Saatavuus, pakkaukset ja tilaaminen</h2>
+        <p class="intro" id="avail-intro"></p>
+      </div>
+
+      <!-- Pakkauskoot KORTTEINA = navigaatio pakkaus-tason URLeihin (§3) -->
+      <h3 class="sub">Valitse pakkauskoko</h3>
+      <div class="pack-grid" id="pack-grid"></div>
+      <p class="access-note">Pakkauskoon valinta vie pakkaus-tason sivulle (sama avoin runko + kyseisen SKU:n kaupallinen klusteri). K3: variantti-dimensio Sanassa vahvistettava.</p>
+
+      <!-- Alempi kaupallinen moduuli — sama kiinteä slotti, täysi muoto -->
+      <div class="info-grid" style="margin-top:32px; align-items:stretch">
+        <!-- 🔵 Tarkka saatavuus -->
+        <div class="gated">
+          <div class="inner">
+            <span class="lock"><i class="fa-solid fa-warehouse" aria-hidden="true"></i></span>
+            <div>
+              <span class="tier login"><span class="dot" aria-hidden="true"></span>Login · Sana</span>
+              <h3>Tarkka saatavuus ja toimitusaika</h3>
+              <p data-when="handoff">Reaaliaikainen varastosaldo ja arvioitu toimitusaika näkyvät kirjautuneille asiakkaille verkkokaupassa.</p>
+              <p data-when="customer"><strong>Varastossa 248 kpl</strong> (500 g) · <strong>12 kpl</strong> (5 kg). Arvioitu toimitus 1–2 arkipäivää.</p>
+              <div class="ctas" data-when="handoff">
+                <a class="btn btn-sm" href="/kirjaudu/" style="border-color:var(--c-accent);background:var(--c-accent);color:var(--c-on-accent)"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Kirjaudu</a>
+                <a class="btn btn-sm" href="https://kauppa.condite.fi/tuote/CAP-1042">Avaa verkkokaupassa</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hinta & tilaaminen (konsolidoitu tähän proton erillisestä alalohkosta) -->
+        <div class="commerce" style="margin:0; display:flex; flex-direction:column; justify-content:center">
+          <div data-when="handoff">
+            <span class="tier login" style="margin-bottom:10px"><span class="dot" aria-hidden="true"></span>Login · hinta &amp; tilaus</span>
+            <span class="price-tag">Ohjehinta</span>
+            <div class="price-now"><span class="val num">12,90&nbsp;€</span><span class="unit">/ 500 g (alv 0 %)</span></div>
+            <p class="price-note">Asiakaskohtainen hinta ja tilaus avautuvat verkkokaupassa.</p>
+            <div class="commerce-ctas">
+              <a class="btn btn-primary btn-block" href="https://kauppa.condite.fi/tuote/CAP-1042"><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i> Tilaa verkkokaupassa</a>
+              <a class="btn btn-outline btn-block" href="#kysy">Kysy tuotteesta</a>
+            </div>
+            <p class="commerce-micro">Oletko jo asiakas? <a href="/kirjaudu/">Kirjaudu</a></p>
+          </div>
+          <div data-when="customer">
+            <span class="sso-flag"><span class="dot"></span>Kirjautunut · SSO-hypoteesi</span>
+            <div class="price-now"><span class="val num">11,60&nbsp;€</span><span class="unit">/ 500 g (alv 0 %)</span></div>
+            <p class="price-note">Sopimushintasi. Lisää suoraan tilaukseen.</p>
+            <div class="qty-row">
+              <span class="qty"><button type="button" aria-label="Vähennä">−</button><input type="text" value="1" aria-label="Määrä" inputmode="numeric"><button type="button" aria-label="Lisää">+</button></span>
+              <a class="btn btn-primary" href="#"><i class="fa-solid fa-cart-plus" aria-hidden="true"></i> Lisää tilaukseen</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- KLUSTERI 5 · EI UMPIKUJAA & ETENEMINEN 🟢🟡                    -->
+    <!-- ============================================================= -->
+
+    <!-- Liittyvät tuotteet (Olli/Miro: kuratoituja korvaavia tuotteita ei ole tuotedatassa
+         määritelty → ei luvata "suositeltua vaihtoehtoa", vaan näytetään liittyvät tuotteet,
+         jotka nousevat automaattisesti kategoriasta ja brändistä). -->
+    <section class="band" id="vaihtoehdot" aria-labelledby="alt-h2">
+      <div class="block" style="padding-top:64px">
+        <div class="section-head" style="margin-bottom:28px">
+          <p class="eyebrow">Liittyvät tuotteet</p>
+          <h2 id="alt-h2">Liittyvät tuotteet</h2>
+          <p class="intro">Samasta kategoriasta ja samaan käyttötarkoitukseen — jatka tästä, jos juuri tämä tuote ei ole se oikea.</p>
+        </div>
+        <div class="card-grid" id="alt-grid" role="list"></div>
+        <p class="access-note" style="margin-top:20px">Avoin (Miro): liittyvät tuotteet nousevat automaattisesti kategoriasta/brändistä. <strong>Kuratoitu korvaava tuote</strong> (esim. saatavuuskatkoon) vaatisi oman kentän tuotedataan — päätettävä ylläpidetäänkö sitä käsin.</p>
+      </div>
+    </section>
+
+    <!-- UKK — AVOIN PÄÄTÖS (Olli/Miro: "otetaanko mukaan vai jätetäänkö pois?").
+         Pidetään wireframessa, kunnes ratkaistaan: 630 tuotteelle UKK ei voi olla käsityötä
+         → joko generoituu avoimesta datasta tai siirtyy kategoriatasolle. -->
+    <section class="block" id="ukk" aria-labelledby="ukk-h2">
+      <div class="section-head" style="margin-bottom:16px">
+        <p class="eyebrow">Usein kysyttyä</p>
+        <h2 id="ukk-h2">Usein kysytyt kysymykset</h2>
+      </div>
+      <div class="faq" id="faq"></div>
+      <p class="access-note">Avoin (Miro): pidetäänkö UKK tuotekortilla? Edellyttää että kysymykset generoituvat tuotedatasta — käsin ylläpito 630 tuotteelle ei ole realistista. Vaihtoehto: UKK kategoriatasolla.</p>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- MITEN EDETÄ 🟡 — näytepyyntölomake POISTETTU tuotekortilta       -->
+    <!-- (Olli/Miro-päätös): yhteydenotto ohjataan Yhteys-sivulle ja       -->
+    <!-- toimialakohtaiselle myyjälle → yksi lomake, yksi ylläpitopaikka.  -->
+    <!-- Lohko pitää polun auki (ei umpikujaa) ilman upotettua lomaketta.  -->
+    <!-- ============================================================= -->
+    <section class="band" id="kysy" aria-labelledby="next-h2">
+      <div class="block" style="padding-top:64px; padding-bottom:64px">
+        <div class="section-head" style="margin-bottom:28px">
+          <div class="tier-row">
+            <p class="eyebrow" style="margin:0">Miten edetä</p>
+            <span class="tier lead"><span class="dot" aria-hidden="true"></span>Liidi · Dynamics</span>
+          </div>
+          <h2 id="next-h2" style="margin-top:8px">Näin pääset eteenpäin tämän tuotteen kanssa</h2>
+          <p class="intro">Tilaaminen tapahtuu verkkokaupassa, kysymykset ja näytteet hoituvat myynnin kautta.</p>
+        </div>
+
+        <div class="next-grid">
+          <!-- 1 · Kysy myynniltä — pää-CTA, korvaa aiemman upotetun lomakkeen -->
+          <div class="aside-card">
+            <h3>Kysy tästä tuotteesta</h3>
+            <p>Näyte, tekniset tiedot tai sovellusapu — ohjaamme suoraan oman toimialasi asiantuntijalle. Kerro yhteydenotossa tuote ja käyttötarve.</p>
+            <a class="btn btn-primary btn-block" href="/yhteys/?tuote=CAP-1042"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Ota yhteyttä</a>
+            <p class="contact-line" style="margin-top:14px"><strong>Myynti</strong><br>+358 20 123 4567 · myynti@condite.fi</p>
+            <a class="btn-link" href="/yhteys/">Toimialakohtaiset yhteyshenkilöt <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+          </div>
+
+          <!-- 2 · Jo asiakas → Sana + uuden asiakkaan tunnuspolku -->
+          <div class="aside-card">
+            <h3>Oletko jo asiakas?</h3>
+            <p>Kirjaudu verkkokauppaan nähdäksesi tämän tuotteen hinnan ja saatavuuden sekä tilataksesi.</p>
+            <a class="btn btn-outline btn-block" href="/kirjaudu/"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Kirjaudu verkkokauppaan</a>
+            <!-- Uuden asiakkaan tunnuspolku (Olli/Miro): tili avataan asiakaspalvelun kautta,
+                 ei itsepalveluna → kerrotaan se suoraan, ettei polku katkea kirjautumisseinään. -->
+            <p class="new-cust"><strong>Et vielä asiakkaana?</strong> Tunnukset avataan asiakaspalvelun kautta: soita <a href="tel:+358201234567">+358 20 123 4567</a> tai jätä yhteydenottopyyntö — avaamme tilin ja saat hinnat näkyviin.</p>
+          </div>
+
+          <!-- 3 · Makupaja — erottautuja, liidi -->
+          <div class="aside-card makupaja">
+            <span class="tier lead" style="margin-bottom:8px"><span class="dot" aria-hidden="true"></span>Liidi</span>
+            <h3>Kehitä reseptisi Makupajassa</h3>
+            <p>Testaa tuote omassa sovelluksessasi yhdessä asiantuntijoidemme kanssa — kehityskumppanuus käytännössä.</p>
+            <a class="btn btn-primary btn-block" href="/tuotekehitys/#makupaja"><i class="fa-solid fa-mortar-pestle" aria-hidden="true"></i> Varaa Makupaja</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <a href="/" class="logo" aria-label="Condite — etusivu">CONDITE</a>
+          <p class="footer-blurb">Elintarvikealan raaka-aineiden maahantuoja ja kehityskumppani. Osa Orkla Food Ingredientsia.</p>
+        </div>
+        <div>
+          <h4>Sivusto</h4>
+          <ul>
+            <li><a href="/tuotteet/">Tuotteet</a></li>
+            <li><a href="/toimialat/">Toimialat</a></li>
+            <li><a href="/reseptit/">Reseptit</a></li>
+            <li><a href="/tuotekehitys/">Tuotekehitys</a></li>
+            <li><a href="/yritys/">Yritys</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Asiakkaalle</h4>
+          <ul>
+            <li><a href="/kirjaudu/">Kirjaudu verkkokauppaan</a></li>
+            <li><a href="/tuotekehitys/#makupaja">Makupaja</a></li>
+            <li><a href="/yhteys/">Yhteyshenkilöt</a></li>
+            <li><a href="/yhteys/laskutusohjeet/">Laskutusohjeet</a></li>
+            <li><a href="https://ura.condite.fi" target="_blank" rel="noopener" aria-label="Avoimet työpaikat (avautuu ura.condite.fi)">Avoimet työpaikat <i class="fa-solid fa-arrow-up-right-from-square ext-ico" aria-hidden="true"></i></a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Uutiskirje</h4>
+          <label for="news-email" style="display:block;font-size:14px;color:var(--c-text-2);margin-bottom:8px">Tilaa ajankohtaiset uutiset ja sovellukset.</label>
+          <div class="news">
+            <input id="news-email" type="email" placeholder="sähköposti@yritys.fi" aria-label="Sähköpostiosoite">
+            <button type="button">Tilaa</button>
+          </div>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <span>© 2026 Condite Oy · Osa Orkla Food Ingredientsia · <span class="muted">Tiedot päivitetty 12.6.2026</span></span>
+        <div class="legal-links">
+          <a href="/tietosuoja/">Tietosuoja</a>
+          <a href="/evasteet/">Evästeet</a>
+          <a href="/saavutettavuus/">Saavutettavuusseloste</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Rakenteinen data (SEO §10): Product + BreadcrumbList + FAQPage. Ei hintoja (login). -->
+  <script type="application/ld+json" id="ld-json"></script>
+
+  <!-- ===== Sisältökonfiguraatio + render (config-driven, ei buildia) ===== -->
+  <script>
+  (function () {
+    "use strict";
+
+    /* TUOTE = Capsi "Savustettu paprikajauhe" (CAP-1042) — sama tuote kuin proton v1.
+       Kentät = ERP-HYPOTEESEJA (brief §6). Vain positiiviset arvot; puuttuvaa ei renderöidä.
+       availability.type: "in" = Varastotuote · "order" = Tilaustuote · "out" = Tilapäisesti pois. */
+    var PAGE = {
+      product: {
+        brand: "Capsi",
+        name: "Savustettu paprikajauhe",
+        excerpt: "Tammisavustetusta paprikasta jauhettu mauste, joka tuo ruokaan syvän savuisen aromin ja lämpimän punaisen värin.",
+        isNew: false,
+        availability: { type: "in" }   // vaihda "out" → klusteri 5 nousee korostetuksi (§9)
+      },
+
+      // Pikafaktat (klusteri 1) — koodit vasemmalle (copy:true → kopiointinappi)
+      facts: [
+        { k: "Tuotekoodi", v: "CAP-1042", copy: true },
+        { k: "Alkuperä", v: "Espanja" },
+        { k: "GTIN / EAN", v: "6411400010426", copy: true },
+        { k: "Tuoteryhmä", v: "Mausteet" }
+      ],
+
+      // Ruokavaliobadget — vain positiiviset (Specifications-node, K2a)
+      diets: ["Gluteeniton", "Vegaaninen", "Laktoositon", "Maidoton"],
+
+      // Pakkauskoot = navigaatio (§3). href → pakkaus-tason URL; saldo = 🔵 (login).
+      packs: [
+        { name: "Rasia 500 g", sku: "CAP-1042-500", saldo: "248 kpl", href: "/tuotteet/mausteet/savustettu-paprikajauhe/500-g/" },
+        { name: "Säkki 5 kg", sku: "CAP-1042-5K", saldo: "12 kpl", href: "/tuotteet/mausteet/savustettu-paprikajauhe/5-kg/" }
+      ],
+
+      // KLUSTERI 2
+      // DEMO: aseta ingredients: null ja/tai nutrition: [] nähdäksesi datapuute-tilat
+      // (Miro-kommentit "ei aineisosia?" / "ei ravintoarvoja").
+      ingredients: "Savustettu paprika 100 %. Ei lisättyjä väri-, aromi- tai säilöntäaineita.",
+      allergenBase: "Ei sisällä elintarviketietoasetuksen mukaisia ilmoitettavia allergeeneja.",
+      mayContain: "Valmistettu tehtaassa, jossa käsitellään sinappia, selleriä ja seesaminsiemeniä.",
+      origin: "Paprika viljelty ja savustettu Espanjassa (La Vera). Pakattu Suomessa.",
+      storage: "Säilytä kuivassa, viileässä ja valolta suojattuna. Avattuna käytä 6 kk:n kuluessa. Parasta ennen -päivä pakkauksessa.",
+
+      // Ravintoarvot / 100 g (K2a)
+      nutrition: [
+        { k: "Energia", v: "282 kcal / 1180 kJ", strong: true },
+        { k: "Rasva", v: "13 g" },
+        { k: "– josta tyydyttynyttä", v: "2,1 g" },
+        { k: "Hiilihydraatit", v: "19 g" },
+        { k: "– josta sokereita", v: "10 g" },
+        { k: "Ravintokuitu", v: "35 g" },
+        { k: "Proteiini", v: "14 g" },
+        { k: "Suola", v: "0,1 g" }
+      ],
+
+      // Dokumentit — avoin, nimetyt latauslinkit (K1)
+      documents: [
+        { name: "Tuotetietolomake (TDS)", meta: "PDF · 240 kB", icon: "fa-solid fa-file-lines", href: "#" },
+        { name: "Käyttöturvallisuustiedote", meta: "PDF · 180 kB", icon: "fa-solid fa-file-shield", href: "#" },
+        { name: "Sertifikaatti — ISO 22000", meta: "PDF · 120 kB", icon: "fa-solid fa-certificate", href: "#" }
+      ],
+
+      // KLUSTERI 3 — Näin käytät (WP enrichment, EI ERP)
+      useIntro: "Savustettu paprikajauhe antaa syvän, savuisen pohjan ilman erillistä savustusta — toimii sekä mausteena että luonnollisena väriaineena.",
+      use: [
+        { ic: "fa-solid fa-spoon", h: "Annostelu", t: "1–2 tl / annos. Lisää kypsennyksen alkuvaiheessa, jotta aromi kehittyy tasaisesti." },
+        { ic: "fa-solid fa-fire-burner", h: "Marinadit ja rubit", t: "Yhdistä öljyyn ja suolaan grilliruokien rubeiksi tai marinadien pohjaksi." },
+        { ic: "fa-solid fa-industry", h: "Teollinen käyttö", t: "Tasalaatuinen väri ja aromi makkaroihin, kastikkeisiin ja valmisruokiin." },
+        { ic: "fa-solid fa-utensils", h: "Yhdistelmät", t: "Toimii valkosipulin, kuminan ja chilin kanssa; tasapainottaa happamia kastikkeita." }
+      ],
+
+      // Reseptit tällä tuotteella
+      recipes: [
+        { kicker: "Food Service", title: "Savustettu paprika-aioli", text: "Nopea lisuke grilliruoille ja burgereille." },
+        { kicker: "Leipomo", title: "Suolainen paprikascone", text: "Savuinen vivahde suolaiseen leivontaan." },
+        { kicker: "Teollisuus", title: "Paprikainen BBQ-kastike", text: "Tasalaatuinen väri ja aromi erätuotantoon." }
+      ],
+
+      // KLUSTERI 4 — saatavuus-ingressi
+      availIntro: "Varastotuote — toimitusvalmis. Valitse pakkauskoko; tarkka saldo, toimitusaika ja hinta avautuvat verkkokaupassa kirjautuneille.",
+
+      // KLUSTERI 5 — liittyvät tuotteet (nousevat kategoriasta/brändistä; kuratoitu korvaavuus avoin)
+      alternatives: [
+        { kicker: "Capsi", title: "Paprikajauhe, makea", text: "Sama käyttö ilman savuista vivahdetta.", href: "/tuotteet/mausteet/paprikajauhe-makea/" },
+        { kicker: "Capsi", title: "Chipotle-jauhe", text: "Voimakkaampi savu ja kevyt tulisuus.", href: "/tuotteet/mausteet/chipotle-jauhe/" },
+        { kicker: "Promix", title: "Savuaromi, neste", text: "Savuinen aromi nestemäisessä muodossa.", href: "/tuotteet/mausteet/savuaromi-neste/" }
+      ],
+
+      // UKK — generoituu avoimesta datasta (§5)
+      faq: [
+        { q: "Onko savustettu paprikajauhe gluteeniton?", a: "Kyllä. Tuote soveltuu gluteenittomaan, vegaaniseen, laktoosittomaan ja maidottomaan ruokavalioon. Tarkista aina pakkausmerkinnät erityisruokavalioita varten." },
+        { q: "Kuinka paljon mausetta käytän?", a: "Ohjeellinen annostus on 1–2 tl ruoka-annosta kohti. Lisää aromi kypsennyksen alkuvaiheessa, jotta se kehittyy tasaisesti." },
+        { q: "Mitä pakkauskokoja on saatavilla?", a: "Tuotetta on saatavana 500 g:n rasiassa ja 5 kg:n säkissä. Valitse pakkauskoko tuotekortilta — kukin koko on oma tuotesivunsa, jolta näet kyseisen erän saatavuuden." },
+        { q: "Mistä paprika on peräisin ja miten sitä säilytetään?", a: "Paprika on viljelty ja tammisavustettu Espanjassa (La Vera). Säilytä kuivassa, viileässä ja valolta suojattuna; avattuna käytä 6 kuukauden kuluessa." },
+        { q: "Saako hinnan ja saatavuuden näkyviin?", a: "Ohjehinta näkyy tuotekortilla. Asiakaskohtainen hinta, reaaliaikainen saldo ja tilaaminen avautuvat verkkokaupassa kirjautuneille. Uutena asiakkaana voit pyytää näytteen tai tunnukset." }
+      ]
+    };
+
+    function el(html) { var t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstChild; }
+    function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]; }); }
+    function set(id, txt) { var n = document.getElementById(id); if (n) n.textContent = txt; }
+
+    var p = PAGE.product;
+
+    // ---- KLUSTERI 1 ----
+    set("prod-brand", p.brand);
+    set("prod-h1", p.name);
+    set("prod-excerpt", p.excerpt);
+
+    // Badget: ruokavaliot + mahd. Uutuus
+    var badges = document.getElementById("hero-badges");
+    PAGE.diets.forEach(function (d) {
+      badges.appendChild(el('<span class="pill suits"><i class="fa-solid fa-check" aria-hidden="true" style="font-size:11px"></i>' + esc(d) + '</span>'));
+    });
+    if (p.isNew) badges.appendChild(el('<span class="tag-new">Uutuus</span>'));
+
+    // Pikafaktat (koodeille kopiointinappi)
+    var facts = document.getElementById("hero-facts");
+    PAGE.facts.forEach(function (f) {
+      var copyBtn = f.copy
+        ? '<button type="button" class="copy-btn" data-copy="' + esc(f.v) + '" aria-label="Kopioi: ' + esc(f.k) + '" title="Kopioi"><i class="fa-regular fa-copy" aria-hidden="true"></i></button>'
+        : '';
+      facts.appendChild(el('<div><dt>' + esc(f.k) + '</dt><dd><span class="fact-val">' + esc(f.v) + '</span>' + copyBtn + '</dd></div>'));
+    });
+    // Kopiointi leikepöydälle + hetkellinen kuittaus (check-ikoni)
+    document.querySelectorAll(".copy-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var val = btn.getAttribute("data-copy");
+        if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(val); }
+        var i = btn.querySelector("i");
+        i.className = "fa-solid fa-check";
+        btn.classList.add("copied");
+        btn.setAttribute("title", "Kopioitu");
+        setTimeout(function () { i.className = "fa-regular fa-copy"; btn.classList.remove("copied"); btn.setAttribute("title", "Kopioi"); }, 1300);
+      });
+    });
+
+    // Saatavana koot (linkkeinä — §3)
+    var packsInline = document.getElementById("hero-packs");
+    var packLinks = PAGE.packs.map(function (pk) { return '<a href="' + esc(pk.href) + '">' + esc(pk.name) + '</a>'; }).join('<span class="sep">·</span>');
+    packsInline.innerHTML = '<span class="lbl">Saatavana:</span>' + packLinks;
+
+    // Saatavuus-label
+    var availMap = {
+      "in":    { cls: "stock", txt: "Varastotuote" },
+      "order": { cls: "order", txt: "Tilaustuote" },
+      "out":   { cls: "out",   txt: "Tilapäisesti pois — ks. liittyvät tuotteet" }
+    };
+    var av = availMap[p.availability.type] || availMap["in"];
+    document.getElementById("hero-avail").appendChild(
+      el('<span class="pill ' + av.cls + '"><span class="dot" aria-hidden="true"></span>' + esc(av.txt) + '</span>')
+    );
+
+    // ---- KLUSTERI 2 ----
+    // Ainesosat: tyhjä/puuttuva arvo → datapuute-tila (Miro: "ei aineisosia?")
+    if (PAGE.ingredients) { set("ingredients", PAGE.ingredients); }
+    else {
+      document.getElementById("ingredients").hidden = true;
+      document.getElementById("ingredients-nodata").hidden = false;
+    }
+    var suits = document.getElementById("suits-line");
+    PAGE.diets.forEach(function (d) {
+      suits.appendChild(el('<span class="pill suits"><i class="fa-solid fa-check" aria-hidden="true" style="font-size:11px"></i>' + esc(d) + '</span>'));
+    });
+    set("allergen-base", PAGE.allergenBase);
+    document.querySelector("#may-contain span").textContent = PAGE.mayContain;
+
+    // Ravintoarvot: tyhjä taulukko → datapuute-tila (Miro: "ei ravintoarvoja")
+    var nut = document.getElementById("nutrition");
+    if (PAGE.nutrition && PAGE.nutrition.length) {
+      PAGE.nutrition.forEach(function (n) {
+        nut.appendChild(el('<div class="' + (n.strong ? "row-strong" : "") + '"><dt>' + esc(n.k) + '</dt><dd>' + esc(n.v) + '</dd></div>'));
+      });
+    } else {
+      nut.hidden = true;
+      document.getElementById("nutrition-nodata").hidden = false;
+    }
+
+    var docs = document.getElementById("doc-list");
+    if (PAGE.documents && PAGE.documents.length) {
+      PAGE.documents.forEach(function (d) {
+        docs.appendChild(el(
+          '<li><a href="' + esc(d.href) + '">' +
+            '<span class="doc-ic"><i class="' + esc(d.icon) + '" aria-hidden="true"></i></span>' +
+            '<span><span class="doc-name">' + esc(d.name) + '</span><br><span class="doc-meta">' + esc(d.meta) + '</span></span>' +
+            '<span class="doc-dl"><i class="fa-solid fa-download" aria-hidden="true"></i></span>' +
+          '</a></li>'
+        ));
+      });
+    } else {
+      // §9: dokumentteja ei ole → piilota koko lohko (ei tyhjää otsikkoa)
+      docs.closest("div").setAttribute("hidden", "");
+    }
+
+    // ---- KLUSTERI 3 ----
+    set("use-intro", PAGE.useIntro);
+    var useGrid = document.getElementById("use-grid");
+    PAGE.use.forEach(function (u) {
+      useGrid.appendChild(el(
+        '<div class="use-col"><h3>' + esc(u.h) + '</h3><p>' + esc(u.t) + '</p></div>'
+      ));
+    });
+
+    var recGrid = document.getElementById("recipe-grid");
+    PAGE.recipes.forEach(function (r) {
+      recGrid.appendChild(el(
+        '<a class="card" role="listitem" href="#">' +
+          '<div class="ph ph-16-10"><i class="fa-regular fa-image" aria-hidden="true"></i>Reseptikuva 16:10</div>' +
+          '<div class="body"><span class="kicker">' + esc(r.kicker) + '</span><h3>' + esc(r.title) + '</h3>' +
+          '<p>' + esc(r.text) + '</p><span class="go">Katso resepti <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></div>' +
+        '</a>'
+      ));
+    });
+
+    // ---- KLUSTERI 4 ----
+    set("avail-intro", PAGE.availIntro);
+    var packGrid = document.getElementById("pack-grid");
+    PAGE.packs.forEach(function (pk) {
+      packGrid.appendChild(el(
+        '<a class="pack-card" href="' + esc(pk.href) + '">' +
+          '<div class="ph pk-ph"><i class="fa-solid fa-box" aria-hidden="true"></i></div>' +
+          '<div><p class="pk-name">' + esc(pk.name) + '</p>' +
+          '<span class="pk-sku num">' + esc(pk.sku) + '</span>' +
+          '<p class="pk-saldo"><span class="tier login" style="padding:1px 7px"><span class="dot" aria-hidden="true"></span>Saldo: ' + esc(pk.saldo) + '</span></p></div>' +
+          '<span class="pk-go"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>' +
+        '</a>'
+      ));
+    });
+
+    // ---- KLUSTERI 5 ----
+    var altGrid = document.getElementById("alt-grid");
+    PAGE.alternatives.forEach(function (a) {
+      altGrid.appendChild(el(
+        '<a class="card" role="listitem" href="' + esc(a.href) + '">' +
+          '<div class="ph ph-16-10"><i class="fa-regular fa-image" aria-hidden="true"></i>Tuotekuva 16:10</div>' +
+          '<div class="body"><span class="kicker">' + esc(a.kicker) + '</span><h3>' + esc(a.title) + '</h3>' +
+          '<p>' + esc(a.text) + '</p><span class="go">Katso tuote <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></div>' +
+        '</a>'
+      ));
+    });
+
+    var faq = document.getElementById("faq");
+    PAGE.faq.forEach(function (qa) {
+      faq.appendChild(el('<details><summary>' + esc(qa.q) + '</summary><p>' + esc(qa.a) + '</p></details>'));
+    });
+
+    // ---- Rakenteinen data (SEO §10) ----
+    var origin = "https://www.condite.fi";
+    var url = origin + "/tuotteet/mausteet/savustettu-paprikajauhe/";
+    var ld = {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Product",
+          "name": p.name,
+          "brand": { "@type": "Brand", "name": p.brand },
+          "sku": "CAP-1042",
+          "gtin13": "6411400010426",
+          "description": p.excerpt,
+          "category": "Mausteet",
+          "url": url
+          /* offers/price tarkoituksella pois — hinta on login-tason (Sana). */
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Etusivu", "item": origin + "/" },
+            { "@type": "ListItem", "position": 2, "name": "Tuotteet", "item": origin + "/tuotteet/" },
+            { "@type": "ListItem", "position": 3, "name": "Mausteet", "item": origin + "/tuotteet/mausteet/" },
+            { "@type": "ListItem", "position": 4, "name": p.name, "item": url }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": PAGE.faq.map(function (qa) {
+            return { "@type": "Question", "name": qa.q, "acceptedAnswer": { "@type": "Answer", "text": qa.a } };
+          })
+        }
+      ]
+    };
+    document.getElementById("ld-json").textContent = JSON.stringify(ld);
+
+    // ---- Näkymänvaihtaja (demo): vaihtaa vain kaupallisen slotin sisällön ----
+    var segBtns = document.querySelectorAll(".segmented [data-set-view]");
+    segBtns.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var view = btn.getAttribute("data-set-view");
+        document.body.setAttribute("data-view", view);
+        segBtns.forEach(function (b) { b.setAttribute("aria-pressed", b === btn ? "true" : "false"); });
+      });
+    });
+
+    // ---- Mobiilinavigaatio ----
+    var navToggle = document.querySelector(".nav-toggle");
+    var header = document.querySelector(".site-header");
+    if (navToggle && header) {
+      navToggle.addEventListener("click", function () {
+        var open = header.classList.toggle("nav-open");
+        navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+        navToggle.setAttribute("aria-label", open ? "Sulje valikko" : "Avaa valikko");
+      });
+    }
+    // Pudotusvalikot: mobiili-toggle (klikkaus avaa/sulkee) + Esc sulkee
+    document.querySelectorAll(".nav-list > li.has-dropdown > a[aria-haspopup]").forEach(function (a) {
+      a.addEventListener("click", function (e) {
+        if (window.matchMedia("(max-width: 760px)").matches) {
+          e.preventDefault();
+          var li = a.parentElement;
+          var op = li.classList.toggle("open");
+          a.setAttribute("aria-expanded", op ? "true" : "false");
+        }
+      });
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+        document.querySelectorAll(".nav-list > li.has-dropdown.open").forEach(function (li) {
+          li.classList.remove("open");
+          var a = li.querySelector("a[aria-haspopup]");
+          if (a) a.setAttribute("aria-expanded", "false");
+        });
+      }
+    });
+  })();
+  </script>
+</body>
+</html>

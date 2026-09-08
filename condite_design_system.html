@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Condite — visuaalinen järjestelmä | Design System</title>
+<meta name="description" content="Condite-sivuston wireframe-tason design system: värit, typografia, pyöristykset, välistys ja komponentit. Jaettu tuotekortin ja etusivun kesken.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!--
+  CONDITE.FI — DESIGN SYSTEM (FI · wireframe-taso)
+  Toteutettu "Condite Design System.dc.html" -lähteestä standalone-sivuna.
+  Tokenit :root-kerroksessa (kuten sisarwireframet), semanttiset CSS-luokat
+  inline-tyylien sijaan — sama visuaalinen lopputulos, siistimpi rakenne.
+  Korostus: pehmeä Condite-sininen tonaalisin napein. Brändifontti / logo / kuvat TBD.
+-->
+<style>
+  :root {
+    /* Taustat */
+    --c-bg: #ffffff;
+    --c-bg-soft: #f7f7f7;
+    --c-bg-tint: #eef6fb;
+    /* Teksti */
+    --c-text: #1d1d1f;
+    --c-text-2: #555555;
+    --c-text-muted: #6f6f6f;
+    /* Viivat */
+    --c-border: #e3e3e3;
+    --c-border-strong: #cfcfcf;
+    --c-divider: #d8d8d8;
+    /* Kuvapaikat */
+    --c-ph-bg: #ececec;
+    --c-ph-border: #c8c8c8;
+    /* Korostus — pehmeä sininen */
+    --c-accent: #7fc8ec;        /* täytöt, aktiiviset, viivat */
+    --c-accent-ink: #0a6e9b;    /* linkit, eyebrow, ikonit */
+    --c-on-accent: #0a4f72;     /* teksti sinisen täytön päällä */
+    --c-accent-soft: #e3f2fb;   /* pehmeä tausta, tintit */
+    --c-suits-border: #b7def4;  /* "soveltuu" / tintatun kaistan reuna */
+    /* Tila- ja merkkivärit */
+    --c-in-bg: #e7efe9;   --c-in-text: #2f5a40;       /* varastossa */
+    --c-warn-bg: #fff5f0; --c-warn-border: #f3d3c1; --c-warn-text: #c0451c;  /* varoitus / allergeeni */
+    --c-tulossa-bg: #fff4cc; --c-tulossa-border: #f0d885; --c-tulossa-text: #6b4d00;  /* tulossa */
+    /* Pyöristykset */
+    --r-sm: 4px;
+    --r-md: 8px;
+    --r-lg: 12px;
+    /* Välistys-skaala */
+    --sp-1: 8px;
+    --sp-2: 16px;
+    --sp-3: 24px;
+    --sp-4: 32px;
+    --sp-6: 48px;
+    --sp-8: 64px;
+  }
+
+  * , *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--c-bg-soft);
+    color: var(--c-text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    padding: 0 0 80px;
+  }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+    outline: 2.5px solid var(--c-accent);
+    outline-offset: 2px;
+    border-radius: var(--r-sm);
+  }
+
+  /* ---- Yleiset ---- */
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+  .eyebrow {
+    font-size: 12px; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--c-accent-ink); margin: 0 0 4px;
+  }
+  h1 { font-size: 40px; line-height: 1.12; margin: 0 0 12px; font-weight: 700; }
+  .lede { margin: 0; color: var(--c-text-2); max-width: 64ch; }
+  h2.section-title { font-size: 26px; margin: 0 0 24px; font-weight: 700; }
+  h3.sub { font-size: 15px; margin: 0 0 12px; color: var(--c-text-2); font-weight: 700; }
+  .muted { color: var(--c-text-muted); }
+  .num { font-variant-numeric: tabular-nums; }
+
+  /* ---- Header ---- */
+  .ds-header { background: var(--c-bg); border-bottom: 1px solid var(--c-border); }
+  .ds-header .wrap { padding-top: 48px; padding-bottom: 48px; }
+
+  /* ---- Main rytmi ---- */
+  main.wrap { padding-top: 48px; display: flex; flex-direction: column; gap: 56px; }
+
+  /* ---- Värikortit ---- */
+  .swatch-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .swatch-grid + h3.sub { margin-top: 32px; }
+  .swatch {
+    border: 1px solid var(--c-border); border-radius: var(--r-md);
+    overflow: hidden; background: var(--c-bg);
+  }
+  .swatch .chip { height: 80px; }
+  .swatch.sm .chip { height: 64px; }
+  .swatch.xs .chip { height: 56px; }
+  .swatch .meta { padding: 10px 12px; }
+  .swatch .name { font-size: 13px; font-weight: 600; }
+  .swatch .val { font-size: 12px; color: var(--c-text-muted); font-variant-numeric: tabular-nums; }
+  .swatch .note { font-size: 11px; color: var(--c-text-muted); margin-top: 2px; }
+  .hatch {
+    background-image: repeating-linear-gradient(45deg, transparent, transparent 9px, rgba(0,0,0,.035) 9px, rgba(0,0,0,.035) 10px);
+  }
+
+  /* ---- Typo-taulukko ---- */
+  .panel { background: var(--c-bg); border: 1px solid var(--c-border); border-radius: var(--r-lg); overflow: hidden; }
+  .type-row {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 24px; padding: 20px 24px; border-bottom: 1px solid var(--c-border);
+  }
+  .type-row:last-child { border-bottom: 0; }
+  .type-spec { font-size: 12px; color: var(--c-text-muted); white-space: nowrap; }
+  .t-h1 { font-size: 44px; line-height: 1.12; font-weight: 700; }
+  .t-h2 { font-size: 30px; line-height: 1.18; font-weight: 700; }
+  .t-h3 { font-size: 18px; font-weight: 700; }
+  .t-body { font-size: 16px; color: var(--c-text-2); }
+  .t-small { font-size: 14px; color: var(--c-text-2); }
+  .t-micro { font-size: 12px; color: var(--c-text-muted); }
+
+  /* ---- Kahden sarakkeen ruudukot ---- */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .grid-2.top { align-items: start; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .card-pad { background: var(--c-bg); border: 1px solid var(--c-border); border-radius: var(--r-lg); padding: 24px; }
+
+  /* ---- Pyöristys-demo ---- */
+  .radii { display: flex; gap: 20px; align-items: flex-end; }
+  .radii .cell { text-align: center; }
+  .radii .box { width: 80px; height: 64px; background: var(--c-accent-soft); border: 1px solid var(--c-suits-border); }
+  .radii .lbl { font-size: 12px; color: var(--c-text-muted); margin-top: 8px; }
+
+  /* ---- Välistys-skaala ---- */
+  .scale { display: flex; flex-direction: column; gap: 10px; }
+  .scale .row { display: flex; align-items: center; gap: 12px; }
+  .scale .bar { height: 14px; background: var(--c-accent); }
+  .scale .lbl { font-size: 13px; color: var(--c-text-2); }
+
+  /* ---- Painikkeet ---- */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    border-radius: var(--r-sm); font-weight: 600; text-decoration: none;
+    line-height: 1.2; cursor: pointer;
+  }
+  .btn-primary {
+    padding: 13px 22px; font-size: 16px;
+    border: 1.5px solid var(--c-accent); background: var(--c-accent); color: var(--c-on-accent);
+  }
+  .btn-secondary {
+    padding: 13px 22px; font-size: 16px;
+    border: 1.5px solid var(--c-accent-ink); background: var(--c-bg); color: var(--c-accent-ink);
+  }
+  .btn-sm {
+    padding: 9px 16px; font-size: 14px;
+    border: 1.5px solid var(--c-accent-ink); background: var(--c-bg); color: var(--c-accent-ink);
+  }
+  .btn-link {
+    color: var(--c-accent-ink); text-decoration: none; font-weight: 600; font-size: 14px;
+    display: inline-flex; gap: 6px; align-items: center;
+  }
+  .btn-bar { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; padding: 32px; }
+
+  /* ---- Segmenttikontrolli ---- */
+  .segmented {
+    display: inline-flex; border: 1px solid var(--c-border-strong);
+    border-radius: var(--r-sm); overflow: hidden;
+  }
+  .segmented .seg { font-size: 14px; font-weight: 600; padding: 7px 18px; background: var(--c-bg); color: var(--c-text); cursor: pointer; }
+  .segmented .seg + .seg { border-left: 1px solid var(--c-border-strong); }
+  .segmented .seg.active { background: var(--c-accent); color: var(--c-on-accent); }
+
+  /* ---- Merkit / pillerit ---- */
+  .badge-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border-radius: 999px; font-size: 14px; font-weight: 500;
+    border: 1px solid var(--c-border-strong); background: var(--c-bg);
+  }
+  .pill.suits { font-weight: 600; background: var(--c-accent-soft); border-color: var(--c-suits-border); color: var(--c-accent-ink); }
+  .pill.stock { font-weight: 600; padding: 6px 12px; gap: 8px; background: var(--c-in-bg); color: var(--c-in-text); border: 0; }
+  .pill.stock .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+  .tag-tulossa {
+    display: inline-block; padding: 2px 8px; border-radius: var(--r-sm);
+    background: var(--c-tulossa-bg); border: 1px solid var(--c-tulossa-border); color: var(--c-tulossa-text);
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em;
+  }
+  .login-flag {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 700; letter-spacing: .3px; text-transform: uppercase; color: var(--c-text-2);
+  }
+  .login-flag .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--c-accent); }
+
+  /* ---- Kortit ---- */
+  .card {
+    border: 1px solid var(--c-border); border-radius: var(--r-md);
+    background: var(--c-bg); overflow: hidden; display: flex; flex-direction: column;
+  }
+  .card .ph {
+    aspect-ratio: 16 / 10; background: var(--c-ph-bg);
+    border-bottom: 1px dashed var(--c-ph-border);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--c-text-2); font-size: 13px; gap: 6px;
+  }
+  .card .ph i { opacity: .6; }
+  .card .body { padding: 16px 24px 24px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .kicker { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--c-text-muted); font-weight: 700; }
+  .card h3 { font-size: 16px; margin: 0; }
+  .card p { font-size: 14px; color: var(--c-text-2); margin: 0; }
+  .card .go { margin-top: auto; padding-top: 8px; color: var(--c-accent-ink); font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; }
+
+  .card-usp { border: 1px solid var(--c-border); border-radius: var(--r-md); padding: 24px; background: var(--c-bg); display: flex; flex-direction: column; gap: 8px; }
+  .card-usp .ic { color: var(--c-accent-ink); font-size: 22px; margin-bottom: 4px; }
+  .card-usp h3 { font-size: 17px; margin: 0; }
+  .card-usp p { font-size: 14px; color: var(--c-text-2); margin: 0; }
+
+  .card-icon { border: 1px solid var(--c-border); border-radius: var(--r-md); background: var(--c-bg); padding: 24px; display: flex; gap: 16px; align-items: flex-start; }
+  .card-icon .badge-ic { width: 46px; height: 46px; border-radius: var(--r-md); background: var(--c-accent-soft); color: var(--c-accent-ink); display: flex; align-items: center; justify-content: center; font-size: 19px; flex: none; }
+  .card-icon h3 { font-size: 15px; margin: 0 0 2px; }
+  .card-icon p { font-size: 14px; color: var(--c-text-2); margin: 0; }
+
+  /* ---- Lukittu lohko ---- */
+  .gated {
+    background: var(--c-bg-soft); border: 1px solid var(--c-border);
+    border-left: 4px solid var(--c-accent); border-radius: var(--r-md); padding: 32px;
+  }
+  .gated .inner { display: flex; gap: 24px; align-items: flex-start; }
+  .gated .lock {
+    flex: none; width: 46px; height: 46px; border-radius: 50%;
+    background: var(--c-bg); border: 1px solid var(--c-border-strong);
+    display: flex; align-items: center; justify-content: center; font-size: 17px; color: var(--c-accent-ink);
+  }
+  .gated h3 { font-size: 16px; margin: 6px 0; }
+  .gated p { font-size: 14px; color: var(--c-text-2); margin: 0 0 16px; max-width: 42ch; }
+
+  /* ---- Lomake ---- */
+  .form-panel { background: var(--c-bg); border: 1px solid var(--c-border); border-radius: var(--r-lg); padding: 24px; display: grid; gap: 14px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 14px; font-weight: 600; }
+  .field input, .field select {
+    padding: 10px 12px; border: 1px solid var(--c-border-strong); border-radius: var(--r-sm);
+    font: inherit; font-size: 14px; background: var(--c-bg); color: var(--c-text);
+  }
+
+  /* ---- Osiomallit ---- */
+  .pattern-head h2 { font-size: 24px; line-height: 1.18; margin: 0; font-weight: 700; }
+  .pattern-head p { margin: 12px 0 0; color: var(--c-text-2); }
+  .tint-band {
+    background: var(--c-bg-tint); border: 1px solid var(--c-suits-border); border-radius: var(--r-lg);
+    padding: 24px; display: flex; align-items: center; justify-content: center; text-align: center;
+  }
+  .tint-band p.body { margin: 0; color: var(--c-text-2); font-size: 14px; max-width: 36ch; }
+
+  /* ---- Responsiivisuus ---- */
+  @media (max-width: 720px) {
+    .wrap { padding: 0 20px; }
+    h1 { font-size: 32px; }
+    .swatch-grid { grid-template-columns: repeat(2, 1fr); }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .t-h1 { font-size: 34px; }
+    .t-h2 { font-size: 26px; }
+    .type-row { flex-direction: column; gap: 8px; }
+    .type-spec { white-space: normal; }
+    .ml-auto { margin-left: 0 !important; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ====== OTSIKKO ====== -->
+  <header class="ds-header">
+    <div class="wrap">
+      <p class="eyebrow">Design System</p>
+      <h1>Condite — visuaalinen järjestelmä</h1>
+      <p class="lede">Wireframe-tason tyylijärjestelmä, joka on jaettu tuotekortin ja etusivun kesken. Korostus on pehmeä Condite-sininen tonaalisin napein. Brändifontti, lopulliset kuvat ja logo ovat TBD.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <!-- ===== 01 — VÄRIT ===== -->
+    <section>
+      <p class="eyebrow">01 — Värit</p>
+      <h2 class="section-title">Väripaletti</h2>
+
+      <h3 class="sub">Korostus — pehmeä sininen</h3>
+      <div class="swatch-grid">
+        <div class="swatch">
+          <div class="chip" style="background:#7fc8ec"></div>
+          <div class="meta"><div class="name">--c-accent</div><div class="val">#7fc8ec</div><div class="note">Täytöt, aktiiviset, viivat</div></div>
+        </div>
+        <div class="swatch">
+          <div class="chip" style="background:#0a6e9b"></div>
+          <div class="meta"><div class="name">--c-accent-ink</div><div class="val">#0a6e9b</div><div class="note">Linkit, eyebrow, ikonit</div></div>
+        </div>
+        <div class="swatch">
+          <div class="chip" style="background:#0a4f72"></div>
+          <div class="meta"><div class="name">--c-on-accent</div><div class="val">#0a4f72</div><div class="note">Teksti sinisen täytön päällä</div></div>
+        </div>
+        <div class="swatch">
+          <div class="chip" style="background:#e3f2fb"></div>
+          <div class="meta"><div class="name">--c-accent-soft</div><div class="val">#e3f2fb</div><div class="note">Pehmeä tausta, tintit</div></div>
+        </div>
+      </div>
+
+      <h3 class="sub">Neutraalit</h3>
+      <div class="swatch-grid">
+        <div class="swatch sm"><div class="chip" style="background:#1d1d1f"></div><div class="meta"><div class="name">--c-text</div><div class="val">#1d1d1f</div></div></div>
+        <div class="swatch sm"><div class="chip" style="background:#555555"></div><div class="meta"><div class="name">--c-text-2</div><div class="val">#555555</div></div></div>
+        <div class="swatch sm"><div class="chip" style="background:#6f6f6f"></div><div class="meta"><div class="name">--c-text-muted</div><div class="val">#6f6f6f</div></div></div>
+        <div class="swatch sm"><div class="chip" style="background:#eef6fb"></div><div class="meta"><div class="name">--c-bg-tint</div><div class="val">#eef6fb</div></div></div>
+        <div class="swatch sm"><div class="chip" style="background:#f7f7f7"></div><div class="meta"><div class="name">--c-bg-soft</div><div class="val">#f7f7f7</div></div></div>
+        <div class="swatch sm"><div class="chip" style="background:#e3e3e3"></div><div class="meta"><div class="name">--c-border</div><div class="val">#e3e3e3</div></div></div>
+        <div class="swatch sm"><div class="chip" style="background:#cfcfcf"></div><div class="meta"><div class="name">--c-border-strong</div><div class="val">#cfcfcf</div></div></div>
+        <div class="swatch sm"><div class="chip hatch" style="background:#ececec"></div><div class="meta"><div class="name">--c-ph-bg</div><div class="val">#ececec · kuvapaikka</div></div></div>
+      </div>
+
+      <h3 class="sub">Tila- ja merkkivärit</h3>
+      <div class="swatch-grid">
+        <div class="swatch xs"><div class="chip" style="background:#e7efe9"></div><div class="meta"><div class="name">Varastossa</div><div class="val">in-bg / in-text #2f5a40</div></div></div>
+        <div class="swatch xs"><div class="chip" style="background:#fff5f0"></div><div class="meta"><div class="name">Varoitus / allergeeni</div><div class="val">warn-bg / text #c0451c</div></div></div>
+        <div class="swatch xs"><div class="chip" style="background:#fff4cc"></div><div class="meta"><div class="name">Tulossa</div><div class="val">tulossa-bg / text #6b4d00</div></div></div>
+        <div class="swatch xs"><div class="chip" style="background:#e3f2fb"></div><div class="meta"><div class="name">Soveltuu</div><div class="val">accent-soft / suits-border</div></div></div>
+      </div>
+    </section>
+
+    <!-- ===== 02 — TYPOGRAFIA ===== -->
+    <section>
+      <p class="eyebrow">02 — Typografia</p>
+      <h2 class="section-title">Tyyppiskaala</h2>
+      <p class="lede" style="margin-bottom:24px">Systeemifontti (brändifontti TBD). Otsikot tiukalla rivivälillä, leipäteksti 1.55.</p>
+      <div class="panel">
+        <div class="type-row">
+          <p class="eyebrow" style="margin:0">Eyebrow / osiotunniste</p>
+          <span class="type-spec">12px · 700 · .12em · uppercase · accent-ink</span>
+        </div>
+        <div class="type-row">
+          <span class="t-h1">Hero-otsikko H1</span>
+          <span class="type-spec">44px · 700 · 1.12</span>
+        </div>
+        <div class="type-row">
+          <span class="t-h2">Osio-otsikko H2</span>
+          <span class="type-spec">30px · 700 · 1.18</span>
+        </div>
+        <div class="type-row">
+          <span class="t-h3">Alaotsikko / kortti H3</span>
+          <span class="type-spec">16–20px · 700</span>
+        </div>
+        <div class="type-row">
+          <span class="t-body">Leipäteksti — luettava perusteksti sekundääriharmaalla.</span>
+          <span class="type-spec">16px · 1.55 · text-2</span>
+        </div>
+        <div class="type-row">
+          <span class="t-small">Pieni teksti — kortit, metatiedot, lomakelabelit.</span>
+          <span class="type-spec">14px · small</span>
+        </div>
+        <div class="type-row">
+          <span class="t-micro">Mikroteksti — kicker, tunnisteet, vihjeet.</span>
+          <span class="type-spec">12px · muted</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 03 — PYÖRISTYKSET & RYTMI ===== -->
+    <section>
+      <p class="eyebrow">03 — Pyöristykset & rytmi</p>
+      <h2 class="section-title">Pyöristykset ja välistys</h2>
+      <div class="grid-2">
+        <div class="card-pad">
+          <h3 class="sub" style="margin-bottom:16px">Pyöristykset</h3>
+          <div class="radii">
+            <div class="cell"><div class="box" style="border-radius:4px"></div><div class="lbl">--r-sm 4px</div></div>
+            <div class="cell"><div class="box" style="border-radius:8px"></div><div class="lbl">--r-md 8px</div></div>
+            <div class="cell"><div class="box" style="border-radius:12px"></div><div class="lbl">--r-lg 12px</div></div>
+          </div>
+        </div>
+        <div class="card-pad">
+          <h3 class="sub" style="margin-bottom:16px">Välistys-skaala</h3>
+          <div class="scale">
+            <div class="row"><div class="bar" style="width:8px"></div><span class="lbl">8 — tiukka</span></div>
+            <div class="row"><div class="bar" style="width:16px"></div><span class="lbl">16 — elementtien väli</span></div>
+            <div class="row"><div class="bar" style="width:24px"></div><span class="lbl">24 — kortti / ruudukko</span></div>
+            <div class="row"><div class="bar" style="width:32px"></div><span class="lbl">32 — otsikko → sisältö</span></div>
+            <div class="row"><div class="bar" style="width:48px"></div><span class="lbl">48 — sarakeväli</span></div>
+            <div class="row"><div class="bar" style="width:64px"></div><span class="lbl">64 — osioväli</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 04 — PAINIKKEET ===== -->
+    <section>
+      <p class="eyebrow">04 — Komponentit</p>
+      <h2 class="section-title">Painikkeet</h2>
+      <div class="panel btn-bar">
+        <a href="#" class="btn btn-primary">Ensisijainen</a>
+        <a href="#" class="btn btn-secondary">Toissijainen</a>
+        <a href="#" class="btn btn-sm"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Pieni</a>
+        <a href="#" class="btn-link">Linkki <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+        <span class="muted ml-auto" style="font-size:12px;margin-left:auto">Tonaaliset: vaalea sininen täyttö + tumma sininen teksti</span>
+      </div>
+    </section>
+
+    <!-- ===== SEGMENTTIKONTROLLI + MERKIT ===== -->
+    <section>
+      <h2 class="section-title">Valitsin ja merkit</h2>
+      <div class="grid-2">
+        <div class="card-pad">
+          <h3 class="sub" style="margin-bottom:16px">Segmenttikontrolli</h3>
+          <div class="segmented" role="group" aria-label="Pakkauskoko">
+            <span class="seg active">500 g</span>
+            <span class="seg">5 kg</span>
+          </div>
+          <p class="muted" style="font-size:12px;margin:16px 0 0">Valintaan (esim. pakkauskoko, näkymä). Ei sama kuin pilleri-merkit.</p>
+        </div>
+        <div class="card-pad">
+          <h3 class="sub" style="margin-bottom:16px">Merkit ja pillerit</h3>
+          <div class="badge-row">
+            <span class="pill"><i class="fa-solid fa-leaf" aria-hidden="true" style="font-size:12px;color:var(--c-text-muted)"></i>Ominaisuus</span>
+            <span class="pill suits">Soveltuu</span>
+            <span class="pill stock"><span class="dot"></span>Varastotuote</span>
+            <span class="tag-tulossa">Tulossa</span>
+            <span class="login-flag"><span class="dot"></span>Webshop-login</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== KORTIT ===== -->
+    <section>
+      <h2 class="section-title">Kortit ja kuvapaikat</h2>
+      <div class="grid-3">
+        <div class="card">
+          <div class="ph hatch"><i class="fa-regular fa-image" aria-hidden="true"></i>Kuva 16:10</div>
+          <div class="body">
+            <span class="kicker">Kicker</span>
+            <h3>Nosto- / tuotekortti</h3>
+            <p>Linkitettävä kortti kuvalla, kickerillä ja kuvauksella.</p>
+            <span class="go">Siirry <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+          </div>
+        </div>
+        <div class="card-usp">
+          <span class="ic"><i class="fa-solid fa-sliders" aria-hidden="true"></i></span>
+          <h3>USP-kortti</h3>
+          <p>Ikoni, otsikko ja lyhyt kuvaus. Ei-linkki.</p>
+        </div>
+        <div class="card-icon">
+          <span class="badge-ic"><i class="fa-solid fa-certificate" aria-hidden="true"></i></span>
+          <div>
+            <h3>Ikoni-kortti</h3>
+            <p>Sertifikaatit, taustatiedot.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== LUKITTU LOHKO + LOMAKE ===== -->
+    <section>
+      <h2 class="section-title">Lukittu lohko ja lomake</h2>
+      <div class="grid-2 top">
+        <div class="gated">
+          <div class="inner">
+            <span class="lock"><i class="fa-solid fa-lock" aria-hidden="true"></i></span>
+            <div>
+              <span class="login-flag"><span class="dot"></span>Webshop-login</span>
+              <h3>Gatattu sisältö</h3>
+              <p>Hinnat, tarkat speksit ja saatavuus näkyvät kirjautuneille.</p>
+              <a href="#" class="btn btn-sm" style="border-color:var(--c-accent);background:var(--c-accent);color:var(--c-on-accent)">Kirjaudu</a>
+            </div>
+          </div>
+        </div>
+        <div class="form-panel">
+          <div class="field">
+            <label>Kenttä *</label>
+            <input type="text" placeholder="Syöte">
+          </div>
+          <div class="field">
+            <label>Valinta</label>
+            <select><option>Vaihtoehto</option></select>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== OSIOMALLIT ===== -->
+    <section>
+      <h2 class="section-title">Osiomallit</h2>
+      <div class="grid-2">
+        <div class="card-pad pattern-head">
+          <h3 class="sub" style="margin-bottom:16px">Osio-otsikko</h3>
+          <p class="eyebrow">Eyebrow</p>
+          <h2>Otsikko kuvaa osion</h2>
+          <p>Lyhyt ingressi, rivipituus ~760px.</p>
+        </div>
+        <div class="tint-band">
+          <div>
+            <p class="eyebrow" style="margin-bottom:8px">Tintattu kaista</p>
+            <p class="body">bg-tint + suits-border ylä/ala. Rytmittää valkoiset osiot ja korostaa luottamus-/palvelulohkot.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</body>
+</html>

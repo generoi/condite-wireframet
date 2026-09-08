@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Condite — Makupaja-prosessi (testaussykli)</title>
+<style>
+  :root{
+    --c-bg:#ffffff; --c-bg-soft:#f7f7f7; --c-bg-tint:#eef6fb;
+    --c-text:#1d1d1f; --c-text-2:#555555; --c-text-muted:#6f6f6f;
+    --c-border:#e3e3e3; --c-border-strong:#cfcfcf; --c-divider:#d8d8d8;
+    --c-accent:#7fc8ec; --c-accent-ink:#0a6e9b; --c-on-accent:#0a4f72;
+    --c-accent-soft:#e3f2fb; --c-suits-border:#b7def4;
+    --r-md:8px; --r-lg:12px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--c-bg-soft);color:var(--c-text);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;line-height:1.5;}
+  .wrap{max-width:1180px;margin:0 auto;padding:48px 24px;}
+  .infobox{background:var(--c-bg);border:1px solid var(--c-border);border-radius:var(--r-lg);padding:32px 32px 28px;}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--c-accent-ink);margin:0 0 6px;}
+  h2{font-size:24px;line-height:1.25;margin:0 0 8px;font-weight:700;}
+  .intro{margin:0 0 4px;color:var(--c-text-2);max-width:70ch;font-size:15px;}
+  .hint{margin:6px 0 0;font-size:12px;color:var(--c-text-muted);}
+
+  svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,system-ui,sans-serif}
+  .s-pill{font:600 14px/1 inherit;fill:var(--c-text)}
+  .s-goal{font:700 14px/1 inherit;fill:var(--c-on-accent)}
+  .s-loop{font:700 14px/1 inherit;fill:var(--c-accent-ink)}
+  .s-cap{font:700 11px/1 inherit;fill:var(--c-accent-ink);letter-spacing:.6px}
+  .s-edge{font:600 12px/1 inherit;fill:var(--c-text-muted)}
+
+  .pill{fill:var(--c-bg);stroke:var(--c-border-strong);stroke-width:1.5}
+  .pill-goal{fill:var(--c-accent);stroke:var(--c-accent);stroke-width:1.5}
+  .loopnode{fill:var(--c-accent-soft);stroke:var(--c-suits-border);stroke-width:2}
+  .flow{fill:none;stroke:var(--c-text-muted);stroke-width:2}
+  .cyc{fill:none;stroke:var(--c-accent-ink);stroke-width:2.5}
+  .cyc-opt{fill:none;stroke:var(--c-accent-ink);stroke-width:2;stroke-dasharray:6 5}
+
+  /* klikattavat solmut */
+  .node-g{cursor:pointer}
+  .node-g:focus{outline:none}
+  .node-g:hover .pill,.node-g:focus-visible .pill{stroke:var(--c-accent-ink);stroke-width:2}
+  .node-g:hover .loopnode,.node-g:focus-visible .loopnode{stroke:var(--c-accent-ink)}
+  .node-g.is-active .pill{stroke:var(--c-accent-ink);stroke-width:2.5}
+  .node-g.is-active .pill-goal{stroke:var(--c-accent-ink);stroke-width:2.5}
+  .node-g.is-active .loopnode{stroke:var(--c-accent-ink);stroke-width:3}
+
+  /* proximity-paneeli: kiinnittyy aktiivisen solmun alle */
+  .diagram{position:relative}
+  .detailwrap{position:relative;min-height:172px;margin-top:14px}
+  .detail{position:absolute;top:12px;left:0;width:360px;max-width:100%;
+    background:var(--c-bg);border:1px solid var(--c-border);border-radius:var(--r-lg);
+    padding:15px 18px;transition:left .18s ease;}
+  .detail-arrow{position:absolute;top:-8px;left:24px;width:14px;height:14px;background:var(--c-bg);
+    border-left:1px solid var(--c-border);border-top:1px solid var(--c-border);transform:rotate(45deg);}
+  .d-head{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:6px}
+  .d-num{color:var(--c-accent-ink);font-weight:700}
+  .d-name{font-weight:700;font-size:15px}
+  .d-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;
+    color:var(--c-accent-ink);background:var(--c-accent-soft);border:1px solid var(--c-suits-border);
+    border-radius:999px;padding:2px 9px;line-height:1.6;}
+  .d-desc{margin:0;font-size:13px;color:var(--c-text-2);line-height:1.55}
+  .note{margin:16px 0 0;font-size:12px;color:var(--c-text-muted);}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);
+    clip-path:inset(50%);white-space:nowrap;border:0;padding:0;margin:-1px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="infobox">
+    <p class="eyebrow">Näin yhteistyö etenee</p>
+    <h2>Briiffistä tuotantoon — testataan kunnes toimii</h2>
+    <p class="intro">[Intro-placeholder: kehitys ei etene suoraa viivaa. Maistatus ja iterointi toistuvat
+      sykleissä Makupajassa, ja tuotantoon edetään vasta kun resepti toimii. Condite viimeistelee sanoituksen.]</p>
+    <p class="hint">Klikkaa vaihetta nähdäksesi tarkemman kuvauksen.</p>
+
+    <div class="diagram">
+      <svg width="100%" viewBox="0 70 1120 255" role="img" aria-labelledby="ig-t ig-d">
+        <title id="ig-t">Makupaja-prosessi, jossa maistatus ja iterointi muodostavat toistuvan syklin</title>
+        <desc id="ig-d">Lineaarinen polku Briiffi → Suunnittelu johtaa testaussykliin, jossa maistatus ja
+          iterointi toistuvat kunnes resepti toimii; sitten edetään koesarjaan ja tuotantoon. Koesarja voi
+          tarvittaessa palauttaa testaukseen.</desc>
+
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+
+        <text class="s-cap" x="555" y="96" text-anchor="middle">Testaussykli</text>
+
+        <!-- nuolet ja kaaret (taustalla) -->
+        <line class="flow" x1="142" y1="200" x2="201"  y2="200" marker-end="url(#ah)"/>
+        <line class="flow" x1="337" y1="200" x2="421"  y2="200" marker-end="url(#ah)"/>
+        <line class="flow" x1="686" y1="200" x2="795"  y2="200" marker-end="url(#ah)"/>
+        <line class="flow" x1="913" y1="200" x2="967"  y2="200" marker-end="url(#ah)"/>
+        <path class="cyc" d="M492,162 Q555,116 618,162" marker-end="url(#ah)"/>
+        <path class="cyc" d="M618,238 Q555,284 492,238" marker-end="url(#ah)"/>
+        <path class="cyc-opt" d="M820,222 Q742,345 665,236" marker-end="url(#ah)"/>
+        <text class="s-edge" x="741" y="188" text-anchor="middle">kun toimii</text>
+        <text class="s-edge" x="742" y="316" text-anchor="middle">jos säätöä tarvitaan</text>
+
+        <!-- solmut (klikattavat) -->
+        <g class="node-g" data-i="0" tabindex="0" role="button" aria-label="Briiffi, näytä kuvaus">
+          <rect class="pill" x="50" y="178" width="90" height="44" rx="22"/>
+          <text class="s-pill" x="95" y="205" text-anchor="middle">Briiffi</text>
+        </g>
+        <g class="node-g" data-i="1" tabindex="0" role="button" aria-label="Suunnittelu, näytä kuvaus">
+          <rect class="pill" x="205" y="178" width="130" height="44" rx="22"/>
+          <text class="s-pill" x="270" y="205" text-anchor="middle">Suunnittelu</text>
+        </g>
+        <g class="node-g" data-i="2" tabindex="0" role="button" aria-label="Maistatus, näytä kuvaus">
+          <circle class="loopnode" cx="470" cy="200" r="44"/>
+          <text class="s-loop" x="470" y="205" text-anchor="middle">Maistatus</text>
+        </g>
+        <g class="node-g" data-i="3" tabindex="0" role="button" aria-label="Iterointi, näytä kuvaus">
+          <circle class="loopnode" cx="640" cy="200" r="44"/>
+          <text class="s-loop" x="640" y="205" text-anchor="middle">Iterointi</text>
+        </g>
+        <g class="node-g" data-i="4" tabindex="0" role="button" aria-label="Koesarja, näytä kuvaus">
+          <rect class="pill" x="799" y="178" width="112" height="44" rx="22"/>
+          <text class="s-pill" x="855" y="205" text-anchor="middle">Koesarja</text>
+        </g>
+        <g class="node-g" data-i="5" tabindex="0" role="button" aria-label="Tuotantoon, näytä kuvaus">
+          <rect class="pill-goal" x="971" y="178" width="128" height="44" rx="22"/>
+          <text class="s-goal" x="1035" y="205" text-anchor="middle">Tuotantoon</text>
+        </g>
+      </svg>
+
+      <!-- proximity-paneeli aktiivisen solmun alla -->
+      <div class="detailwrap">
+        <div class="detail" role="region" aria-live="polite">
+          <span class="detail-arrow"></span>
+          <div class="d-head">
+            <span class="d-num"></span><span class="d-name"></span><span class="d-tag"></span>
+          </div>
+          <p class="d-desc"></p>
+        </div>
+      </div>
+    </div>
+
+    <p class="note">Pääsytaso: avoin. Kuvaukset luonnos — Condite viimeistelee. Vaihtoehto S3:n pystysteppille (vsteps); tonaaliset DS-värit.</p>
+
+    <!-- kaikki kuvaukset myös tekstinä saavutettavuutta ja hakukoneita varten -->
+    <div class="sr-only">
+      <h3>Makupaja-prosessin vaiheet</h3>
+      <ol>
+        <li>Briiffi: kartoitamme tarpeesi — mitä kehitetään, mihin käyttöön ja millä reunaehdoilla. Sovimme tavoitteet ja aikataulun.</li>
+        <li>Suunnittelu: valitsemme raaka-aineet ja lähestymistavan ja ehdotamme suunnan kokeiltavaksi.</li>
+        <li>Maistatus (testaussykli): valmistamme ensimmäiset versiot Makupajassa ja maistatamme ne kanssasi.</li>
+        <li>Iterointi (testaussykli): hiomme reseptiä palautteesi perusteella, kunnes lopputulos vastaa tarvettasi.</li>
+        <li>Koesarja: testaamme reseptin pienemmässä tuotantomittakaavassa; tarvittaessa palaamme testaukseen.</li>
+        <li>Tuotantoon: viemme valmiin tuotteen tuotantoon ja jatkamme kehityskumppanina.</li>
+      </ol>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  var VB = 1120, NX = [95,270,470,640,855,1035];
+  var D = [
+    {n:'1', name:'Briiffi', tag:'', desc:'[Luonnos: Aloitamme kartoittamalla tarpeesi — mitä kehitetään, mihin käyttöön ja millä reunaehdoilla (esim. allergeenit, säilyvyys, hinta, volyymi). Sovimme tavoitteet ja aikataulun, jotta kehitystyö lähtee oikeaan suuntaan heti.]'},
+    {n:'2', name:'Suunnittelu', tag:'', desc:'[Luonnos: Valitsemme sopivat raaka-aineet ja lähestymistavan tavoitteidesi pohjalta. Hyödynnämme Conditen valikoimaa ja Orklan asiantuntemusta ja ehdotamme yhden tai useamman suunnan, joista lähdemme kokeilemaan.]'},
+    {n:'3', name:'Maistatus', tag:'testaussykli', desc:'[Luonnos: Valmistamme ensimmäiset versiot Makupajan testikeittiössä ja maistatamme ne kanssasi. Näet, maistat ja arvioit tulokset paikan päällä — konkretia korvaa arvailun jo varhaisessa vaiheessa.]'},
+    {n:'4', name:'Iterointi', tag:'testaussykli', desc:'[Luonnos: Hiomme reseptiä palautteesi perusteella — säädämme makua, koostumusta ja ominaisuuksia. Maistatus ja iterointi toistuvat sykleinä, kunnes lopputulos vastaa tarvettasi.]'},
+    {n:'5', name:'Koesarja', tag:'voi palata testaukseen', desc:'[Luonnos: Testaamme toimivan reseptin pienemmässä tuotantomittakaavassa ja varmistamme, että ratkaisu skaalautuu ja pysyy tasalaatuisena. Jos mittakaava paljastaa säätötarvetta, palaamme vielä hiomaan.]'},
+    {n:'6', name:'Tuotantoon', tag:'', desc:'[Luonnos: Viemme valmiin tuotteen tuotantoon sovitulla volyymilla ja aikataululla. Yhteistyö ei pääty tähän — jatkamme kehityskumppanina ja tuemme tuotetta myös jatkossa.]'}
+  ];
+
+  var groups = [].slice.call(document.querySelectorAll('.node-g'));
+  var wrap   = document.querySelector('.detailwrap');
+  var panel  = document.querySelector('.detail');
+  var arrow  = document.querySelector('.detail-arrow');
+  var active = 0;
+
+  function render(i){
+    var d = D[i];
+    panel.querySelector('.d-num').textContent  = d.n;
+    panel.querySelector('.d-name').textContent = d.name;
+    var t = panel.querySelector('.d-tag');
+    t.textContent = d.tag; t.style.display = d.tag ? '' : 'none';
+    panel.querySelector('.d-desc').textContent = d.desc;
+    groups.forEach(function(g,k){ g.classList.toggle('is-active', k===i); });
+    active = i;
+    place();
+  }
+
+  function place(){
+    var w  = wrap.clientWidth;
+    var pw = Math.min(panel.offsetWidth, w);
+    var nodeX = NX[active] / VB * w;
+    var left = Math.max(0, Math.min(nodeX - pw/2, w - pw));
+    panel.style.left = left + 'px';
+    var ax = Math.max(16, Math.min(nodeX - left, pw - 16));
+    arrow.style.left = ax + 'px';
+  }
+
+  groups.forEach(function(g){
+    var i = +g.getAttribute('data-i');
+    g.addEventListener('click', function(){ render(i); });
+    g.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); render(i); }
+    });
+  });
+  window.addEventListener('resize', place);
+  render(0);
+})();
+</script>
+</body>
+</html>

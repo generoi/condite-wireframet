@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Condite — Makupaja-prosessi (sykli + callout-kuvaukset)</title>
+<style>
+  :root{
+    --c-bg:#ffffff; --c-bg-soft:#f7f7f7; --c-bg-tint:#eef6fb;
+    --c-text:#1d1d1f; --c-text-2:#555555; --c-text-muted:#6f6f6f;
+    --c-border:#e3e3e3; --c-border-strong:#cfcfcf; --c-divider:#d8d8d8;
+    --c-accent:#7fc8ec; --c-accent-ink:#0a6e9b; --c-on-accent:#0a4f72;
+    --c-accent-soft:#e3f2fb; --c-suits-border:#b7def4;
+    --r-md:8px; --r-lg:12px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--c-bg-soft);color:var(--c-text);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;line-height:1.5;}
+  .wrap{max-width:1180px;margin:0 auto;padding:48px 24px;}
+  .infobox{background:var(--c-bg);border:1px solid var(--c-border);border-radius:var(--r-lg);padding:32px 32px 28px;}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--c-accent-ink);margin:0 0 6px;}
+  h2{font-size:24px;line-height:1.25;margin:0 0 8px;font-weight:700;}
+  .intro{margin:0 0 8px;color:var(--c-text-2);max-width:70ch;font-size:15px;}
+
+  svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,system-ui,sans-serif}
+  .s-pill{font:600 14px/1 inherit;fill:var(--c-text)}
+  .s-goal{font:700 14px/1 inherit;fill:var(--c-on-accent)}
+  .s-loop{font:700 14px/1 inherit;fill:var(--c-accent-ink)}
+  .s-cap{font:700 11px/1 inherit;fill:var(--c-accent-ink);letter-spacing:.6px}
+  .s-edge{font:600 12px/1 inherit;fill:var(--c-text-muted)}
+
+  .pill{fill:var(--c-bg);stroke:var(--c-border-strong);stroke-width:1.5}
+  .pill-goal{fill:var(--c-accent);stroke:var(--c-accent);stroke-width:1.5}
+  .loopnode{fill:var(--c-accent-soft);stroke:var(--c-suits-border);stroke-width:2}
+  .flow{fill:none;stroke:var(--c-text-muted);stroke-width:2}
+  .cyc{fill:none;stroke:var(--c-accent-ink);stroke-width:2.5}
+  .cyc-opt{fill:none;stroke:var(--c-accent-ink);stroke-width:2;stroke-dasharray:6 5}
+
+  /* hienovarainen callout */
+  .lead{stroke:var(--c-border-strong);stroke-width:1.2}
+  .leaddot{fill:var(--c-accent-ink)}
+  .co{height:100%;background:var(--c-bg);border:1px solid var(--c-border);border-radius:8px;
+    padding:9px 11px;font-family:inherit;}
+  .co-t{margin:0 0 3px;font-size:13px;font-weight:700;color:var(--c-text);}
+  .co-n{color:var(--c-accent-ink);font-weight:700;margin-right:3px;}
+  .co-d{margin:0;font-size:12px;line-height:1.4;color:var(--c-text-2);}
+
+  .note{margin:18px 0 0;font-size:12px;color:var(--c-text-muted);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="infobox">
+    <p class="eyebrow">Näin yhteistyö etenee</p>
+    <h2>Briiffistä tuotantoon — testataan kunnes toimii</h2>
+    <p class="intro">[Intro-placeholder: kehitys ei etene suoraa viivaa. Maistatus ja iterointi toistuvat
+      sykleissä Makupajassa, ja tuotantoon edetään vasta kun resepti toimii. Condite viimeistelee sanoituksen.]</p>
+
+    <svg width="100%" viewBox="0 100 1120 540" role="img" aria-labelledby="ig-t ig-d">
+      <title id="ig-t">Makupaja-prosessi, jossa maistatus ja iterointi muodostavat toistuvan syklin</title>
+      <desc id="ig-d">Lineaarinen polku Briiffi → Suunnittelu → testaussykli (maistatus ja iterointi
+        toistuvat) → Koesarja → Tuotantoon. Koesarja voi tarvittaessa palauttaa testaukseen. Kunkin
+        vaiheen kuvaus on vuorotellen prosessin ylä- ja alapuolella.</desc>
+
+      <defs>
+        <marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+
+      <!-- lineaariset nuolet -->
+      <line class="flow" x1="142" y1="360" x2="201" y2="360" marker-end="url(#ah)"/>
+      <line class="flow" x1="337" y1="360" x2="424" y2="360" marker-end="url(#ah)"/>
+      <line class="flow" x1="686" y1="360" x2="795" y2="360" marker-end="url(#ah)"/>
+      <line class="flow" x1="913" y1="360" x2="967" y2="360" marker-end="url(#ah)"/>
+
+      <!-- sykli-kaaret -->
+      <path class="cyc" d="M494,326 Q555,294 616,326" marker-end="url(#ah)"/>
+      <path class="cyc" d="M616,394 Q555,426 494,394" marker-end="url(#ah)"/>
+      <path class="cyc-opt" d="M855,382 Q760,478 667,392" marker-end="url(#ah)"/>
+
+      <text class="s-edge" x="740" y="348" text-anchor="middle">kun toimii</text>
+      <text class="s-edge" x="772" y="462" text-anchor="middle">jos säätöä tarvitaan</text>
+
+      <!-- solmut -->
+      <rect class="pill" x="50" y="338" width="90" height="44" rx="22"/>
+      <text class="s-pill" x="95" y="365" text-anchor="middle">Briiffi</text>
+      <rect class="pill" x="205" y="338" width="130" height="44" rx="22"/>
+      <text class="s-pill" x="270" y="365" text-anchor="middle">Suunnittelu</text>
+      <circle class="loopnode" cx="470" cy="360" r="42"/>
+      <text class="s-loop" x="470" y="365" text-anchor="middle">Maistatus</text>
+      <circle class="loopnode" cx="640" cy="360" r="42"/>
+      <text class="s-loop" x="640" y="365" text-anchor="middle">Iterointi</text>
+      <rect class="pill" x="799" y="338" width="112" height="44" rx="22"/>
+      <text class="s-pill" x="855" y="365" text-anchor="middle">Koesarja</text>
+      <rect class="pill-goal" x="971" y="338" width="128" height="44" rx="22"/>
+      <text class="s-goal" x="1035" y="365" text-anchor="middle">Tuotantoon</text>
+
+      <!-- callout-viivat (1,3,5 ylös · 2,4,6 alas) -->
+      <line class="lead" x1="95"   y1="338" x2="95"   y2="280"/><circle class="leaddot" cx="95"   cy="338" r="2.5"/>
+      <line class="lead" x1="470"  y1="318" x2="470"  y2="280"/><circle class="leaddot" cx="470" cy="318" r="2.5"/>
+      <line class="lead" x1="855"  y1="338" x2="855"  y2="280"/><circle class="leaddot" cx="855"  cy="338" r="2.5"/>
+      <line class="lead" x1="270"  y1="382" x2="270"  y2="470"/><circle class="leaddot" cx="270"  cy="382" r="2.5"/>
+      <line class="lead" x1="640"  y1="402" x2="640"  y2="470"/><circle class="leaddot" cx="640"  cy="402" r="2.5"/>
+      <line class="lead" x1="1035" y1="382" x2="1035" y2="470"/><circle class="leaddot" cx="1035" cy="382" r="2.5"/>
+
+      <!-- kuvaukset: yläpuoli (1,3,5) -->
+      <foreignObject x="8" y="130" width="220" height="150">
+        <div xmlns="http://www.w3.org/1999/xhtml" class="co">
+          <p class="co-t"><span class="co-n">1</span>Briiffi</p>
+          <p class="co-d">[Luonnos: Kartoitamme tarpeen, tavoitteen ja reunaehdot — mm. allergeenit, säilyvyys, hinta ja volyymi.]</p>
+        </div>
+      </foreignObject>
+      <foreignObject x="360" y="130" width="220" height="150">
+        <div xmlns="http://www.w3.org/1999/xhtml" class="co">
+          <p class="co-t"><span class="co-n">3</span>Maistatus</p>
+          <p class="co-d">[Luonnos: Valmistamme ensimmäiset versiot Makupajan testikeittiössä ja maistatamme ne kanssasi paikan päällä.]</p>
+        </div>
+      </foreignObject>
+      <foreignObject x="745" y="130" width="220" height="150">
+        <div xmlns="http://www.w3.org/1999/xhtml" class="co">
+          <p class="co-t"><span class="co-n">5</span>Koesarja</p>
+          <p class="co-d">[Luonnos: Testaamme reseptin pienemmässä tuotantomittakaavassa ja varmistamme, että ratkaisu skaalautuu tasalaatuisena.]</p>
+        </div>
+      </foreignObject>
+
+      <!-- kuvaukset: alapuoli (2,4,6) -->
+      <foreignObject x="160" y="470" width="220" height="150">
+        <div xmlns="http://www.w3.org/1999/xhtml" class="co">
+          <p class="co-t"><span class="co-n">2</span>Suunnittelu</p>
+          <p class="co-d">[Luonnos: Valitsemme raaka-aineet ja lähestymistavan ja ehdotamme yhden tai useamman suunnan kokeiltavaksi.]</p>
+        </div>
+      </foreignObject>
+      <foreignObject x="530" y="470" width="220" height="150">
+        <div xmlns="http://www.w3.org/1999/xhtml" class="co">
+          <p class="co-t"><span class="co-n">4</span>Iterointi</p>
+          <p class="co-d">[Luonnos: Hiomme reseptiä palautteesi pohjalta — makua, koostumusta ja ominaisuuksia — kunnes lopputulos toimii.]</p>
+        </div>
+      </foreignObject>
+      <foreignObject x="892" y="470" width="220" height="150">
+        <div xmlns="http://www.w3.org/1999/xhtml" class="co">
+          <p class="co-t"><span class="co-n">6</span>Tuotantoon</p>
+          <p class="co-d">[Luonnos: Viemme valmiin tuotteen tuotantoon ja jatkamme kehityskumppanina myös sen jälkeen.]</p>
+        </div>
+      </foreignObject>
+    </svg>
+
+    <p class="note">Pääsytaso: avoin. Kuvaukset luonnos — Condite viimeistelee. Tonaaliset DS-värit. Vaakamalli on desktop-painotteinen.</p>
+  </section>
+</div>
+</body>
+</html>

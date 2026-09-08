@@ -1,0 +1,1277 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Condite — elintarvikealan raaka-aineet ja kehityskumppani</title>
+<meta name="description" content="Condite on elintarvikealan raaka-aineiden kehityskumppani: laaja ammattivalikoima, oma Makupaja-testikeittiö ja räätälöinti leipomoille, ravintoloille, teollisuudelle ja private labelille.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!--
+  CONDITE.FI — ETUSIVU · KIILLOTETTU WIREFRAME (FI)
+  Tuotos: itsenäinen HTML-prototyyppi. Ei build-vaihetta, ei brändiväriä/-fonttia/-kuvia.
+  Kaikki sisältö PAGE-objektissa; render-IIFE rakentaa DOMin. Token-kerros :root-lohkossa —
+  brändiarvot pudotetaan myöhemmin yhdestä paikasta koskematta rakenteeseen.
+  Sektiot vastaavat brief §5.0–5.8 ja kääntyvät 1:1 ACF-lohkoiksi WP-vaiheessa.
+-->
+<style>
+  :root {
+    /* ---- Väri-tokenit · PEHMENNETTY TONAALINEN SININEN (kanoninen DS, hyv. 12.6.2026) ---- */
+    --c-bg: #ffffff;
+    --c-bg-soft: #f7f7f7;
+    --c-bg-tint: #eef6fb;          /* vaalea sinisävy taustalohkoille */
+    --c-text: #1d1d1f;
+    --c-text-2: #555555;           /* sekundääriteksti — WCAG AA valkoisella */
+    --c-text-muted: #6f6f6f;       /* muted — AA; ei vaaleampaa */
+    --c-border: #e3e3e3;
+    --c-border-strong: #cfcfcf;
+    --c-divider: #d8d8d8;
+    --c-suits-border: #b7def4;     /* sinisten taustalohkojen reunaviiva */
+    --c-placeholder-bg: #ececec;
+    --c-placeholder-border: #c8c8c8;
+    --c-accent: #7fc8ec;           /* täyttö: tonaalinen sininen (napit/aktiiviset/viivat) */
+    --c-accent-ink: #0a6e9b;       /* linkit / eyebrow / ikonit — AA valkoisella */
+    --c-on-accent: #0a4f72;        /* tumma teksti sinisen täytön päällä */
+    --c-accent-soft: #e3f2fb;      /* pehmeä sininen täyttö (ikonichipit, tagit) */
+    --c-tag-bg: #e3f2fb;
+    /* ---- Tier-merkinnät · hillityt, haalistetut merkkivärit (eivät brändiväri) ---- */
+    --c-tier-open: #5d7a6a;       /* avoin */
+    --c-tier-lead: #7a6553;       /* liidi */
+    --c-tier-login: #586a82;      /* webshop-login */
+    /* ---- Radii ---- */
+    --r-sm: 4px; --r-md: 8px; --r-lg: 12px;
+    /* ---- Layout ---- */
+    --container: 1200px; --pad: 24px;
+    /* ---- Spacing-skaala ---- */
+    --gap-8: 8px; --gap-16: 16px; --gap-24: 24px; --gap-32: 32px;
+    --gap-48: 48px; --gap-64: 64px; --gap-96: 96px;
+    /* ---- Tyyppiskaala ---- */
+    --fs-eyebrow: 12px; --fs-body: 16px; --fs-small: 14px;
+    --fs-h1: 46px; --fs-h2: 32px; --fs-h3: 20px; --fs-stat: 54px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: var(--fs-body); line-height: 1.55; color: var(--c-text);
+    background: var(--c-bg); -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  p { margin: 0 0 0.7em; }
+  h1, h2, h3 { margin: 0; line-height: 1.2; letter-spacing: -0.01em; }
+  h1 { font-size: var(--fs-h1); } h2 { font-size: var(--fs-h2); } h3 { font-size: var(--fs-h3); }
+  ul { margin: 0; padding: 0; }
+  a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--c-accent-ink); outline-offset: 2px; }
+  .skip { position: absolute; left: -9999px; top: 0; background: var(--c-text); color: #fff; padding: 8px 16px; z-index: 200; border-radius: var(--r-sm); }
+  .skip:focus { left: 8px; top: 8px; }
+  .container { max-width: var(--container); margin: 0 auto; padding-left: var(--pad); padding-right: var(--pad); }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+  /* Wireframe-huomautusnauha (handoff-konteksti, ei osa sivua) */
+  .wf-note { background: #2b2b30; color: #e9e9ee; font-size: 12.5px; }
+  .wf-note .container { display: flex; gap: var(--gap-16); align-items: center; padding-top: 8px; padding-bottom: 8px; flex-wrap: wrap; }
+  .wf-note strong { color: #fff; }
+  .wf-note .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; vertical-align: middle; margin-right: 5px; }
+
+  /* Utility-rivi */
+  .utility { background: var(--c-bg-soft); border-bottom: 1px solid var(--c-border); font-size: var(--fs-small); color: var(--c-text-2); }
+  .utility-inner { min-height: 38px; display: flex; align-items: center; justify-content: flex-end; gap: var(--gap-16); }
+  .utility-item { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; background: none; border: 0; font: inherit; color: inherit; cursor: pointer; padding: 4px 0; }
+  .utility-langs { display: inline-flex; align-items: center; gap: 2px; }
+  .utility-langs a { text-decoration: none; padding: 3px 7px; border-radius: var(--r-sm); color: var(--c-text-muted); }
+  .utility-langs a[aria-current="true"] { background: #e1e1e4; color: var(--c-text); font-weight: 700; }
+
+  /* Pää-navigaatio (sticky) */
+  .header { position: sticky; top: 0; z-index: 50; background: #fff; border-bottom: 1px solid var(--c-border); }
+  .nav { display: flex; align-items: center; justify-content: space-between; height: 74px; gap: var(--gap-24); }
+  .logo { display: inline-flex; align-items: center; text-decoration: none; color: var(--c-text); font-weight: 700; }
+  .logo-box { width: 120px; height: 38px; background: var(--c-placeholder-bg); border: 1px dashed var(--c-placeholder-border); display: flex; align-items: center; justify-content: center; color: var(--c-text-2); font-size: var(--fs-small); border-radius: var(--r-sm); letter-spacing: .5px; }
+  .nav-main { display: flex; align-items: center; gap: var(--gap-16); }
+  .nav-list { list-style: none; margin: 0; padding: 0; display: flex; gap: 2px; }
+  .nav-list a { text-decoration: none; padding: 8px 13px; border-radius: var(--r-sm); font-weight: 500; color: var(--c-text); display: inline-flex; align-items: center; }
+  .nav-list a:hover { background: var(--c-bg-soft); }
+  .nav-list a[aria-current="page"] { color: var(--c-accent-ink); font-weight: 700; }
+  .nav-list > li.has-dropdown { position: relative; }
+  .nav-list > li > a[aria-haspopup="true"]::after { content: "▾"; font-size: 9px; margin-left: 5px; color: var(--c-text-muted); }
+  .nav-dropdown { position: absolute; top: 100%; left: 0; min-width: 240px; background: #fff; border: 1px solid var(--c-border); border-radius: var(--r-md); box-shadow: 0 8px 24px rgba(0,0,0,.09); padding: 8px 0; margin-top: 4px; list-style: none; display: none; z-index: 60; }
+  .nav-list > li.has-dropdown:hover > .nav-dropdown,
+  .nav-list > li.has-dropdown:focus-within > .nav-dropdown,
+  .nav-list > li.has-dropdown.open > .nav-dropdown { display: block; }
+  .nav-dropdown li a { display: block; padding: 9px 16px; font-size: var(--fs-small); color: var(--c-text); font-weight: 500; }
+  .nav-dropdown li a:hover { background: var(--c-bg-soft); color: var(--c-accent-ink); }
+  .ext-ico { font-size: 10px; margin-left: 5px; opacity: .7; vertical-align: baseline; }
+  .nav-toggle { display: none; background: #fff; border: 1px solid var(--c-border-strong); border-radius: var(--r-sm); width: 44px; height: 44px; font-size: 18px; cursor: pointer; color: var(--c-text); align-items: center; justify-content: center; }
+
+  /* Painikkeet */
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 22px; border-radius: var(--r-sm); font-weight: 600; font-size: var(--fs-body); text-decoration: none; border: 1.5px solid transparent; cursor: pointer; line-height: 1.2; }
+  .btn-primary { background: var(--c-accent); color: var(--c-on-accent); border-color: var(--c-accent); }
+  .btn-primary:hover { filter: brightness(0.95); }
+  .btn-outline { background: #fff; color: var(--c-accent-ink); border-color: var(--c-accent-ink); }
+  .btn-outline:hover { background: var(--c-accent-soft); border-color: var(--c-accent-ink); }
+  .btn-sm { padding: 9px 16px; font-size: var(--fs-small); }
+  .btn-link { color: var(--c-accent-ink); text-decoration: none; font-weight: 600; display: inline-flex; gap: 6px; align-items: center; }
+  .btn-link:hover { text-decoration: underline; }
+
+  /* Tier-merkki (avoin / liidi / login) */
+  .tier { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: .3px; text-transform: uppercase; color: var(--c-text-2); }
+  .tier .tdot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+  .tier-open .tdot { background: var(--c-tier-open); }
+  .tier-lead .tdot { background: var(--c-tier-lead); }
+  .tier-login .tdot { background: var(--c-tier-login); }
+
+  /* Kuvan paikkamerkki */
+  .ph { background: var(--c-placeholder-bg);
+        background-image: repeating-linear-gradient(45deg, transparent, transparent 9px, rgba(0,0,0,.035) 9px, rgba(0,0,0,.035) 10px);
+        border: 1px dashed var(--c-placeholder-border); border-radius: var(--r-md); display: flex; align-items: center; justify-content: center; color: var(--c-text-2); font-size: var(--fs-small); text-align: center; padding: var(--gap-16); gap: 8px; }
+  .ph i { font-size: 18px; opacity: .6; }
+
+  /* Sektiot + otsikkopää */
+  .block-section { padding: var(--gap-64) 0 0; }
+  .block-section:last-of-type { padding-bottom: var(--gap-64); }
+  .block-section[id] { scroll-margin-top: 150px; }
+  .block-section.tinted { background: var(--c-bg-tint); border-top: 1px solid var(--c-suits-border); border-bottom: 1px solid var(--c-suits-border); padding-bottom: var(--gap-64); margin-top: var(--gap-64); }
+  /* Neutraali harmaa taustalohko — käytetään kun kaksi taustalohkoa on peräkkäin,
+     jotta ne erottuvat toisistaan sävyllä eivätkä valkoisella välikaistalla. */
+  .block-section.soft { background: var(--c-bg-soft); border-top: 1px solid var(--c-border); border-bottom: 1px solid var(--c-border); padding-bottom: var(--gap-64); margin-top: var(--gap-64); }
+  .block-section.tinted + .block-section, .block-section.soft + .block-section { padding-top: var(--gap-64); }
+  /* Peräkkäiset taustalohkot kiinni toisissaan: ei valkoista rakoa, ei tuplaviivaa. */
+  .block-section.tinted + .block-section.tinted,
+  .block-section.tinted + .block-section.soft,
+  .block-section.soft + .block-section.tinted,
+  .block-section.soft + .block-section.soft { margin-top: 0; }
+  .block-section.soft:has(+ .block-section.tinted),
+  .block-section.tinted:has(+ .block-section.soft),
+  .block-section.tinted:has(+ .block-section.tinted),
+  .block-section.soft:has(+ .block-section.soft) { border-bottom: 0; }
+  .section-head { margin-bottom: var(--gap-32); max-width: 760px; }
+  .section-head .eyebrow { font-size: var(--fs-eyebrow); color: var(--c-accent-ink); font-weight: 700; letter-spacing: .5px; text-transform: uppercase; margin-bottom: var(--gap-8); }
+  .section-head p { margin-top: var(--gap-16); margin-bottom: 0; color: var(--c-text-2); }
+  .head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--gap-24); flex-wrap: wrap; margin-bottom: var(--gap-32); }
+  .head-row .section-head { margin-bottom: 0; }
+
+  /* Hero (split) */
+  .hero-split { display: grid; grid-template-columns: 1.1fr 1fr; gap: var(--gap-48); align-items: center; }
+  .hero-slogan { font-size: var(--fs-small); color: var(--c-accent-ink); font-weight: 700; letter-spacing: .5px; text-transform: uppercase; margin-bottom: var(--gap-16); }
+  .hero-split h1 { margin-bottom: var(--gap-24); }
+  .hero-sub { font-size: 18px; color: var(--c-text-2); margin-bottom: var(--gap-32); max-width: 560px; }
+  .hero-ctas { display: flex; flex-wrap: wrap; gap: var(--gap-16); align-items: center; }
+  .hero-visual { aspect-ratio: 4 / 3; min-height: 320px; }
+
+  /* Segmenttipolut — vaakalista (kuva · otsikko · kuvaus · CTA) */
+  .seg-list { border-top: 1px solid var(--c-border); }
+  .seg-row { display: grid; grid-template-columns: 96px minmax(150px, 1fr) 1.7fr auto; grid-template-areas: "thumb title desc go"; gap: var(--gap-32); align-items: center; padding: var(--gap-24) 0; border-bottom: 1px solid var(--c-border); text-decoration: none; color: inherit; transition: background 120ms ease; }
+  .seg-row:hover { background: var(--c-bg-soft); }
+  .seg-thumb { grid-area: thumb; width: 96px; height: 96px; aspect-ratio: 1; min-height: 0; padding: 6px; font-size: 11px; }
+  .seg-thumb i { display: none; }
+  .seg-row-title { grid-area: title; font-size: var(--fs-h3); font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; text-decoration-color: var(--c-border-strong); }
+  .seg-row:hover .seg-row-title { text-decoration-color: var(--c-accent-ink); }
+  .seg-row-desc { grid-area: desc; font-size: var(--fs-small); color: var(--c-text-2); margin: 0; }
+  .seg-row-go { grid-area: go; color: var(--c-accent-ink); font-weight: 600; font-size: var(--fs-small); display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; justify-self: end; }
+
+  /* USP-ruudukko (ei-linkki) */
+  .usp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gap-24); }
+  .usp-card { border: 1px solid var(--c-border); border-radius: var(--r-md); padding: var(--gap-24); background: #fff; display: flex; flex-direction: column; gap: var(--gap-8); }
+  .usp-ico { color: var(--c-accent-ink); font-size: 22px; margin-bottom: 4px; }
+  .usp-card h3 { font-size: 17px; } .usp-card p { font-size: var(--fs-small); color: var(--c-text-2); margin: 0; }
+
+  /* Stat-ruudukko */
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--gap-32); margin-top: var(--gap-48); }
+  .stat { text-align: center; padding: var(--gap-16) var(--gap-24); border-left: 1px solid var(--c-border); }
+  .stat:first-child { border-left: 0; }
+  .stat-number { font-size: var(--fs-stat); font-weight: 700; line-height: 1; letter-spacing: -.02em; margin-bottom: var(--gap-8); color: var(--c-accent-ink); }
+  .stat-label { font-size: var(--fs-small); color: var(--c-text-2); }
+
+  /* Nostokortit (tuotteet / reseptit) */
+  .nost-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--gap-24); }
+  .nost-card { border: 1px solid var(--c-border); border-radius: var(--r-md); background: #fff; overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: inherit; transition: transform 120ms ease, box-shadow 120ms ease; }
+  .nost-card:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,.07); }
+  .nost-media { aspect-ratio: 16 / 10; min-height: 0; border: 0; border-bottom: 1px dashed var(--c-placeholder-border); border-radius: 0; }
+  .nost-body { padding: var(--gap-16) var(--gap-24) var(--gap-24); display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .nost-body h3 { font-size: 16px; }
+  .nost-kicker { font-size: var(--fs-eyebrow); text-transform: uppercase; letter-spacing: .5px; color: var(--c-text-muted); font-weight: 700; }
+  .nost-body p { font-size: var(--fs-small); color: var(--c-text-2); margin: 0; }
+  .nost-go { margin-top: auto; padding-top: var(--gap-8); color: var(--c-accent-ink); font-weight: 600; font-size: var(--fs-small); display: inline-flex; align-items: center; gap: 6px; }
+  /* Kampanjalohko — yksi näyttävä, Conditen itse ylläpitämä nosto (yksi kohde: kampanjasivu) */
+  .camp-section { margin-top: var(--gap-64); background: #0a4f72; color: #cfe3ef; padding: var(--gap-64) 0; }
+  .camp-section[id] { scroll-margin-top: 150px; }
+  .camp-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: var(--gap-48); align-items: center; }
+  .camp-badge { display: inline-flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 700; letter-spacing: .08em;
+                text-transform: uppercase; color: var(--c-on-accent); background: var(--c-accent); border-radius: 999px; padding: 5px 12px; }
+  .camp-copy h2 { color: #fff; font-size: clamp(28px, 3.2vw, 38px); letter-spacing: -.02em; margin: var(--gap-16) 0 var(--gap-16); }
+  .camp-lead { font-size: 18px; color: #cfe3ef; margin: 0 0 var(--gap-16); max-width: 52ch; }
+  .camp-meta { font-size: var(--fs-small); color: #9fc6dc; margin: 0 0 var(--gap-32); }
+  .camp-ctas { display: flex; flex-wrap: wrap; gap: var(--gap-24); align-items: center; }
+  .camp-link { color: #cfe3ef; font-weight: 600; font-size: var(--fs-small); display: inline-flex; align-items: center; gap: 6px;
+               text-decoration: underline; text-underline-offset: 3px; }
+  .camp-link:hover { color: #fff; }
+  .camp-media { aspect-ratio: 4 / 3; min-height: 300px; background: rgba(255,255,255,.06);
+                background-image: repeating-linear-gradient(45deg, transparent, transparent 9px, rgba(255,255,255,.05) 9px, rgba(255,255,255,.05) 10px);
+                border-color: rgba(255,255,255,.35); color: #b3d4e6; }
+  .camp-editnote { grid-column: 1 / -1; display: flex; gap: 10px; align-items: flex-start; margin-top: var(--gap-8);
+                   border: 1px dashed rgba(255,255,255,.35); border-radius: var(--r-md); padding: var(--gap-16);
+                   font-size: var(--fs-small); color: #b3d4e6; }
+  .camp-editnote i { color: #9fc6dc; margin-top: 2px; }
+
+  /* Ajankohtaiset artikkelit ja julkaisut — yksi lista, tyyppi metatietona (ei omaa lohkoa/taksonomiaa per tyyppi) */
+  .news-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--c-border); }
+  .news-row { display: grid; grid-template-columns: 40px 132px 1fr auto; gap: var(--gap-24); align-items: center;
+              padding: var(--gap-24) 0; border-bottom: 1px solid var(--c-border); transition: background 120ms ease; }
+  .news-row:hover { background: var(--c-bg-soft); }
+  .news-ico { width: 40px; height: 40px; border-radius: var(--r-sm); background: var(--c-accent-soft); color: var(--c-accent-ink);
+              display: flex; align-items: center; justify-content: center; font-size: 16px; flex: none; }
+  .news-meta { display: flex; flex-direction: column; gap: 2px; }
+  .news-type { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--c-accent-ink); }
+  .news-date { font-size: var(--fs-small); color: var(--c-text-2); font-variant-numeric: tabular-nums; }
+  .news-main { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .news-title { font-weight: 700; font-size: 17px; color: var(--c-text); text-decoration: underline;
+                text-decoration-thickness: 2px; text-underline-offset: 3px; text-decoration-color: var(--c-border-strong); }
+  .news-row:hover .news-title { text-decoration-color: var(--c-accent-ink); }
+  .news-text { font-size: var(--fs-small); color: var(--c-text-2); }
+  .news-go { color: var(--c-accent-ink); font-weight: 600; font-size: var(--fs-small); display: inline-flex; align-items: center;
+             gap: 6px; white-space: nowrap; justify-self: end; text-decoration: none; }
+  .news-go:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .news-actions { margin-top: var(--gap-24); display: flex; flex-wrap: wrap; gap: var(--gap-16); align-items: center; }
+
+  .ev-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--c-border); }
+  .ev-row { display: grid; grid-template-columns: 170px 1fr 1fr; gap: var(--gap-16); align-items: baseline;
+            padding: var(--gap-16) 0; border-bottom: 1px solid var(--c-border); }
+  .ev-when { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .ev-what { font-weight: 600; }
+  .ev-where { color: var(--c-text-2); font-size: var(--fs-small); }
+  .ev-actions { margin-top: var(--gap-24); }
+  .subhead { font-size: var(--fs-h3); margin: 0 0 var(--gap-24); }
+  .empty-note { border: 1px dashed var(--c-placeholder-border); border-radius: var(--r-md); background: var(--c-bg-soft); padding: var(--gap-16) var(--gap-24); font-size: var(--fs-small); color: var(--c-text-muted); display: flex; align-items: center; gap: 10px; margin-top: var(--gap-24); }
+
+  /* Makupaja (anchor-lohko: teksti + CTA-aside) */
+  /* Kehityskumppanuus — kaksi rinnakkaista erottautujaa (Makupaja + private label).
+     Laura 28.8.2026: molemmat ovat merkittäviä kilpailuetuja → sama koko, sama taso, sivun yläosaan. */
+  .duo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap-32); }
+  .duo-card { background: #fff; border: 1px solid var(--c-border); border-radius: var(--r-lg);
+              padding: var(--gap-32); display: flex; flex-direction: column; gap: var(--gap-16); }
+  .duo-media { aspect-ratio: 16 / 9; min-height: 0; }
+  .duo-card h3 { font-size: 22px; letter-spacing: -.01em; }
+  .duo-lead { color: var(--c-text-2); margin: 0; font-size: 16px; }
+  .duo-card .ab-points { margin-top: var(--gap-8); }
+  .duo-foot { margin-top: auto; padding-top: var(--gap-8); display: grid; gap: var(--gap-8); }
+  .duo-foot .btn { justify-content: center; }
+
+  .anchor-block { display: grid; grid-template-columns: 1.3fr 1fr; gap: var(--gap-48); align-items: start; }
+  .ab-lead { color: var(--c-text-2); margin: 0 0 var(--gap-24); font-size: 17px; max-width: 56ch; }
+  .ab-points { list-style: none; display: grid; gap: var(--gap-16); margin: 0; }
+  .ab-points li { display: flex; align-items: flex-start; gap: var(--gap-16); }
+  .ab-points .ico { flex: none; width: 28px; height: 28px; border-radius: 50%; background: var(--c-accent-soft); color: var(--c-accent-ink); display: flex; align-items: center; justify-content: center; font-size: 13px; }
+  .ab-points strong { display: block; font-size: 15px; } .ab-points span.t { font-size: var(--fs-small); color: var(--c-text-2); }
+  .ab-aside { background: #fff; border: 1px solid var(--c-border); border-radius: var(--r-lg); padding: var(--gap-24); display: grid; gap: var(--gap-16); align-content: start; }
+  .ab-aside .av-media { aspect-ratio: 16 / 9; min-height: 0; }
+  .ab-aside .btn { width: 100%; justify-content: center; }
+  .ab-micro { font-size: var(--fs-small); color: var(--c-text-muted); margin: 0; text-align: center; }
+
+  /* ===== Referenssit: kolme omaa lohkoa (case-tarinat · brändit · sertifikaatit) ===== */
+
+  /* 1) Case-tarinat — kuva + lainaus + asiakas + "lue koko juttu" */
+  .case-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap-32); }
+  .case-card { display: flex; flex-direction: column; border: 1px solid var(--c-border); border-radius: var(--r-lg); background: #fff; overflow: hidden; transition: box-shadow 120ms ease, transform 120ms ease; }
+  .case-card:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(0,0,0,.08); }
+  .case-media { aspect-ratio: 16 / 9; min-height: 0; border: 0; border-bottom: 1px dashed var(--c-placeholder-border); border-radius: 0; }
+  .case-body { padding: var(--gap-32); display: flex; flex-direction: column; gap: var(--gap-16); flex: 1; }
+  .case-cat { align-self: flex-start; font-size: var(--fs-eyebrow); text-transform: uppercase; letter-spacing: .5px; font-weight: 700; color: var(--c-accent-ink); background: var(--c-accent-soft); padding: 4px 11px; border-radius: 999px; }
+  .case-qmark { color: var(--c-border-strong); font-size: 22px; line-height: 1; }
+  .case-quote { font-size: 19px; line-height: 1.5; color: var(--c-text); font-weight: 500; margin: 0; }
+  .case-author { display: flex; align-items: center; gap: var(--gap-16); }
+  .case-avatar { width: 46px; height: 46px; border-radius: 50%; flex: none; aspect-ratio: 1; min-height: 0; padding: 0; font-size: 10px; }
+  .case-author .ca-name { font-weight: 700; font-size: var(--fs-small); display: block; }
+  .case-author .ca-company { font-size: var(--fs-small); color: var(--c-text-2); }
+  .case-link { margin-top: auto; color: var(--c-accent-ink); font-weight: 600; font-size: var(--fs-small); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+  .case-link:hover { text-decoration: underline; }
+
+  /* 2) Brändit — logo-seinä (paljon logoja) */
+  .brand-wall { display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--gap-16); }
+  .brand-tile { background: #fff; border: 1px solid var(--c-border); border-radius: var(--r-md); height: 76px; display: flex; align-items: center; justify-content: center; color: var(--c-text-2); font-weight: 600; font-size: var(--fs-small); text-align: center; padding: 8px; }
+  .brand-tile.more { background: transparent; border-style: dashed; color: var(--c-text-muted); font-weight: 700; }
+
+  /* 3) Sertifikaatit — ikonikortit + Orkla-ankkuri (tumma banneri) */
+  .cert-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: var(--gap-24); }
+  .cert-card { border: 1px solid var(--c-border); border-radius: var(--r-md); background: #fff; padding: var(--gap-24); display: flex; gap: var(--gap-16); align-items: flex-start; }
+  .cert-ico { width: 46px; height: 46px; border-radius: var(--r-md); background: var(--c-accent-soft); color: var(--c-accent-ink); display: flex; align-items: center; justify-content: center; font-size: 19px; flex: none; }
+  .cert-card h3 { font-size: 15px; margin: 0 0 2px; }
+  .cert-card p { font-size: var(--fs-small); color: var(--c-text-2); margin: 0; }
+  .orkla-banner { display: flex; align-items: center; gap: var(--gap-24); background: #0a4f72; color: #cfe3ef; border-radius: var(--r-lg); padding: var(--gap-32); margin-top: var(--gap-32); }
+  .orkla-banner .ob-ico { width: 56px; height: 56px; border-radius: 50%; background: #0d6088; border: 1px solid #2b80a8; color: #dceefb; display: flex; align-items: center; justify-content: center; font-size: 22px; flex: none; }
+  .orkla-banner strong { color: #fff; display: block; font-size: var(--fs-h3); margin-bottom: 2px; }
+  .orkla-banner p { margin: 0; font-size: var(--fs-small); color: #b3d4e6; max-width: 56ch; }
+
+  /* Tuotekategoriat — tiivis 3×3-ruudukko (kompaktit kortit) */
+  .cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gap-24); }
+  .cat-card { border: 1px solid var(--c-border); border-radius: var(--r-md); background: #fff; overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: inherit; transition: transform 120ms ease, box-shadow 120ms ease; }
+  .cat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.06); }
+  .cat-media { aspect-ratio: 16 / 9; min-height: 0; border: 0; border-bottom: 1px dashed var(--c-placeholder-border); border-radius: 0; }
+  .cat-body { padding: var(--gap-16); display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .cat-body h3 { font-size: 15px; }
+  .cat-body p { font-size: 13.5px; color: var(--c-text-2); margin: 0; }
+  .cat-go { margin-top: auto; padding-top: var(--gap-8); color: var(--c-accent-ink); font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; }
+
+  /* Brändit ja laatu — kolme osaa (omat brändit · logoseinä · sertifioinnit) */
+  .trust-part { margin-top: var(--gap-48); }
+  .trust-subhead { font-size: var(--fs-h3); margin: 0; }
+  .ownbrand-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--gap-24); }
+  .ownbrand-card { background: #fff; border: 1px solid var(--c-border); border-radius: var(--r-md); padding: var(--gap-24); display: flex; flex-direction: column; gap: 6px; text-decoration: none; color: inherit; transition: transform 120ms ease, box-shadow 120ms ease; }
+  .ownbrand-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.06); }
+  .ownbrand-logo { aspect-ratio: 5 / 2; min-height: 0; margin-bottom: var(--gap-8); }
+  .ownbrand-cat { font-size: 11px; text-transform: uppercase; letter-spacing: .5px; font-weight: 700; color: var(--c-accent-ink); }
+  .ownbrand-card h3 { font-size: 16px; }
+  .ownbrand-card p { font-size: 13.5px; color: var(--c-text-2); margin: 0; }
+  .ownbrand-go { margin-top: auto; padding-top: var(--gap-8); color: var(--c-accent-ink); font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; }
+  .brand-tile.placeholder { background: var(--c-placeholder-bg); background-image: repeating-linear-gradient(45deg, transparent, transparent 9px, rgba(0,0,0,.035) 9px, rgba(0,0,0,.035) 10px); border-style: dashed; color: var(--c-text-muted); font-weight: 500; font-size: 11px; }
+
+  /* Loppu-CTA: lomake + yhteys (kaksi yleisöä) */
+  .cta-form-layout { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--gap-48); align-items: start; }
+  .form-block { background: #fff; border: 1px solid var(--c-border); border-radius: var(--r-lg); padding: var(--gap-32); }
+  .form-block .hs-note { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; color: var(--c-text-muted); border: 1px dashed var(--c-placeholder-border); border-radius: 12px; padding: 3px 10px; margin-bottom: var(--gap-16); }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap-16) var(--gap-24); }
+  .field { display: flex; flex-direction: column; gap: 6px; } .field.full { grid-column: 1 / -1; }
+  .field label { font-size: var(--fs-small); font-weight: 600; }
+  .field input, .field select, .field textarea { padding: 10px 12px; border: 1px solid var(--c-border-strong); border-radius: var(--r-sm); font: inherit; font-size: var(--fs-small); background: #fff; color: var(--c-text); }
+  .field textarea { min-height: 110px; resize: vertical; }
+  .form-actions { margin-top: var(--gap-24); display: flex; flex-direction: column; gap: var(--gap-8); align-items: flex-start; }
+  .form-micro { font-size: var(--fs-small); color: var(--c-text-muted); margin: 0; }
+  .form-states { margin-top: var(--gap-16); font-size: 12.5px; color: var(--c-text-muted); border-top: 1px dashed var(--c-border-strong); padding-top: var(--gap-16); }
+  .form-states b { color: var(--c-text-2); }
+  .cta-info { display: grid; gap: var(--gap-24); align-content: start; }
+  .login-card { border: 2px solid var(--c-accent); border-radius: var(--r-lg); padding: var(--gap-32); background: var(--c-accent-soft); display: grid; gap: var(--gap-16); }
+  .login-card h3 { font-size: var(--fs-h3); }
+  .login-card p { font-size: var(--fs-small); color: var(--c-text-2); margin: 0; }
+  .login-card .btn { width: 100%; justify-content: center; }
+  .info-card { border: 1px solid var(--c-border); border-radius: var(--r-md); padding: var(--gap-24); background: #fff; }
+  .info-card dl { display: grid; gap: var(--gap-16); margin: 0; }
+  .info-card dt { font-size: var(--fs-eyebrow); text-transform: uppercase; letter-spacing: .5px; color: var(--c-text-muted); font-weight: 700; margin-bottom: 2px; }
+  .info-card dd { margin: 0; font-size: var(--fs-small); color: var(--c-text-2); }
+  .info-card dd a { color: var(--c-accent-ink); font-weight: 600; text-decoration: none; }
+
+  /* Footer */
+  footer { background: #1a1a1c; color: #e8e8ea; padding-top: var(--gap-64); padding-bottom: var(--gap-32); margin-top: var(--gap-96); }
+  .footer-top { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.3fr; gap: var(--gap-32); padding-bottom: var(--gap-48); border-bottom: 1px solid #333; }
+  .footer-brand .logo-box { background: #2c2c30; border-color: #444; color: #c9c9cf; }
+  .footer-brand p { font-size: var(--fs-small); color: #b6b6bc; margin: var(--gap-16) 0 0; max-width: 30ch; }
+  .footer-col h4 { font-size: var(--fs-small); text-transform: uppercase; letter-spacing: 1px; margin: 0 0 var(--gap-16); color: #fff; }
+  .footer-col ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+  .footer-col a { text-decoration: none; color: #bcbcc2; font-size: var(--fs-small); }
+  .footer-col a:hover { color: #fff; }
+  .footer-news label { display: block; font-size: var(--fs-small); color: #b6b6bc; margin-bottom: 8px; }
+  .footer-news .news-row { display: flex; gap: 8px; }
+  .footer-news input { flex: 1; min-width: 0; padding: 10px 12px; border-radius: var(--r-sm); border: 1px solid #444; background: #232327; color: #fff; font: inherit; font-size: var(--fs-small); }
+  .footer-news button { padding: 10px 16px; border-radius: var(--r-sm); border: 0; background: #fff; color: #1a1a1c; font-weight: 700; font-size: var(--fs-small); cursor: pointer; }
+  .footer-bottom { display: flex; justify-content: space-between; gap: var(--gap-24); padding-top: var(--gap-24); flex-wrap: wrap; font-size: 12px; color: #8a8a90; }
+  .footer-bottom-links { display: flex; gap: var(--gap-24); flex-wrap: wrap; }
+  .footer-bottom-links a { color: #8a8a90; text-decoration: none; }
+  .footer-bottom-links a:hover { color: #fff; }
+
+  /* Responsiivisuus */
+  @media (max-width: 960px) {
+    :root { --fs-h1: 36px; --fs-h2: 28px; --fs-stat: 42px; }
+    .anchor-block { grid-template-columns: 1fr; gap: var(--gap-32); }
+    .cta-form-layout { grid-template-columns: 1fr; gap: var(--gap-32); }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+    .ownbrand-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    :root { --fs-h1: 30px; --fs-h2: 24px; --fs-stat: 36px; }
+    .block-section { padding-top: var(--gap-48); }
+    .nav { height: auto; padding: var(--gap-16) 0; }
+    .nav-toggle { display: inline-flex; }
+    .nav-main { position: absolute; left: 0; right: 0; top: 100%; background: #fff; border-bottom: 1px solid var(--c-border); box-shadow: 0 12px 24px rgba(0,0,0,.08); flex-direction: column; align-items: stretch; gap: 0; padding: var(--gap-8) var(--pad) var(--gap-24); display: none; }
+    .header .container { position: relative; }
+    .nav-main.open { display: flex; }
+    .nav-list { flex-direction: column; gap: 0; }
+    .nav-list a { padding: 12px 8px; border-radius: 0; border-bottom: 1px solid var(--c-border); }
+    .nav-dropdown { position: static; display: block; box-shadow: none; border: 0; border-bottom: 1px solid var(--c-border); border-radius: 0; padding: 0 0 8px 12px; margin: 0; }
+    .nav-list > li > a[aria-haspopup="true"]::after { display: none; }
+    .nav-main .btn { width: 100%; justify-content: center; margin-top: var(--gap-16); }
+    .utility-inner { justify-content: space-between; }
+    .hero-split { grid-template-columns: 1fr; gap: var(--gap-32); }
+    .hero-visual { min-height: 0; width: 100%; }
+    .hero-ctas .btn { flex: 1 1 auto; justify-content: center; }
+    .stat-grid { grid-template-columns: repeat(2, 1fr); gap: var(--gap-24); }
+    .stat { border-left: 0; border-top: 1px solid var(--c-border); padding-top: var(--gap-24); }
+    .stat:nth-child(-n+2) { border-top: 0; padding-top: var(--gap-16); }
+    .form-grid { grid-template-columns: 1fr; }
+    .case-grid { grid-template-columns: 1fr; }
+    .orkla-banner { flex-direction: column; align-items: flex-start; gap: var(--gap-16); padding: var(--gap-24); }
+    .footer-top { grid-template-columns: 1fr; gap: var(--gap-32); }
+    .cat-grid, .usp-grid { grid-template-columns: repeat(2, 1fr); }
+    .brand-wall { grid-template-columns: repeat(4, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .seg-row { grid-template-columns: 72px 1fr; grid-template-areas: "thumb title" "thumb desc" "go go"; gap: 4px var(--gap-16); align-items: start; }
+    .seg-thumb { width: 72px; height: 72px; align-self: start; }
+    .seg-row-title { font-size: 18px; }
+    .seg-row-go { justify-self: start; padding-top: var(--gap-8); }
+  }
+  @media (max-width: 480px) {
+    .usp-grid, .nost-grid, .case-grid, .cat-grid, .ownbrand-grid, .duo-grid { grid-template-columns: 1fr; }
+    .camp-grid { grid-template-columns: 1fr; gap: var(--gap-32); }
+    .camp-media { min-height: 220px; }
+    .ev-row { grid-template-columns: 1fr; gap: 2px; }
+    .news-row { grid-template-columns: 40px 1fr; gap: var(--gap-16); row-gap: var(--gap-8); }
+    .news-meta { flex-direction: row; gap: var(--gap-16); align-items: baseline; }
+    .news-main, .news-go { grid-column: 2; justify-self: start; }
+    .brand-wall { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+
+<!-- ============== PAGE CONFIG (sisällön ainoa lähde) ============== -->
+<script>
+const PAGE = {
+  hero: {
+    eyebrow: "Kehityskumppani, ei pelkkä toimittaja",
+    h1: "Kehityskumppanisi elintarvikealan raaka-aineissa",
+    subhead: "Laaja ammattivalikoima, oma tuotanto Naantalissa ja oma testikeittiö — leipomoille, ravintoloille, teollisuudelle ja private label -valmistukseen.",
+    primaryCta:   { label: "Löydä segmenttisi", href: "#segmentit" },
+    secondaryCta: { label: "Selaa tuotteet", href: "/tuotteet/" },
+    imageLabel: "Hero-media 4:3 — brändikuva (tuotekehitys / testikeittiö)"
+  },
+
+  segments: {
+    id: "segmentit",
+    eyebrow: "Kenelle",
+    heading: "Löydä oma polkusi",
+    intro: "Tunnista segmenttisi ja siirry juuri sinun tarpeisiisi koottuun sisältöön.",
+    items: [
+      { icon: "fa-solid fa-bread-slice", title: "Leipomot", text: "Raaka-aineet ja reseptit oman leivontasi kehittämiseen.", href: "/toimialat/leipomot/" },
+      { icon: "fa-solid fa-utensils", title: "Food Service", text: "Inspiraatio ja sovellettavuus ammattikeittiöön.", href: "/toimialat/food-service/" },
+      { icon: "fa-solid fa-industry", title: "Food Industry", text: "Kapasiteetti, räätälöinti ja toimitusvarmuus teollisuudelle.", href: "/toimialat/food-industry/" },
+      { icon: "fa-solid fa-flask", title: "Private Label", text: "Ideasta valmiiksi tuotteeksi — me hoidamme valmistuksen.", href: "/toimialat/private-label/" }
+    ]
+  },
+
+  usp: {
+    eyebrow: "Miksi Condite",
+    heading: "Kumppani, joka kehittää kanssasi",
+    intro: "Raaka-aineet, reseptit, testikeittiö ja räätälöinti saman kumppanin alta.",
+    items: [
+      // 28.8.2026: Makupaja ja private label EIVÄT ole enää USP-kortteina — ne saivat oman,
+      // isomman "Kehityskumppanuus"-lohkon heti tämän alle (Lauran palaute). Samat asiat kahdesti
+      // peräkkäin söisivät molempien tehon → tässä muut vahvuudet.
+      { icon: "fa-solid fa-user-tie", title: "Sovellusosaaminen toimialoittain", text: "Asiantuntijamme tuntevat leipomon, ammattikeittiön ja teollisuuden arjen." },
+      { icon: "fa-solid fa-book-open", title: "Reseptit ja sovellukset", text: "Valmiit sovellukset näyttävät, miten raaka-aine toimii käytännössä." },
+      { icon: "fa-solid fa-layer-group", title: "Kuratoitu ammattivalikoima", text: "630 tuotetta ja 173 brändiä, valittu ammattilaisten tarpeisiin." },
+      { icon: "fa-solid fa-truck-fast", title: "Orklan toimitusvarmuus", text: "Vakaa tausta ja jatkuvuus, joihin voit luottaa." },
+      // Lisätty Miro-kommentin pohjalta: lohko ei kerro vain tuotteista.
+      // 28.8.2026: "Kotimainen kumppani" (tiimi + varasto) oli alimitoitettu — yrityspresentaation
+      // mukaan Conditella on OMA TUOTANTO Naantalissa. Vaihdettu vahvempaan, todennettavaan väitteeseen.
+      { icon: "fa-solid fa-industry", title: "Oma tuotanto Naantalissa", text: "Emme vain tuo maahan: pakkaamme ja valmistamme itse Suomessa 11 pakkauslinjalla." },
+      { icon: "fa-solid fa-handshake", title: "Kumppanit ja jakelu", text: "Tuotteemme kulkevat myös tukkukumppaneiden kautta — suurimpana Kespro." }
+    ],
+    stats: [
+      { value: "630", label: "tuotetta valikoimassa" },
+      { value: "173", label: "brändiä edustettuna" },
+      // 28.8.2026: "30+ vuotta" korjattu — Condite perustettiin 1969 (yrityspresentaatio s2/s3).
+      // "4 palveltua segmenttiä" vaihdettu tuotantotodisteeseen, joka erottaa pelkästä maahantuojasta.
+      { value: "55+", label: "vuotta alalla" },
+      { value: "11", label: "omaa pakkauslinjaa Naantalissa" }
+    ]
+  },
+
+  // Tuote- ja reseptinostot — WP-vaiheessa dynaamisia (CPT tuote/resepti). Nyt staattisia luonnoksia.
+  categories: {
+    eyebrow: "Valikoima",
+    heading: "Tuotekategoriat ammattikäyttöön",
+    intro: "Avoin valikoiman selailu — tuotteiden speksit ja hinnat näkyvät kirjautuneille verkkokaupassa.",
+    browseAll: { label: "Selaa kaikki tuotteet", href: "/tuotteet/" },
+    items: [
+      { title: "Mausteet ja maustesekoitukset", text: "Mausteet ja maustamisratkaisut keittiöön ja teollisuuteen.", href: "/tuotteet/mausteet/" },
+      { title: "Täytteet ja koristeet", text: "Täytteet, kuorrutteet ja koristeet leipomoille ja konditorioille.", href: "/tuotteet/taytteet-koristeet/" },
+      { title: "Suklaa ja kaakao", text: "Suklaat, couverture ja kaakaotuotteet valmistukseen.", href: "/tuotteet/suklaa/" },
+      { title: "Jauhot ja leivontaseokset", text: "Jauhot, esiseokset ja valmisseokset leivontaan.", href: "/tuotteet/jauhot-seokset/" },
+      { title: "Leivonnan apuaineet", text: "Hiivat, kohotusaineet ja entsyymit prosessin tueksi.", href: "/tuotteet/apuaineet/" },
+      { title: "Pähkinät, siemenet ja kuivahedelmät", text: "Raaka-aineet leivontaan, välipaloihin ja teollisuuteen.", href: "/tuotteet/pahkinat-siemenet/" },
+      { title: "Maku- ja aromiaineet", text: "Aromit, esanssit ja makuratkaisut sovelluksiin.", href: "/tuotteet/aromit/" },
+      { title: "Kasvipohjaiset raaka-aineet", text: "Kasvipohjaiset vaihtoehdot tuotekehitykseen.", href: "/tuotteet/kasvipohjaiset/" },
+      { title: "Hyytelöinti- ja sakeutusaineet", text: "Toiminnalliset raaka-aineet rakenteen hallintaan.", href: "/tuotteet/toiminnalliset/" }
+    ]
+  },
+
+  // KAMPANJANOSTO — yksi näyttävä, vapaa toimituksellinen slotti. Korvaa aiemman
+  // "Uutuudet ja sesonki" -lohkon, joka yhdisti kolme eri taksonomiaa (uutuustuotteet /
+  // sesonkinosto / kampanja) samaan listaukseen: raskas ylläpitää ja vierailijalle vaikea
+  // hahmottaa. Nyt yksi kampanja kerrallaan → yksi kohde = kampanjasivu, jolla kampanjan
+  // tuotteet, reseptit ja artikkelit ovat yhdessä. Uutuudet löytyvät tuotehausta
+  // (/tuotteet/haku/?jarjesta=uusimmat), tapahtumat omasta messulohkostaan.
+  // WP-vaiheessa: kampanja-CPT + etusivun "nostettu kampanja" -valinta (ACF), ei kehittäjää.
+  // Kampanjasivu on uutiskirjeen, messu-QR-koodien ja kampanjalinkkien laskeutumispiste (UTM).
+  campaign: {
+    id: "kampanja",
+    active: true,                      // false → lohko jää kokonaan pois (ei tyhjää paikkaa)
+    badge: "Kampanja",
+    heading: "Syksyn maut: kotimaiset marjat ja suklaa",
+    lead: "Kuratoitu kokonaisuus syksyn tuotantoon — raaka-aineet, valmiit sovellukset ja reseptit samassa paikassa, sekä asiantuntija joka auttaa valinnassa.",
+    meta: "Voimassa 1.9.–30.11.2026 · Kampanjasivulla tuotteet, reseptit ja artikkelit yhdessä.",
+    media: "Kampanjakuva 4:3",
+    cta: { label: "Tutustu kampanjaan", href: "/kampanjat/syksy-2026/" },
+    secondary: { label: "Kaikki kampanjat", href: "/kampanjat/" },
+    editNote: "[TÄYTTÖ: kampanjan aihe, kuva ja kesto ovat Conditen itse ylläpitämiä — yksi nosto kerrallaan. Kun voimassa olevaa kampanjaa ei ole, lohko piilotetaan kokonaan.]"
+  },
+
+  // AJANKOHTAISET ARTIKKELIT JA JULKAISUT — yksi lista, yksi arkisto, yksi ylläpitopaikka.
+  // Artikkeli / ladattava julkaisu (PDF) / tiedote ovat SAMAA sisältötyyppiä (WP: post tai
+  // "julkaisu"-CPT + tyyppitaksonomia) → tyyppi on rivin metatieto, ei omaa etusivulohkoa.
+  // Tuotenostot, reseptit ja kampanja pidetään tästä erillään (ks. campaign-lohko).
+  //
+  // PÄÄTÖKSET 28.8.2026 (Olli):
+  // 1) PÄÄSYTASO = AVOIN. Julkaisut ladataan suoraan, EI lomaketta/liidigaattia. Liidi
+  //    kerätään uutiskirjeellä ja yhteydenotolla; tarkat tekniset dokumentit pysyvät
+  //    liiditasolla tuotekortilla (§5).
+  // 2) JOKAISELLA JULKAISULLA OMA HTML-SIVU (otsikko, tiivistelmä, sisältö, latauspainike).
+  //    PDF on sivun liite, ei ainoa muoto → sisältö löytyy hakukoneista ja AI-hauista,
+  //    on sisäisesti linkitettävissä (kampanjasivu, segmenttihubit, tuotekortit) ja
+  //    saa rakenteisen datan. Siksi rivin OTSIKKO vie sivulle ja erillinen
+  //    latauslinkki suoraan tiedostoon (`file.href`).
+  news: {
+    id: "ajankohtaista",
+    eyebrow: "Ajankohtaista",
+    heading: "Artikkelit ja julkaisut",
+    tier: "open",
+    intro: "Asiantuntija-artikkelit, ladattavat julkaisut ja tiedotteet samassa listassa — järjestyksessä uusin ensin. Kaikki avointa, ilman lomakkeita.",
+    items: [
+      { type: "Artikkeli", date: "14.8.2026", icon: "fa-regular fa-file-lines",
+        title: "Kasvipohjaiset täytteet — mitä rakenteessa pitää huomioida",
+        text: "Sovellusnäkökulma leipomoille ja teollisuudelle.",
+        href: "/ajankohtaista/kasvipohjaiset-taytteet/", action: "Lue artikkeli" },
+      { type: "Julkaisu", date: "1.8.2026", icon: "fa-regular fa-file-pdf",
+        title: "Sesonkiopas 2026 — syksy ja joulu",
+        text: "Kuratoidut raaka-aineet ja sovellukset kausituotantoon.",
+        href: "/ajankohtaista/sesonkiopas-2026/",
+        file: { label: "PDF", size: "2,4 MB", href: "/media/condite-sesonkiopas-2026.pdf" } },
+      { type: "Julkaisu", date: "12.6.2026", icon: "fa-regular fa-file-pdf",
+        title: "Vastuullisuuskatsaus 2025",
+        text: "Toimitusketju, alkuperät ja tavoitteet.",
+        href: "/ajankohtaista/vastuullisuuskatsaus-2025/",
+        file: { label: "PDF", size: "1,8 MB", href: "/media/condite-vastuullisuuskatsaus-2025.pdf" } },
+      { type: "Tiedote", date: "3.6.2026", icon: "fa-regular fa-bell",
+        title: "Makupaja laajenee — uudet tilat käytössä syksyllä",
+        text: "Enemmän aikoja asiakastyöpajoille.",
+        href: "/ajankohtaista/makupaja-laajenee/", action: "Lue tiedote" }
+    ],
+    allLink: { label: "Kaikki artikkelit ja julkaisut", href: "/ajankohtaista/" },
+    newsletter: { label: "Tilaa uutiskirje", href: "/yhteys/uutiskirje/" },
+    note: "Linjaus: julkaisut avoimia — suora lataus ilman lomaketta. Otsikko vie julkaisun omalle sivulle (tiivistelmä + lataus), koska pelkkä PDF ei löydy hakukoneista eikä AI-hauista eikä ole sisäisesti linkitettävissä."
+  },
+
+  // MESSUT JA TAPAHTUMAT (Miro: "ollaan aina jossain messuilla"). Ensikosketuskanava
+  // erityisesti leipomoille (Leipuripäivät) ja Food Servicelle → oma slim-lohko.
+  events: {
+    id: "messut",
+    eyebrow: "Tapahtumat",
+    heading: "Tavataan messuilla",
+    intro: "Olemme mukana alan tapahtumissa läpi vuoden — tule maistamaan ja juttelemaan.",
+    items: [
+      { when: "9.–10.10.2026", what: "Leipuripäivät", where: "Tampere · osasto A24" },
+      { when: "12.11.2026", what: "Gastro Helsinki", where: "Messukeskus · osasto 6f31" },
+      { when: "21.1.2027", what: "Makupaja-avoimet ovet", where: "Vantaa · ilmoittautuminen auki" }
+    ],
+    allLink: { label: "Kaikki tapahtumat", href: "/ajankohtaista/tapahtumat/" }
+  },
+
+  recipes: {
+    heading: "Reseptit ja sovellukset ammattikäyttöön",
+    subhead: "Reseptit ja sovellukset",
+    browseAll: { label: "Reseptipankkiin", href: "/reseptit/" },
+    emptyText: "Reseptipankki täydentyy — kun reseptit ovat saatavilla, tähän nousee 3–4 ajankohtaista sovellusta.",
+    items: [
+      { kicker: "Resepti", title: "Savuinen paprikamarinadi", text: "Grilli- ja BBQ-sovelluksiin Food Service -käyttöön.", href: "/reseptit/", media: "Reseptikuva 16:10" },
+      { kicker: "Resepti", title: "Suklaaganache täytteisiin", text: "Konditorian täytteisiin ja kuorrutteisiin.", href: "/reseptit/", media: "Reseptikuva 16:10" },
+      { kicker: "Resepti", title: "Kausileivonnaisen täyte", text: "Sesonkituotteen sovellus leipomoille.", href: "/reseptit/", media: "Reseptikuva 16:10" }
+    ]
+  },
+
+  // KEHITYSKUMPPANUUS — kaksi erottautujaa samalla painoarvolla (Laura 28.8.2026:
+  // "Private Label ja Makupaja ovat merkittäviä kilpailuetuja, voisi nostaa näkyvämmin").
+  // Aiemmin Makupajalla oli oma lohko vasta sivun puolivälin jälkeen ja private label näkyi
+  // vain segmenttilistan rivinä + USP-kortin maininnassa. Nyt molemmat ovat samankokoisia
+  // kortteja heti "Miksi Condite" -lohkon jälkeen, ennen tuotekategorioita: kumppanuus ennen
+  // katalogia (§7.4 "kumppani, ei toimittaja").
+  // HUOM: private label esiintyy sivustolla kahdessa roolissa — SEGMENTTINÄ (/toimialat/private-label/,
+  // segmenttilistassa yllä) ja KYVYKKYYTENÄ (/tuotekehitys/private-label/, tämä kortti). Tämä kortti
+  // linkittää kyvykkyyssivulle.
+  devpartner: {
+    id: "makupaja",                 // sivustonlaajuinen #makupaja-ankkuri säilyy
+    eyebrow: "Kehityskumppanuus",
+    heading: "Kehitetään tuotteesi yhdessä",
+    intro: "Kaksi asiaa erottaa meidät toimittajasta: oma testikeittiö, jossa resepti hiotaan valmiiksi, ja oma tuotanto, joka valmistaa sen sinun brändilläsi.",
+    items: [
+      {
+        tier: "lead",
+        media: "Makupaja-media 16:9 — testikeittiö",
+        title: "Makupaja — oma testikeittiömme",
+        lead: "Kokeilemme, maistamme ja hiomme reseptin tai sovelluksen valmiiksi yhdessä asiantuntijoidemme kanssa.",
+        points: [
+          { title: "Yhteiskehitys asiantuntijan kanssa", text: "Tuomme raaka-aine- ja sovellusosaamisen tuotekehityksesi tueksi." },
+          { title: "Testaus ja maistatus", text: "Kokeillaan ja iteroidaan, kunnes lopputulos vastaa tavoitettasi." },
+          { title: "Valmis sovellus tai resepti", text: "Lähdet sessiosta konkreettisen ratkaisun kanssa." }
+        ],
+        cta: { label: "Varaa Makupaja-sessio", href: "#yhteys" },
+        micro: "Maksuton ensikontakti, ei sitoumuksia. [TÄYTTÖ: vahvista asiakkaalta (§14.1).]"
+      },
+      {
+        tier: "open",
+        media: "Tuotantokuva 16:9 — pakkauslinja Naantalissa",
+        title: "Private label -valmistus",
+        lead: "Ideasta valmiiksi tuotteeksi sinun brändilläsi — resepti, valmistus ja pakkaus saman katon alta.",
+        points: [
+          { title: "Resepti kehitetään kanssasi", text: "Sama testikeittiö ja samat asiantuntijat tukena." },
+          { title: "Valmistus ja pakkaus Suomessa", text: "Oma tuotanto Naantalissa, 11 pakkauslinjaa." },
+          { title: "Sopimusvalmistus", text: "[TÄYTTÖ: vahvista minimierät ja tuotantomuodot asiakkaalta.]" }
+        ],
+        cta: { label: "Tutustu private label -valmistukseen", href: "/tuotekehitys/private-label/" },
+        micro: "Kerro tuoteideasi, niin arvioimme toteutettavuuden."
+      }
+    ]
+  },
+
+  cases: {
+    eyebrow: "Referenssit",
+    heading: "Asiakkaidemme tarinoita",
+    intro: "Miten kehityskumppanuus näkyy käytännössä — asiakkaidemme sanoin.",
+    allLink: { label: "Kaikki asiakastarinat", href: "/referenssit/" },
+    emptyNote: "[TÄYTTÖ: nimetyt referenssit vai kategoriataso? (§14.4) — älä julkaise nimeä/lainausta ilman asiakkaan lupaa.]",
+    items: [
+      {
+        cat: "Leipomot", image: "Asiakaskuva 16:9",
+        quote: "[Lainaus asiakkaalta — konkreettinen hyöty omin sanoin, 1–2 lausetta.]",
+        name: "[Etunimi Sukunimi]", company: "[Yritys Oy]", avatar: "Kuva",
+        href: "/referenssit/case-1/"
+      },
+      {
+        cat: "Private Label", image: "Asiakaskuva 16:9",
+        quote: "[Lainaus asiakkaalta — mitä yhteiskehitys ratkaisi, 1–2 lausetta.]",
+        name: "[Etunimi Sukunimi]", company: "[Yritys Oy]", avatar: "Kuva",
+        href: "/referenssit/case-2/"
+      }
+    ]
+  },
+
+  // 5.6b Brändit ja laatu — yksi yhdistetty lohko, kolme osaa:
+  //   1) Conditen omat brändit (4 korttia) · 2) edustetut brändit (logoseinä) · 3) sertifioinnit ja tausta
+  trust: {
+    eyebrow: "Brändit ja laatu",
+    heading: "Luotettava kumppani ja alan johtavat brändit",
+    intro: "Yli 170 brändiä ja 630 tuotetta, oma tuotanto Suomessa, sertifioitu laatu ja vakaa Orkla-tausta — kuratoitu ammattilaisten tarpeisiin.",
+
+    // 1) Conditen omat brändit
+    ownBrands: {
+      heading: "Conditen omat brändit",
+      allLink: { label: "Katso omat brändit", href: "/brandit/" },
+      items: [
+        { name: "Xocofine", cat: "Suklaa ja kaakao", text: "Conditen oma suklaa- ja kaakaobrändi ammattikäyttöön.", href: "/brandit/xocofine/" },
+        { name: "[Oma brändi]", cat: "[Kategoria]", text: "[TÄYTTÖ: lyhyt kuvaus omasta brändistä.]", href: "/brandit/" },
+        { name: "[Oma brändi]", cat: "[Kategoria]", text: "[TÄYTTÖ: lyhyt kuvaus omasta brändistä.]", href: "/brandit/" },
+        { name: "[Oma brändi]", cat: "[Kategoria]", text: "[TÄYTTÖ: lyhyt kuvaus omasta brändistä.]", href: "/brandit/" }
+      ]
+    },
+
+    // 2) Edustetut brändit — logoseinä (Condite edustaa 173 brändiä)
+    brands: {
+      heading: "Edustamme alan johtavia brändejä",
+      allLink: { label: "Katso kaikki brändit", href: "/brandit/" },
+      logos: [
+        { name: "Capsi" }, { name: "Dobla" }, { name: "Promix" },
+        { ph: true }, { ph: true }, { ph: true }, { ph: true }, { ph: true },
+        { ph: true }, { ph: true }, { ph: true }
+      ],
+      more: "+160 muuta"
+    },
+
+    // 3) Sertifioinnit ja tausta — ikonikortit + Orkla-ankkuri (tumma banneri)
+    certs: {
+      heading: "Sertifioinnit ja tausta",
+      items: [
+        // 28.8.2026: aiemmat ISO 22000 / FSSC 22000 / Luomu olivat keksittyjä placeholdereita.
+        // Korvattu yrityspresentaation (s11) todellisilla sertifioinneilla.
+        // KYSYMYS 6: voimassaolo, myöntäjä ja logo-oikeudet vahvistettava ennen julkaisua.
+        { icon: "fa-solid fa-certificate", title: "BRC A", text: "Kansainvälinen elintarviketurvallisuuden standardi — korkein luokitus A." },
+        { icon: "fa-solid fa-shield-halved", title: "OFSS", text: "Orklan oma tuoteturvallisuusstandardi, jota noudatamme kaikessa toiminnassa." },
+        { icon: "fa-solid fa-clipboard-check", title: "Vaatimus toimittajille", text: "Toimittajiltamme edellytämme BRC-, IFS- tai vastaavaa sertifikaattia." }
+      ],
+      orkla: { title: "Osa Orkla Food Ingredientsia", text: "Vakaa eurooppalainen tausta, jatkuvuus ja toimitusvarmuus, joihin voit luottaa." }
+    }
+  },
+
+  finalCta: {
+    id: "yhteys",
+    eyebrow: "Aloitetaan",
+    heading: "Aloitetaan yhteistyö",
+    intro: "Kerro tarpeestasi, niin ohjaamme oikean asiantuntijan luo.",
+    tierLead: "lead",
+    tierLogin: "login",
+    fields: [
+      { id: "nimi", label: "Nimi", type: "text", required: true },
+      { id: "yritys", label: "Yritys", type: "text", required: true },
+      { id: "email", label: "Sähköposti", type: "email", required: true },
+      { id: "puhelin", label: "Puhelin", type: "tel" },
+      { id: "segmentti", label: "Segmentti", type: "select", required: true, options: ["Leipomot", "Food Service", "Food Industry", "Private Label", "Muu"] },
+      { id: "aihe", label: "Aihe", type: "select", options: ["Yleinen yhteydenotto", "Makupaja-varaus", "Näyte tai tarjous", "Private label"] },
+      { id: "viesti", label: "Viesti", type: "textarea", required: true, full: true }
+    ],
+    submitLabel: "Ota yhteyttä",
+    microcopy: "Vastaamme saman työpäivän aikana. [TÄYTTÖ: vahvista (§14.2).]",
+    statesNote: "Lomakkeen tilat (WP-vaihe): tyhjä · täyttö · validointivirhe (teksti + aria-describedby) · lähetys (spinneri, painike disabled) · onnistui (kiitos-tila/redirect) · palvelinvirhe (syötteet säilytetään). HTML-vaiheessa lomake ei lähetä dataa.",
+    login: {
+      heading: "Oletko jo asiakas?",
+      text: "Kirjaudu verkkokauppaan nähdäksesi tuotteiden speksit, saatavuuden ja hinnat.",
+      cta: { label: "Kirjaudu verkkokauppaan", href: "/kirjaudu/" }
+    },
+    contact: {
+      heading: "Suora yhteys",
+      items: [
+        { dt: "Myynti", dd: "[TÄYTTÖ: puhelinnumero]", link: { label: "myynti@condite.fi", href: "mailto:myynti@condite.fi" } },
+        { dt: "Toimialakohtaiset yhteyshenkilöt", dd: "Löydä oman toimialasi yhteyshenkilö.", link: { label: "Yhteyshenkilöt", href: "/yhteys/" } }
+      ]
+    }
+  }
+};
+</script>
+
+<body>
+<a href="#main" class="skip">Siirry sisältöön</a>
+
+<!-- Wireframe-huomautus (handoff-konteksti) -->
+<div class="wf-note" role="note">
+  <div class="container">
+    <span><strong>Kiillotettu wireframe</strong> · pehmennetty tonaalinen sininen (hyväksytty paletti) — fontit ja kuvat ovat brändivaiheen TBD.</span>
+    <span class="sr-only">Tier-merkkien selitys:</span>
+    <span><span class="dot" style="background:var(--c-tier-lead)"></span>Liidigatattu</span>
+    <span><span class="dot" style="background:var(--c-tier-login)"></span>Webshop-login</span>
+  </div>
+</div>
+
+<!-- Utility-rivi -->
+<div class="utility">
+  <div class="container utility-inner">
+    <button class="utility-item" type="button" aria-label="Avaa haku"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Haku</button>
+    <span aria-hidden="true">·</span>
+    <span class="utility-langs" role="group" aria-label="Kieli (ei toiminnallinen tässä vaiheessa)">
+      <a href="#" aria-current="true" lang="fi" hreflang="fi">FI</a>
+      <a href="#" lang="sv" hreflang="sv">SV</a>
+      <a href="#" lang="en" hreflang="en">EN</a>
+    </span>
+  </div>
+</div>
+
+<!-- Pää-navigaatio -->
+<header class="header" role="banner">
+  <div class="container nav">
+    <a class="logo" href="/" aria-label="Condite — etusivu"><span class="logo-box">CONDITE</span></a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Avaa valikko">
+      <i class="fa-solid fa-bars" aria-hidden="true"></i>
+    </button>
+    <div class="nav-main" id="primary-nav">
+      <nav aria-label="Päänavigaatio">
+        <ul class="nav-list">
+          <li class="has-dropdown">
+            <a href="/tuotteet/" aria-haspopup="true" aria-expanded="false">Tuotteet</a>
+            <ul class="nav-dropdown">
+              <li><a href="/tuotteet/mausteet/">Mausteet</a></li>
+              <li><a href="/tuotteet/taytteet-koristeet/">Täytteet ja koristeet</a></li>
+              <li><a href="/tuotteet/suklaa/">Suklaa ja kaakao</a></li>
+              <li><a href="/tuotteet/">Kaikki tuotteet</a></li>
+            </ul>
+          </li>
+          <li class="has-dropdown">
+            <a href="/toimialat/" aria-haspopup="true" aria-expanded="false">Toimialat</a>
+            <ul class="nav-dropdown">
+              <li><a href="/toimialat/leipomot/">Leipomot</a></li>
+              <li><a href="/toimialat/food-service/">Food Service</a></li>
+              <li><a href="/toimialat/food-industry/">Food Industry</a></li>
+              <li><a href="/toimialat/private-label/">Private Label</a></li>
+            </ul>
+          </li>
+          <li><a href="/reseptit/">Reseptit</a></li>
+          <li><a href="/tuotekehitys/">Tuotekehitys</a></li>
+          <li><a href="/yritys/">Yritys</a></li>
+          <li class="has-dropdown">
+            <a href="/yhteys/" aria-haspopup="true" aria-expanded="false">Yhteys</a>
+            <ul class="nav-dropdown">
+              <li><a href="/yhteys/">Yhteys</a></li>
+              <li><a href="/yhteys/laskutusohjeet/">Laskutusohjeet</a></li>
+              <li><a href="https://ura.condite.fi" target="_blank" rel="noopener" aria-label="Avoimet työpaikat (avautuu ura.condite.fi)">Avoimet työpaikat <i class="fa-solid fa-arrow-up-right-from-square ext-ico" aria-hidden="true"></i></a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <a class="btn btn-outline btn-sm" href="/kirjaudu/"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Kirjaudu</a>
+    </div>
+  </div>
+</header>
+
+<main id="main"></main>
+
+<!-- Footer -->
+<footer role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="logo-box">CONDITE</span>
+        <p>Elintarvikealan raaka-aineiden maahantuoja, valmistaja ja kehityskumppani. Osa Orkla Food Ingredientsia.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Sivusto</h4>
+        <ul>
+          <li><a href="/tuotteet/">Tuotteet</a></li>
+          <li><a href="/toimialat/">Toimialat</a></li>
+          <li><a href="/reseptit/">Reseptit</a></li>
+          <li><a href="/tuotekehitys/">Tuotekehitys</a></li>
+          <li><a href="/yritys/">Yritys</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Asiakkaalle</h4>
+        <ul>
+          <li><a href="/kirjaudu/">Kirjaudu verkkokauppaan</a></li>
+          <li><a href="#makupaja">Makupaja</a></li>
+          <li><a href="/yhteys/">Yhteyshenkilöt</a></li>
+          <li><a href="#yhteys">Ota yhteyttä</a></li>
+          <li><a href="/yhteys/laskutusohjeet/">Laskutusohjeet</a></li>
+          <li><a href="https://ura.condite.fi" target="_blank" rel="noopener" aria-label="Avoimet työpaikat (avautuu ura.condite.fi)">Avoimet työpaikat <i class="fa-solid fa-arrow-up-right-from-square ext-ico" aria-hidden="true"></i></a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-news">
+        <h4>Uutiskirje</h4>
+        <form onsubmit="return false">
+          <label for="news-email">Tilaa ajankohtaiset uutiset ja sovellukset.</label>
+          <div class="news-row">
+            <input id="news-email" type="email" placeholder="sähköposti@yritys.fi" aria-label="Sähköpostiosoite">
+            <button type="button">Tilaa</button>
+          </div>
+        </form>
+        <span class="utility-langs" role="group" aria-label="Kieli" style="margin-top:var(--gap-16);display:inline-flex">
+          <a href="#" aria-current="true" style="color:#bcbcc2">FI</a>
+          <a href="#" style="color:#bcbcc2">SV</a>
+          <a href="#" style="color:#bcbcc2">EN</a>
+        </span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Condite Oy · Osa Orkla Food Ingredientsia</span>
+      <div class="footer-bottom-links">
+        <a href="/tietosuoja/">Tietosuoja</a>
+        <a href="/evasteet/">Evästeet</a>
+        <a href="/saavutettavuus/">Saavutettavuusseloste</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============== RENDER ============== -->
+<script>
+(function () {
+  "use strict";
+
+  const esc = (s) => String(s == null ? "" : s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const check = () => '<span class="ico" aria-hidden="true"><i class="fa-solid fa-check"></i></span>';
+  const TIER_LABEL = { open: "Avoin", lead: "Liidi", login: "Webshop-login" };
+
+  function tier(type) {
+    if (!type) return "";
+    return '<span class="tier tier-' + type + '"><span class="tdot" aria-hidden="true"></span>' +
+      esc(TIER_LABEL[type] || type) + "</span>";
+  }
+  function section(inner, opts) {
+    opts = opts || {};
+    const id = opts.id ? ' id="' + opts.id + '"' : "";
+    const cls = opts.cls ? " " + opts.cls : "";
+    const label = opts.labelledby ? ' aria-labelledby="' + opts.labelledby + '"' : "";
+    return '<section class="block-section' + cls + '"' + id + label + '><div class="container">' + inner + "</div></section>";
+  }
+  function sectionHead(eyebrow, heading, id, intro) {
+    return '<div class="section-head">' +
+      (eyebrow ? '<div class="eyebrow">' + esc(eyebrow) + "</div>" : "") +
+      '<h2 id="' + id + '">' + esc(heading) + "</h2>" +
+      (intro ? "<p>" + esc(intro) + "</p>" : "") + "</div>";
+  }
+  function ph(label, cls) {
+    return '<div class="ph ' + (cls || "") + '"><i class="fa-regular fa-image" aria-hidden="true"></i><span>' + esc(label) + "</span></div>";
+  }
+
+  // 5.1 Hero
+  function renderHero() {
+    const h = PAGE.hero; if (!h) return "";
+    let ctas = "";
+    if (h.primaryCta)   ctas += '<a class="btn btn-primary" href="' + esc(h.primaryCta.href) + '">' + esc(h.primaryCta.label) + "</a>";
+    if (h.secondaryCta) ctas += '<a class="btn btn-outline" href="' + esc(h.secondaryCta.href) + '">' + esc(h.secondaryCta.label) + "</a>";
+    const inner =
+      '<div class="hero-split"><div>' +
+        (h.eyebrow ? '<p class="hero-slogan">' + esc(h.eyebrow) + "</p>" : "") +
+        '<h1 id="hero-title">' + esc(h.h1) + "</h1>" +
+        '<p class="hero-sub">' + esc(h.subhead) + "</p>" +
+        '<div class="hero-ctas">' + ctas + "</div>" +
+      "</div>" +
+      ph(h.imageLabel || "Hero-media", "hero-visual") + "</div>";
+    return section(inner, { labelledby: "hero-title" });
+  }
+
+  // 5.2 Segmenttipolut (koko rivi = yksi linkki)
+  function renderSegments() {
+    const s = PAGE.segments; if (!s) return "";
+    const rows = (s.items || []).map((it) =>
+      '<a class="seg-row" href="' + esc(it.href) + '">' +
+        ph(it.thumb || "Kuva", "seg-thumb") +
+        '<h3 class="seg-row-title">' + esc(it.title) + "</h3>" +
+        '<p class="seg-row-desc">' + esc(it.text) + "</p>" +
+        '<span class="seg-row-go">Siirry <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>' +
+      "</a>"
+    ).join("");
+    return section(sectionHead(s.eyebrow, s.heading, "seg-title", s.intro) +
+      '<div class="seg-list">' + rows + "</div>", { id: s.id, labelledby: "seg-title" });
+  }
+
+  // 5.3 USP-paneeli + big numbers
+  function renderUsp() {
+    const u = PAGE.usp; if (!u) return "";
+    const cards = (u.items || []).map((it) =>
+      '<article class="usp-card">' +
+        '<span class="usp-ico" aria-hidden="true"><i class="' + esc(it.icon) + '"></i></span>' +
+        "<h3>" + esc(it.title) + "</h3><p>" + esc(it.text) + "</p></article>"
+    ).join("");
+    const stats = (u.stats || []).map((c) =>
+      '<div class="stat"><div class="stat-number">' + esc(c.value) + '</div><div class="stat-label">' + esc(c.label) + "</div></div>"
+    ).join("");
+    return section(sectionHead(u.eyebrow, u.heading, "usp-title", u.intro) +
+      '<div class="usp-grid">' + cards + "</div>" +
+      (stats ? '<div class="stat-grid">' + stats + "</div>" : ""),
+      { labelledby: "usp-title", cls: "soft" });
+  }
+
+  // 5.4c Kampanjanosto — yksi näyttävä toimituksellinen slotti → kampanjasivu
+  function renderCampaign() {
+    const c = PAGE.campaign; if (!c || c.active === false) return "";
+    const note = c.editNote
+      ? '<div class="camp-editnote"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>' + esc(c.editNote) + "</span></div>"
+      : "";
+    const secondary = c.secondary
+      ? '<a class="camp-link" href="' + esc(c.secondary.href) + '">' + esc(c.secondary.label) +
+        ' <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>'
+      : "";
+    return '<section class="camp-section" id="' + esc(c.id) + '" aria-labelledby="camp-title">' +
+      '<div class="container camp-grid">' +
+        '<div class="camp-copy">' +
+          '<span class="camp-badge">' + esc(c.badge) + "</span>" +
+          '<h2 id="camp-title">' + esc(c.heading) + "</h2>" +
+          '<p class="camp-lead">' + esc(c.lead) + "</p>" +
+          (c.meta ? '<p class="camp-meta">' + esc(c.meta) + "</p>" : "") +
+          '<div class="camp-ctas">' +
+            '<a class="btn btn-primary" href="' + esc(c.cta.href) + '">' + esc(c.cta.label) +
+            ' <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>' + secondary +
+          "</div>" +
+        "</div>" +
+        ph(c.media || "Kampanjakuva", "camp-media") +
+        note +
+      "</div></section>";
+  }
+
+  // 5.8a Ajankohtaiset artikkelit ja julkaisut — yksi lista, tyyppi rivin metatietona.
+  // Rivillä KAKSI linkkiä: otsikko → julkaisun oma sivu (SEO), toimintolinkki → suora PDF-lataus.
+  function renderNews() {
+    const n = PAGE.news; if (!n) return "";
+    const rows = (n.items || []).map((it) => {
+      const go = it.file
+        ? '<a class="news-go" href="' + esc(it.file.href || it.href) + '" download>' +
+            "Lataa " + esc(it.file.label) + " (" + esc(it.file.size) + ")" +
+            ' <i class="fa-solid fa-arrow-down" aria-hidden="true"></i></a>'
+        : '<a class="news-go" href="' + esc(it.href) + '">' + esc(it.action || "Lue lisää") +
+            ' <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>';
+      return '<li class="news-row">' +
+        '<span class="news-ico"><i class="' + esc(it.icon || "fa-regular fa-file-lines") + '" aria-hidden="true"></i></span>' +
+        '<span class="news-meta"><span class="news-type">' + esc(it.type) + "</span>" +
+          '<span class="news-date">' + esc(it.date) + "</span></span>" +
+        '<span class="news-main">' +
+          '<a class="news-title" href="' + esc(it.href) + '">' + esc(it.title) + "</a>" +
+          '<span class="news-text">' + esc(it.text) + "</span></span>" +
+        go +
+      "</li>";
+    }).join("");
+    const actions =
+      '<div class="news-actions">' +
+        (n.allLink ? '<a class="btn btn-outline" href="' + esc(n.allLink.href) + '">' + esc(n.allLink.label) + "</a>" : "") +
+        (n.newsletter ? '<a class="btn-link" href="' + esc(n.newsletter.href) + '">' + esc(n.newsletter.label) +
+          ' <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>' : "") +
+      "</div>";
+    const note = n.note
+      ? '<div class="empty-note" style="margin-top:var(--gap-24)"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>' +
+        esc(n.note) + "</span></div>"
+      : "";
+    const head = (n.tier ? '<div style="margin-bottom:var(--gap-16)">' + tier(n.tier) + "</div>" : "") +
+      sectionHead(n.eyebrow, n.heading, "news-title-h", n.intro);
+    return section(head + '<ul class="news-list">' + rows + "</ul>" + actions + note,
+      { id: n.id, labelledby: "news-title-h" });
+  }
+
+  // 5.8b Messut ja tapahtumat (Miro: "ollaan aina jossain messuilla")
+  function renderEvents() {
+    const e = PAGE.events; if (!e) return "";
+    const rows = (e.items || []).map((it) =>
+      '<li class="ev-row">' +
+        '<span class="ev-when">' + esc(it.when) + "</span>" +
+        '<span class="ev-what">' + esc(it.what) + "</span>" +
+        '<span class="ev-where">' + esc(it.where) + "</span>" +
+      "</li>"
+    ).join("");
+    const link = e.allLink
+      ? '<a class="btn btn-outline" href="' + esc(e.allLink.href) + '">' + esc(e.allLink.label) + "</a>"
+      : "";
+    return section(sectionHead(e.eyebrow, e.heading, "events-title", e.intro) +
+      '<ul class="ev-list">' + rows + "</ul>" +
+      (link ? '<div class="ev-actions">' + link + "</div>" : ""),
+      { id: e.id, labelledby: "events-title", cls: "soft" });
+  }
+
+  // 5.4a Tuotekategoriat — tiivis 3×3-ruudukko
+  function renderCategories() {
+    const c = PAGE.categories; if (!c) return "";
+    const cards = (c.items || []).map((it) =>
+      '<a class="cat-card" href="' + esc(it.href) + '">' +
+        ph(it.media || "Kuva", "cat-media") +
+        '<div class="cat-body">' +
+        "<h3>" + esc(it.title) + "</h3><p>" + esc(it.text) + "</p>" +
+        '<span class="cat-go">Katso kategoria <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></div></a>'
+    ).join("");
+    const head =
+      '<div class="head-row">' + sectionHead(c.eyebrow, c.heading, "cat-title", c.intro) +
+      '<a class="btn-link" href="' + esc(c.browseAll.href) + '">' + esc(c.browseAll.label) +
+      ' <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div>';
+    const fill = c.fillNote ? '<div class="empty-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>' + esc(c.fillNote) + "</span></div>" : "";
+    return section(head + '<div class="cat-grid">' + cards + "</div>" + fill, { labelledby: "cat-title" });
+  }
+
+  // 5.4b Reseptinostot (tyhjä tila tuettuna)
+  function renderRecipes() {
+    const r = PAGE.recipes; if (!r) return "";
+    const has = (r.items || []).length > 0;
+    const cards = (r.items || []).map((it) =>
+      '<a class="nost-card" href="' + esc(it.href) + '">' +
+        ph(it.media || "Reseptikuva", "nost-media") +
+        '<div class="nost-body"><span class="nost-kicker">' + esc(it.kicker) + "</span>" +
+        "<h3>" + esc(it.title) + "</h3><p>" + esc(it.text) + "</p>" +
+        '<span class="nost-go">Katso resepti <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></div></a>'
+    ).join("");
+    const head =
+      '<div class="head-row"><div class="section-head"><h2 id="rec-title" class="subhead">' + esc(r.heading) + "</h2></div>" +
+      '<a class="btn-link" href="' + esc(r.browseAll.href) + '">' + esc(r.browseAll.label) +
+      ' <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div>';
+    const body = has
+      ? '<div class="nost-grid">' + cards + "</div>"
+      : '<div class="empty-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>' + esc(r.emptyText) + "</span></div>";
+    return section(head + body, { labelledby: "rec-title" });
+  }
+
+  // 5.5 Kehityskumppanuus — Makupaja + private label rinnakkain (Laura 28.8.2026)
+  function renderDevPartner() {
+    const d = PAGE.devpartner; if (!d) return "";
+    const cards = (d.items || []).map((it) => {
+      const points = (it.points || []).map((p) =>
+        "<li>" + check() + "<span><strong>" + esc(p.title) + '</strong><span class="t">' + esc(p.text) + "</span></span></li>"
+      ).join("");
+      return '<article class="duo-card">' +
+        ph(it.media || "Media 16:9", "duo-media") +
+        (it.tier ? "<div>" + tier(it.tier) + "</div>" : "") +
+        "<h3>" + esc(it.title) + "</h3>" +
+        '<p class="duo-lead">' + esc(it.lead) + "</p>" +
+        '<ul class="ab-points">' + points + "</ul>" +
+        '<div class="duo-foot">' +
+          '<a class="btn btn-primary" href="' + esc(it.cta.href) + '">' + esc(it.cta.label) + "</a>" +
+          (it.micro ? '<p class="ab-micro">' + esc(it.micro) + "</p>" : "") +
+        "</div></article>";
+    }).join("");
+    return section(sectionHead(d.eyebrow, d.heading, "dev-title", d.intro) +
+      '<div class="duo-grid">' + cards + "</div>",
+      { id: d.id, labelledby: "dev-title", cls: "tinted" });
+  }
+
+  // 5.6a Case-tarinat (kuva + lainaus + asiakas + linkki)
+  function renderCases() {
+    const c = PAGE.cases; if (!c) return "";
+    const has = (c.items || []).length > 0;
+    const head =
+      '<div class="head-row">' + sectionHead(c.eyebrow, c.heading, "cases-title", c.intro) +
+      (c.allLink ? '<a class="btn-link" href="' + esc(c.allLink.href) + '">' + esc(c.allLink.label) +
+        ' <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>' : "") + "</div>";
+    const cards = (c.items || []).map((it) =>
+      '<article class="case-card">' +
+        ph(it.image || "Asiakaskuva 16:9", "case-media") +
+        '<div class="case-body">' +
+          '<span class="case-cat">' + esc(it.cat) + "</span>" +
+          '<span class="case-qmark" aria-hidden="true"><i class="fa-solid fa-quote-left"></i></span>' +
+          '<blockquote class="case-quote">' + esc(it.quote) + "</blockquote>" +
+          '<div class="case-author">' + ph(it.avatar || "Kuva", "case-avatar") +
+            '<span><span class="ca-name">' + esc(it.name) + '</span><span class="ca-company">' + esc(it.company) + "</span></span></div>" +
+          '<a class="case-link" href="' + esc(it.href) + '">Lue koko juttu <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>' +
+        "</div></article>"
+    ).join("");
+    const body = has
+      ? '<div class="case-grid">' + cards + "</div>"
+      : '<div class="empty-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>' + esc(c.emptyNote) + "</span></div>";
+    return section(head + body, { labelledby: "cases-title" });
+  }
+
+  // 5.6b Brändit ja laatu — yhdistetty lohko, kolme osaa
+  function renderTrust() {
+    const t = PAGE.trust; if (!t) return "";
+    const fillNote = (note) => note
+      ? '<div class="empty-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>' + esc(note) + "</span></div>"
+      : "";
+    const subHead = (heading, link) =>
+      '<div class="head-row"><div class="section-head"><h3 class="trust-subhead">' + esc(heading) + "</h3></div>" +
+      (link ? '<a class="btn-link" href="' + esc(link.href) + '">' + esc(link.label) +
+        ' <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>' : "") + "</div>";
+
+    // 1) Conditen omat brändit (4 korttia)
+    let part1 = "";
+    const o = t.ownBrands;
+    if (o) {
+      const cards = (o.items || []).map((it) =>
+        '<a class="ownbrand-card" href="' + esc(it.href) + '">' +
+          ph("Logo", "ownbrand-logo") +
+          (it.cat ? '<span class="ownbrand-cat">' + esc(it.cat) + "</span>" : "") +
+          "<h3>" + esc(it.name) + "</h3><p>" + esc(it.text) + "</p>" +
+          '<span class="ownbrand-go">Tutustu <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></a>'
+      ).join("");
+      part1 = subHead(o.heading, o.allLink) +
+        '<div class="ownbrand-grid">' + cards + "</div>" + fillNote(o.fillNote);
+    }
+
+    // 2) Edustetut brändit (logoseinä)
+    let part2 = "";
+    const b = t.brands;
+    if (b) {
+      const tiles = (b.logos || []).map((l) =>
+        l.ph ? '<div class="brand-tile placeholder">Logo</div>'
+             : '<div class="brand-tile">' + esc(l.name) + "</div>"
+      ).join("") + (b.more ? '<div class="brand-tile more">' + esc(b.more) + "</div>" : "");
+      part2 = '<div class="trust-part">' + subHead(b.heading, b.allLink) +
+        '<div class="brand-wall">' + tiles + "</div></div>";
+    }
+
+    // 3) Sertifioinnit ja tausta + Orkla-banneri
+    let part3 = "";
+    const c = t.certs;
+    if (c) {
+      const cards = (c.items || []).map((it) =>
+        '<article class="cert-card"><span class="cert-ico" aria-hidden="true"><i class="' + esc(it.icon) + '"></i></span>' +
+        "<div><h3>" + esc(it.title) + "</h3><p>" + esc(it.text) + "</p></div></article>"
+      ).join("");
+      const orkla = c.orkla
+        ? '<div class="orkla-banner"><span class="ob-ico" aria-hidden="true"><i class="fa-solid fa-seedling"></i></span>' +
+          "<div><strong>" + esc(c.orkla.title) + "</strong><p>" + esc(c.orkla.text) + "</p></div></div>"
+        : "";
+      part3 = '<div class="trust-part">' +
+        '<h3 class="trust-subhead" style="margin-bottom:var(--gap-24)">' + esc(c.heading) + "</h3>" +
+        fillNote(c.fillNote) +
+        '<div class="cert-grid">' + cards + "</div>" + orkla + "</div>";
+    }
+
+    return section(sectionHead(t.eyebrow, t.heading, "trust-title", t.intro) + part1 + part2 + part3,
+      { labelledby: "trust-title", cls: "tinted" });
+  }
+
+  // 5.7 Loppu-CTA: liidilomake + webshop-login + yhteys
+  function renderFinalCta() {
+    const f = PAGE.finalCta; if (!f) return "";
+    const fields = (f.fields || []).map((fld) => {
+      const cls = "field" + (fld.full ? " full" : "");
+      const req = fld.required ? ' <span aria-hidden="true" style="color:var(--c-accent-ink);">*</span>' : "";
+      const reqAttr = fld.required ? " required aria-required=\"true\"" : "";
+      let control;
+      if (fld.type === "select") {
+        const opts = (fld.options || []).map((o) => "<option>" + esc(o) + "</option>").join("");
+        control = '<select id="f-' + esc(fld.id) + '"' + reqAttr + '><option value="" disabled selected>Valitse…</option>' + opts + "</select>";
+      } else if (fld.type === "textarea") {
+        control = '<textarea id="f-' + esc(fld.id) + '"' + reqAttr + "></textarea>";
+      } else {
+        control = '<input id="f-' + esc(fld.id) + '" type="' + esc(fld.type || "text") + '"' + reqAttr + ">";
+      }
+      return '<div class="' + cls + '"><label for="f-' + esc(fld.id) + '">' + esc(fld.label) + req + "</label>" + control + "</div>";
+    }).join("");
+    const form =
+      '<div class="form-block">' + tier(f.tierLead) +
+      '<span class="hs-note" style="margin-left:var(--gap-8)"><i class="fa-regular fa-rectangle-list" aria-hidden="true"></i> Dynamics 365 -lomake (placeholder)</span>' +
+      (f.intro ? '<p style="color:var(--c-text-2);margin:var(--gap-16) 0 var(--gap-24);">' + esc(f.intro) + "</p>" : "") +
+      '<form class="form-grid" onsubmit="return false">' + fields + "</form>" +
+      '<div class="form-actions"><button type="button" class="btn btn-primary">' + esc(f.submitLabel || "Lähetä") + "</button>" +
+      (f.microcopy ? '<p class="form-micro">' + esc(f.microcopy) + "</p>" : "") + "</div>" +
+      (f.statesNote ? '<p class="form-states"><b>Tilat:</b> ' + esc(f.statesNote) + "</p>" : "") +
+      "</div>";
+    let info = '<div class="cta-info">';
+    if (f.login) {
+      info += '<div class="login-card">' + tier(f.tierLogin) +
+        "<h3>" + esc(f.login.heading) + "</h3><p>" + esc(f.login.text) + "</p>" +
+        '<a class="btn btn-outline" href="' + esc(f.login.cta.href) + '"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> ' + esc(f.login.cta.label) + "</a></div>";
+    }
+    const c = f.contact;
+    if (c) {
+      const rows = (c.items || []).map((it) =>
+        "<div><dt>" + esc(it.dt) + "</dt><dd>" + esc(it.dd) +
+        (it.link ? '<br><a href="' + esc(it.link.href) + '">' + esc(it.link.label) + "</a>" : "") + "</dd></div>"
+      ).join("");
+      info += '<div class="info-card">' + (c.heading ? "<h3 style=\"font-size:var(--fs-h3);margin-bottom:var(--gap-16)\">" + esc(c.heading) + "</h3>" : "") + "<dl>" + rows + "</dl></div>";
+    }
+    info += "</div>";
+    return section(sectionHead(f.eyebrow, f.heading, "final-title", null) +
+      '<div class="cta-form-layout">' + form + info + "</div>", { id: f.id, labelledby: "final-title" });
+  }
+
+  const html = [
+    renderHero(),
+    renderSegments(),
+    renderUsp(),
+    renderDevPartner(),
+    renderCategories(),
+    renderCampaign(),
+    renderRecipes(),
+    renderCases(),
+    renderNews(),
+    renderEvents(),
+    renderTrust(),
+    renderFinalCta()
+  ].join("");
+
+  document.getElementById("main").innerHTML = html;
+
+  // --- Mobiilivalikko + dropdownit (näppäimistö/touch) ---
+  const toggle = document.querySelector(".nav-toggle");
+  const navMain = document.getElementById("primary-nav");
+  if (toggle && navMain) {
+    toggle.addEventListener("click", () => {
+      const open = navMain.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      toggle.setAttribute("aria-label", open ? "Sulje valikko" : "Avaa valikko");
+    });
+  }
+  // Dropdown-toggle mobiilissa (klikkaa avaa/sulkee), Esc sulkee desktopilla
+  document.querySelectorAll(".nav-list > li.has-dropdown > a[aria-haspopup]").forEach((a) => {
+    a.addEventListener("click", (e) => {
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        e.preventDefault();
+        const li = a.parentElement;
+        const open = li.classList.toggle("open");
+        a.setAttribute("aria-expanded", open ? "true" : "false");
+      }
+    });
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      document.querySelectorAll(".nav-list > li.has-dropdown.open").forEach((li) => {
+        li.classList.remove("open");
+        const a = li.querySelector("a[aria-haspopup]");
+        if (a) a.setAttribute("aria-expanded", "false");
+      });
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# Projektikonteksti ja ohjeet — eivät kuulu julkiselle URL:lle
+CLAUDE.md
+condite_konteksti.md
+condite_meista_avoimet_kysymykset.md
+
+# Tuotedata
+Condite_tuotteet.xlsx
+Condite Tuotekortti.html
+
+# Vanhat versiot
+vanhat/
+
+# Työkalukonfiguraatio
+.claude/

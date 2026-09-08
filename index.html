@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Condite.fi — wireframet | Prototyyppihakemisto</title>
+<!--
+  Condite.fi — wireframehakemisto (index)
+  Tokenit :root-kerroksessa kanonisesta design systemistä (condite_design_system.html).
+  Config-driven: PAGE-objekti + render-IIFE. FI only.
+-->
+<style>
+  :root {
+    /* Taustat */
+    --c-bg: #ffffff;
+    --c-bg-soft: #f7f7f7;
+    --c-bg-tint: #eef6fb;
+    /* Teksti */
+    --c-text: #1d1d1f;
+    --c-text-2: #555555;
+    --c-text-muted: #6f6f6f;
+    /* Viivat */
+    --c-border: #e3e3e3;
+    --c-border-strong: #cfcfcf;
+    --c-divider: #d8d8d8;
+    /* Korostus — pehmeä sininen */
+    --c-accent: #7fc8ec;
+    --c-accent-ink: #0a6e9b;
+    --c-on-accent: #0a4f72;
+    --c-accent-soft: #e3f2fb;
+    --c-suits-border: #b7def4;
+    /* Tilavärit */
+    --c-tulossa-bg: #fff4cc; --c-tulossa-border: #f0d885; --c-tulossa-text: #6b4d00;
+    /* Pyöristykset */
+    --r-sm: 4px; --r-md: 8px; --r-lg: 12px;
+    /* Välistys */
+    --sp-1: 8px; --sp-2: 16px; --sp-3: 24px; --sp-4: 32px; --sp-6: 48px; --sp-8: 64px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+
+  body {
+    margin: 0;
+    background: var(--c-bg-soft);
+    color: var(--c-text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    padding: 0 0 var(--sp-8);
+  }
+  a { color: var(--c-accent-ink); }
+  a:focus-visible {
+    outline: 2.5px solid var(--c-accent);
+    outline-offset: 2px;
+    border-radius: var(--r-sm);
+  }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 var(--sp-4); }
+  .eyebrow {
+    font-size: 12px; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--c-accent-ink); margin: 0 0 4px;
+  }
+
+  /* ---- Hero ---- */
+  .hero {
+    background: var(--c-bg);
+    border-bottom: 1px solid var(--c-border);
+    padding: var(--sp-6) 0;
+    margin-bottom: var(--sp-6);
+  }
+  .hero h1 { font-size: 40px; line-height: 1.12; margin: 0 0 12px; font-weight: 700; }
+  .hero .lede { margin: 0; color: var(--c-text-2); max-width: 64ch; }
+
+  .notice {
+    margin: var(--sp-3) 0 0;
+    padding: var(--sp-2);
+    background: var(--c-bg-tint);
+    border: 1px solid var(--c-suits-border);
+    border-radius: var(--r-md);
+    font-size: 14px;
+    color: var(--c-text-2);
+    max-width: 72ch;
+  }
+  .notice strong { color: var(--c-text); }
+
+  /* ---- Ryhmät ---- */
+  .group { margin-bottom: var(--sp-6); }
+  .group-head {
+    display: flex; align-items: baseline; gap: var(--sp-2);
+    padding-bottom: var(--sp-1);
+    border-bottom: 1px solid var(--c-divider);
+    margin-bottom: var(--sp-3);
+  }
+  .group-head h2 { font-size: 22px; margin: 0; font-weight: 700; }
+  .group-head .count { font-size: 13px; color: var(--c-text-muted); }
+
+  /* ---- Kortit ---- */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--sp-2);
+  }
+  .card {
+    display: block;
+    background: var(--c-bg);
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-lg);
+    padding: var(--sp-2) var(--sp-3) var(--sp-3);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color .12s ease, box-shadow .12s ease;
+  }
+  .card:hover {
+    border-color: var(--c-accent);
+    box-shadow: 0 2px 10px rgba(10, 110, 155, .10);
+  }
+  .card .kicker {
+    font-size: 11px; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--c-text-muted);
+    margin: 0 0 var(--sp-1);
+  }
+  .card h3 {
+    font-size: 17px; line-height: 1.3; margin: 0 0 6px; font-weight: 700;
+    color: var(--c-accent-ink);
+  }
+  .card p { margin: 0; font-size: 14px; color: var(--c-text-2); }
+  .card .file {
+    display: block; margin-top: var(--sp-2);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11.5px; color: var(--c-text-muted);
+    word-break: break-all;
+  }
+  .badge {
+    display: inline-block; margin-left: 6px; padding: 1px 7px;
+    border-radius: 999px; font-size: 11px; font-weight: 700;
+    letter-spacing: .02em; vertical-align: 2px;
+    background: var(--c-accent-soft); color: var(--c-on-accent);
+    border: 1px solid var(--c-suits-border);
+  }
+  .badge.uusin { background: var(--c-tulossa-bg); border-color: var(--c-tulossa-border); color: var(--c-tulossa-text); }
+
+  footer.page-foot {
+    margin-top: var(--sp-8);
+    padding-top: var(--sp-3);
+    border-top: 1px solid var(--c-border);
+    font-size: 13px; color: var(--c-text-muted);
+  }
+  footer.page-foot p { margin: 0 0 4px; }
+
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 30px; }
+    .wrap { padding: 0 var(--sp-2); }
+  }
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script>
+/* ------------------------------------------------------------------
+   PAGE — kaikki sisältö yhdessä objektissa
+------------------------------------------------------------------ */
+const PAGE = {
+  hero: {
+    eyebrow: 'Prototyyppi · sisäinen',
+    h1: 'Condite.fi — wireframet',
+    lede: 'Kiillotetut wireframet Conditen verkkosivu-uudistuksesta. Jokainen sivu on itsenäinen HTML-tiedosto, joka nojaa yhteiseen design systemiin. Vain suomi.',
+    notice: '<strong>Huom:</strong> sivujen sisäiset navigaatiolinkit osoittavat tulevan sivuston osoitteisiin (esim. <code>/tuotteet/</code>) eivätkä avaudu tässä prototyypissä. Liiku sivujen välillä tästä hakemistosta. Lomakkeet ja haku näytetään tiloineen, mutta eivät lähetä mitään.'
+  },
+  groups: [
+    {
+      title: 'Etusivu',
+      items: [
+        { kicker: 'Etusivu', title: 'Condite — etusivu', file: 'condite_etusivu_wireframe.html',
+          desc: 'Segmentin tunnistus ja ohjaus syväsisältöön. Luottamusalue kolmena blokkina: omat brändit, logoseinä ja sertifikaatit + Orkla-banneri.' }
+      ]
+    },
+    {
+      title: 'Tuotteet ja brändit',
+      items: [
+        { kicker: 'Hub', title: 'Tuotteet', file: 'condite_tuotteet_wireframe.html',
+          desc: 'Katalogin orientointi ja reititys. Hakukeskeinen sisäänkäynti 630 tuotteeseen.' },
+        { kicker: 'Listaus', title: 'Tuotteet ja haku', file: 'condite_tuotelistaus_feelia_wireframe.html',
+          desc: 'Yhdistetty haku, listaus, selaus ja suodatus. Kaksitasoinen kategorianavigaatio ja vertailu.' },
+        { kicker: 'Tuotekortti', title: 'Tuotekortti v3', file: 'condite_tuotekortti_v3_wireframe.html', badge: 'Uusin', badgeClass: 'uusin',
+          desc: 'Feed-vetoinen tuotesivu: tunniste, tilausreitti ja konteksti. Promix Maitokiisseliaines.' },
+        { kicker: 'Tuotekortti', title: 'Tuotekortti v2', file: 'condite_tuotekortti_v2_wireframe.html',
+          desc: 'Aiempi versio kysymysklusteroinnilla. Capsi savustettu paprikajauhe.' },
+        { kicker: 'Hub', title: 'Brändit', file: 'condite_brandihub_wireframe.html',
+          desc: 'Brändihakemisto: omat brändit ensin, sitten edustettujen brändien logoseinä.' },
+        { kicker: 'Omabrändisivu', title: 'Xocofine', file: 'condite_omabrandi_xocofine_wireframe.html',
+          desc: 'Omabrändisivun malli — ammattilaissuklaa ja kuvertyyri. Toimii pohjana muille omille brändeille.' }
+      ]
+    },
+    {
+      title: 'Toimialat',
+      items: [
+        { kicker: 'Hub', title: 'Toimialat', file: 'condite_toimialat_wireframe.html',
+          desc: 'Neljän segmentin sisäänkäynti: leipomot, food service, food industry ja private label.' },
+        { kicker: 'Segmenttihubi', title: 'Leipomot', file: 'condite_segmenttihubi_leipomot_wireframe.html',
+          desc: 'Segmenttihubin master-template. Kiinteä runko + vaihtuvat keskimodulit.' }
+      ]
+    },
+    {
+      title: 'Reseptit',
+      items: [
+        { kicker: 'Listaus', title: 'Reseptipankki', file: 'condite_reseptipankki_wireframe.html',
+          desc: 'Reseptien selaus ja suodatus. Käänteinen suosittelu tuotteisiin "Sisältää:"-rivillä.' },
+        { kicker: 'Reseptisivu', title: 'Suolainen kinuskitäyte', file: 'condite_reseptisivu_wireframe.html',
+          desc: 'Yksittäinen resepti. Elävä annoslaskuri ja "vaihda täyte" -moduli.' }
+      ]
+    },
+    {
+      title: 'Tuotekehitys',
+      items: [
+        { kicker: 'Hub', title: 'Tuotekehitys', file: 'condite_tuotekehitys_wireframe.html',
+          desc: 'Kehityskumppanuuden sisäänkäynti — raaka-aineet, reseptit ja private label.' },
+        { kicker: 'Erottautuja', title: 'Makupaja', file: 'condite_makupaja_wireframe.html',
+          desc: 'Testikeittiö näkyväksi ja varattavaksi. Kuusivaiheinen prosessi ja varauslomake kolmessa tilassa.' },
+        { kicker: 'Prosessi', title: 'Räätälöintiprosessi', file: 'condite_raatalointiprosessi_wireframe.html',
+          desc: 'Yhteistyöprosessi läpinäkyväksi. Pystysuuntainen vaiheistus kestoineen.' },
+        { kicker: 'Palvelu', title: 'Resepti- ja sovelluskehitys', file: 'condite_reseptikehitys_wireframe.html',
+          desc: 'Reseptikehitys palveluna. Pää-CTA ohjaa reseptipankkiin.' },
+        { kicker: 'Palvelu', title: 'Private label', file: 'condite_private_label_wireframe.html',
+          desc: 'Kehitys- ja valmistusnäkökulma. Kuusivaiheinen ketju ja Orkla-banneri.' },
+        { kicker: 'Uskottavuus', title: 'Referenssit ja case-tarinat', file: 'condite_referenssit_wireframe.html',
+          desc: 'Case-tarinat kehitysyhteistyöstä asiakkaiden kanssa.' }
+      ]
+    },
+    {
+      title: 'Yritys ja yhteys',
+      items: [
+        { kicker: 'Yritys', title: 'Meistä', file: 'condite_yritys_wireframe.html',
+          desc: 'Luottamusnarratiivi: oma tuotanto kärkenä, historia-aikajana, sertifikaatit ja Orkla.' },
+        { kicker: 'Yritys', title: 'Vastuullisuus ja toimitusketju', file: 'condite_vastuullisuus_wireframe.html',
+          desc: 'Sertifikaatit ja periaatteet, numeroitu toimitusketju. Placeholderit suojaavat viherpesulta.' },
+        { kicker: 'Konversiopiste', title: 'Yhteys', file: 'condite_yhteys_wireframe.html',
+          desc: 'Liidipolun päätepiste: yhteydenotto, reklamaatio, myyjät ja laskutus. Kiitos-tila lomakkeen sisällä.' },
+        { kicker: 'Tukisivu', title: 'Laskutusohjeet', file: 'condite_laskutusohjeet_wireframe.html',
+          desc: 'Verkkolaskutus ja maksuehdot.' }
+      ]
+    },
+    {
+      title: 'Kampanjat',
+      items: [
+        { kicker: 'Sivutyyppi', title: 'Kampanjaländäri', file: 'condite_kampanja_wireframe.html',
+          desc: 'Kampanjasivun runko + modulikirjasto. Kolme demokampanjaa ja valinnainen kampanjasävy.' }
+      ]
+    },
+    {
+      title: 'Systeemi ja komponentit',
+      items: [
+        { kicker: 'Kanoninen', title: 'Design system', file: 'condite_design_system.html', badge: 'Lähde',
+          desc: 'Ainoa totuuden lähde tokeneille, typolle, spacingille ja komponenteille. Pehmennetty tonaalinen sininen.' },
+        { kicker: 'Komponentti', title: 'Pystysuuntainen vaiheistus', file: 'condite_komponentti_vaiheistus.html',
+          desc: 'Jaettu prosessivaiheistus-komponentti (vsteps). Kopioitava pohja sisarsivuille.' }
+      ]
+    },
+    {
+      title: 'Makupaja-infograafit — luonnosvariantit',
+      items: [
+        { kicker: 'Variantti', title: 'Perusversio', file: 'condite_makupaja_infograafi.html', desc: 'Makupaja-prosessi infograafina.' },
+        { kicker: 'Variantti', title: 'Anna / saat -punos', file: 'condite_makupaja_infograafi_punos.html', desc: 'Prosessi vastavuoroisuuden kautta.' },
+        { kicker: 'Variantti', title: 'Testaussykli', file: 'condite_makupaja_infograafi_sykli.html', desc: 'Iteratiivinen sykli.' },
+        { kicker: 'Variantti', title: 'Sykli + callout', file: 'condite_makupaja_infograafi_sykli_callout.html', desc: 'Sykli selittävillä callout-kuvauksilla.' },
+        { kicker: 'Variantti', title: 'Vertikaali', file: 'condite_makupaja_infograafi_vertikaali.html', desc: 'Pystysuuntainen esitys.' }
+      ]
+    }
+  ],
+  foot: [
+    'Condite.fi — palvelumuotoiluvaiheen HTML-prototyyppi. Ei tuotantokoodia.',
+    'Toteutus: Genero. Sivut eivät indeksoidu (noindex).'
+  ]
+};
+
+/* ------------------------------------------------------------------
+   Render
+------------------------------------------------------------------ */
+(function render() {
+  const esc = s => String(s).replace(/[&<>"']/g, c =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+  const h = PAGE.hero;
+  let out = '';
+
+  out += '<header class="hero"><div class="wrap">'
+    + '<p class="eyebrow">' + esc(h.eyebrow) + '</p>'
+    + '<h1>' + esc(h.h1) + '</h1>'
+    + '<p class="lede">' + esc(h.lede) + '</p>'
+    + '<p class="notice">' + h.notice + '</p>'
+    + '</div></header>';
+
+  out += '<main class="wrap">';
+  PAGE.groups.forEach(g => {
+    out += '<section class="group">'
+      + '<div class="group-head"><h2>' + esc(g.title) + '</h2>'
+      + '<span class="count">' + g.items.length + ' sivu' + (g.items.length === 1 ? '' : 'a') + '</span></div>'
+      + '<div class="cards">';
+
+    g.items.forEach(it => {
+      const badge = it.badge
+        ? '<span class="badge' + (it.badgeClass ? ' ' + esc(it.badgeClass) : '') + '">' + esc(it.badge) + '</span>'
+        : '';
+      out += '<a class="card" href="' + esc(it.file) + '">'
+        + '<p class="kicker">' + esc(it.kicker) + '</p>'
+        + '<h3>' + esc(it.title) + badge + '</h3>'
+        + '<p>' + esc(it.desc) + '</p>'
+        + '<span class="file">' + esc(it.file) + '</span>'
+        + '</a>';
+    });
+
+    out += '</div></section>';
+  });
+
+  out += '<footer class="page-foot">'
+    + PAGE.foot.map(p => '<p>' + esc(p) + '</p>').join('')
+    + '</footer>';
+  out += '</main>';
+
+  document.getElementById('app').innerHTML = out;
+})();
+</script>
+
+</body>
+</html>

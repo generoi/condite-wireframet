@@ -1,0 +1,1143 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reseptit ja sovellukset ammattikeittiöön ja leipomoon | Condite</title>
+<meta name="description" content="Selaa Conditen reseptipankkia: täytteet, pohjat, kuorrutukset, jälkiruoat ja suolaiset sovellukset ammattikeittiöön ja leipomoon. Jokainen resepti näyttää käytetyt Condite-tuotteet ja linkittää suoraan katalogiin.">
+<meta name="robots" content="index, follow">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!--
+  CONDITE.FI — RESEPTIPANKKI (TEMPLATE / SELAUSPINTA) · KIILLOTETTU WIREFRAME (FI)
+  Pohja: approved design system (condite_design_system.html) — softened tonal blue.
+  Chrome (header/crumbs/footer/mobiilinavi/tokenit) yhteinen reseptisivun kanssa (sisarsivu,
+  johon kortit linkittävät).
+
+  SELAUSMALLIN HISTORIA JA NYKYTILA:
+  · 17.6.2026 (Olli) launch-yksinkertaistus: fasetit pois, EI vasenta palkkia, kaksiportainen
+    kategorianavi → yksi vaakasuora kategoriapilleririvi. Vasen palkki ei palaa.
+  · 28.8.2026 (Miro-lappu, asiakas): "hakua ja suodatusta kannattaa kehittää vahvasti, koska
+    reseptimäärä kasvaa ajan myötä" + "sesonkien ja trendien näkyminen reseptiosiossa voisi tuoda
+    lisäarvoa". → Olli: fasetit NÄKYVIIN NYT (ei enää pelkkänä WP-suunnitelmana) ja sesonki
+    SEKÄ toimituksellisena nostona ETTÄ suodatinarvona.
+
+  SUODATUSRAKENNE (S4b, toteutettu — prioriteetti sama kuin aiempi fasettiehdotus):
+   1. RUOKAVALIO (gluteeniton · vegaaninen · laktoositon) — sama avoin data kuin tuotteilla ja
+      suoraan hakukysyntää vastaava ("gluteenittomat ratkaisut").
+   2. SEGMENTTI / KÄYTTÖYMPÄRISTÖ (leipomo · food service · teollisuus) — sama resepti palvelee
+      eri persoonia; nopein tapa suodattaa relevanssiin (Tarja vs. Kaisa vs. Hannu).
+   3. CONDITE-BRÄNDI — käänteisrekommendaattori suodattimena ("näytä reseptit, joissa on Credin").
+      Data on jo olemassa (product-relaatio) → halpa toteuttaa, tukee myyntiä.
+   4. SESONKI (joulu · pääsiäinen · kesä · syksy ja talvi) — kytkeytyy kampanjasisältöön
+      ja uutiskirjeeseen.
+   POIS JÄTETTY: valmistusaika (lajittelu "Nopein ensin" kattaa tarpeen) ja vaikeustaso
+   (ammattilaiselle heikko erottelija, subjektiivinen ylläpito) — voi lisätä myöhemmin.
+   KATEGORIA on asiakkaan filtterikartalla viides suodatin, mutta se pysyy PÄÄTÖKSELLÄ (Olli
+   28.8.2026) omana pilleririvinään fasettivalikoiden yläpuolella: se on yleisin sisääntulo ja
+   ansaitsee näkyvimmän paikan (yksi klikkaus, laskurit näkyvissä, ei valikon takana).
+   Yksivalintainen — fasetit ovat monivalintaisia.
+   CONDITE-BRÄNDI ei ole asiakkaan kartalla mutta pidetään toistaiseksi (Olli 28.8.2026:
+   "voidaan pitää brändi ja poistaa se jos tarve vaatii") — poisto = poista yksi olio
+   PAGE.facetGroups-taulukosta, muu logiikka on geneeristä eikä vaadi muutoksia.
+  Sijainti: fasettirivi kategoriapillerien ALLA omana rivinään — ei sivupalkkia. Logiikka:
+  ryhmän sisällä TAI, ryhmien välillä JA; elävät laskurit (ignore-self); 0 tulosta = disabloitu;
+  aktiiviset valinnat poistettavina pillereinä + "Tyhjennä suodattimet".
+  Haku kattaa nyt myös brändin, ruokavalion, segmentin ja sesongin (ei vain nimeä/kategoriaa).
+
+  NOSTOSTRIPPI (Olli 28.8.2026): nostettu resepti + "Nyt kysytyimmät" yhdellä matalalla rivillä
+  HETI H1:n JÄLKEEN, HAUN YLÄPUOLELLA — sisääntulonosto ennen työkaluja, haku ja suodattimet heti
+  sen alla. Strippi piiloutuu kun käyttäjä ilmaisee aikeen (haku / fasetti / kategoria).
+  SESONKIPIKAVALINNAT POISTETTU (Olli 28.8.2026: "poistetaan sesongissa nyt") — sesonki on yhä
+  fasettina Rajaa-rivillä, joten suodatin ei kadonnut, vain pikapilleririvi.
+  K (DATA): trendilista on käsin kuratoitu (PAGE.trending.items); WP-vaiheessa joko GA4-pohjainen
+  tai toimituksellisesti nostettu. Lajittelun "Suosituimmat" pysyy siksi disabloituna.
+
+  PALETTIPÄÄTÖS: hyväksytty DS-paletti (--c-accent #7fc8ec / --c-accent-ink #0a6e9b)
+  KORVAA kontekstin §9:n kirkkaan #00A0E0:n (CLAUDE.md / DS = kanoninen).
+
+  SIVUN STRATEGINEN YDIN = KÄÄNTEISREKOMMENDAATTORI: jokainen resepti rakentuu Condite-tuotteen
+  ympärille (product-relaatio datassa) → nostettu resepti + Reseptisivu sitovat reseptit katalogiin.
+
+  PÄÄSYTASOT: koko pankki on löydettävyyssisältöä → KAIKKI lohkot AVOIMIA, paitsi
+  Makupaja-nosto = LIIDI (nosto + linkki, ei upotettua lomaketta). EI login-lohkoja.
+
+  AVOIN DATARIIPPUVUUS (K): reseptidataa ei ole datasettinä → kovakoodattu 12 placeholder-reseptiä.
+
+  §8-TARKISTUSLISTA (täytetty):
+  · Laskeutumisvalmius: crumbs · hero selittää mistä on kyse · näkyvä navi + kategoriat + haku → seisoo omillaan
+  · Ratkaisulähtöinen otsikointi: H1 + kategoriat ongelman ympärille (täytteet, pohjat, kuorrutukset)
+  · Kanava→laskeutuminen: Google (ratkaisuhaku) + some/uutiskirje; hero + ruudukko vastaavat heti "mitä täältä löytyy"
+  · Verkkosivu vs verkkokauppa: pankki myy idean/inspiraation (avoin); tilaus tulee vasta tuotteen kautta
+  · Pää-CTA: selaus reseptikortteihin (→ Reseptisivu); Makupaja sekundäärinä
+  · Pääsytaso per lohko: kaikki avoin paitsi Makupaja (liidi); ei login-lohkoja
+  · Ei umpikujia: kortit · kategoriat · fasetit · nostostrippi · haku · tyhjä tila
+    polkuineen · Makupaja · "selaa tuotteet"
+-->
+<style>
+  :root {
+    /* Taustat */
+    --c-bg:#ffffff; --c-bg-soft:#f7f7f7; --c-bg-tint:#eef6fb;
+    /* Teksti */
+    --c-text:#1d1d1f; --c-text-2:#555555; --c-text-muted:#6f6f6f;
+    /* Viivat */
+    --c-border:#e3e3e3; --c-border-strong:#cfcfcf; --c-divider:#d8d8d8;
+    /* Kuvapaikat */
+    --c-ph-bg:#ececec; --c-ph-border:#c8c8c8;
+    /* Korostus — pehmeä sininen (DS) */
+    --c-accent:#7fc8ec; --c-accent-ink:#0a6e9b; --c-on-accent:#0a4f72;
+    --c-accent-soft:#e3f2fb; --c-suits-border:#b7def4;
+    /* Tila- ja merkkivärit */
+    --c-in-bg:#e7efe9; --c-in-text:#2f5a40;
+    --c-warn-bg:#fff5f0; --c-warn-border:#f3d3c1; --c-warn-text:#c0451c;
+    /* Pyöristykset */
+    --r-sm:4px; --r-md:8px; --r-lg:12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--c-bg); color: var(--c-text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+    font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased;
+  }
+  /* Shell-gotcha: author-display:flex ohittaa UA-säännön — pidä tämä mukana */
+  [hidden] { display: none !important; }
+  a { color: var(--c-accent-ink); }
+  img { max-width: 100%; }
+
+  /* Saavutettavuus */
+  .skip {
+    position: absolute; left: 8px; top: -48px; z-index: 100;
+    background: var(--c-accent); color: var(--c-on-accent); font-weight: 700;
+    padding: 10px 16px; border-radius: var(--r-sm); text-decoration: none; transition: top .15s;
+  }
+  .skip:focus { top: 8px; }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible {
+    outline: 2.5px solid var(--c-accent); outline-offset: 2px; border-radius: var(--r-sm);
+  }
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+
+  /* Layout */
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  .block { max-width: 1200px; margin: 0 auto; padding: 64px 24px 0; }
+  .block.first { padding-top: 24px; }
+  .block.last { padding-bottom: 64px; }
+  .band { border-top: 1px solid var(--c-suits-border); border-bottom: 1px solid var(--c-suits-border); background: var(--c-bg-tint); margin-top: 64px; }
+  .band .block { padding-top: 56px; padding-bottom: 56px; }
+
+  /* Tyypit */
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--c-accent-ink); margin: 0 0 8px; }
+  h1 { font-size: 44px; line-height: 1.12; letter-spacing: -.01em; margin: 0 0 16px; font-weight: 700; }
+  h2 { font-size: 30px; line-height: 1.18; margin: 0; font-weight: 700; }
+  h3 { font-size: 18px; font-weight: 700; }
+  .intro { margin: 16px 0 0; color: var(--c-text-2); }
+  .lede { margin: 0; color: var(--c-text-2); font-size: 18px; max-width: 64ch; }
+  .section-head { max-width: 760px; }
+  .section-head .intro { margin-top: 12px; }
+
+  /* Painikkeet */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: var(--r-sm); font-weight: 600; font-size: 16px; text-decoration: none; line-height: 1.2; cursor: pointer; padding: 13px 22px; border: 1.5px solid transparent; font-family: inherit; }
+  .btn-primary { border-color: var(--c-accent); background: var(--c-accent); color: var(--c-on-accent); }
+  .btn-outline { border-color: var(--c-accent-ink); background: var(--c-bg); color: var(--c-accent-ink); }
+  .btn-sm { padding: 9px 16px; font-size: 14px; border-color: var(--c-accent-ink); background: var(--c-bg); color: var(--c-accent-ink); }
+  .btn-link { color: var(--c-accent-ink); text-decoration: none; font-weight: 600; font-size: 14px; display: inline-flex; gap: 6px; align-items: center; white-space: nowrap; cursor: pointer; background: none; border: 0; font-family: inherit; padding: 0; }
+  .btn-ghost { background: none; border: 1px solid var(--c-border-strong); color: var(--c-text-2); padding: 9px 16px; font-size: 14px; border-radius: var(--r-sm); font-weight: 600; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; text-decoration: none; font-family: inherit; }
+  .btn-ghost:hover { border-color: var(--c-accent-ink); color: var(--c-accent-ink); }
+
+  /* Header */
+  .site-header { border-bottom: 1px solid var(--c-border); background: var(--c-bg); position: sticky; top: 0; z-index: 50; }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; min-height: 64px; gap: 32px; }
+  .logo { flex: none; width: 110px; height: 34px; background: var(--c-ph-bg); border: 1px dashed var(--c-ph-border); display: flex; align-items: center; justify-content: center; color: var(--c-text-2); font-size: 12px; border-radius: var(--r-sm); letter-spacing: .5px; font-weight: 700; text-decoration: none; }
+  .nav-main { display: flex; align-items: center; justify-content: center; flex: 1; }
+  .nav-list { list-style: none; margin: 0; padding: 0; display: flex; gap: 2px; }
+  .nav-list a { text-decoration: none; padding: 8px 12px; border-radius: var(--r-sm); font-weight: 500; color: var(--c-text); font-size: 14px; white-space: nowrap; position: relative; }
+  .nav-list a:hover { color: var(--c-accent-ink); }
+  .nav-list a[aria-current="page"] { color: var(--c-accent-ink); font-weight: 700; }
+  .nav-list a[aria-current="page"]::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: 0; height: 2px; background: var(--c-accent); border-radius: 2px; }
+  .nav-actions { flex: none; display: inline-flex; align-items: center; gap: 16px; }
+  .lang { display: inline-flex; align-items: center; gap: 2px; font-size: 14px; }
+  .lang a { text-decoration: none; padding: 3px 7px; border-radius: var(--r-sm); color: var(--c-text-muted); }
+  .lang a[aria-current="true"] { background: var(--c-bg-soft); color: var(--c-text); font-weight: 700; }
+  .nav-toggle { display: none; }
+
+  /* Murupolku */
+  .crumbs { max-width: 1200px; margin: 0 auto; padding: 14px 24px 0; font-size: 13px; color: var(--c-text-muted); }
+  .crumbs ol { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; }
+  .crumbs a { color: var(--c-text-2); text-decoration: none; }
+  .crumbs a:hover { color: var(--c-accent-ink); }
+  .crumbs li[aria-current="page"] { color: var(--c-text); font-weight: 600; }
+  .crumbs .sep { color: var(--c-border-strong); }
+
+  /* Yleinen kuvapaikka (.ph = DS placeholder-media) */
+  .ph { background: var(--c-ph-bg); border: 1px dashed var(--c-ph-border); display: flex; align-items: center; justify-content: center; color: var(--c-text-2); font-size: 13px; gap: 6px; text-align: center; }
+  .ph i { opacity: .6; }
+  .ph-16-10 { aspect-ratio: 16 / 10; }
+  .ph-16-9 { aspect-ratio: 16 / 9; }
+  .ph-4-3 { aspect-ratio: 4 / 3; }
+  .ph-1-1 { aspect-ratio: 1 / 1; }
+
+  /* ===== "Näytä lisää" (Baymard: load-more skaalautuvuus suurelle N:lle) ===== */
+  .load-more-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 32px; }
+  .load-more-note { font-size: 13px; color: var(--c-text-muted); }
+
+  /* ===== S4 SELAUSALUE — YKSIPALSTAINEN (ei sivupalkkia) ===== */
+  .browse-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+  .browse-head h2 { font-size: 22px; }
+  .browse-head .browse-sub { margin: 6px 0 0; color: var(--c-text-2); font-size: 15px; }
+
+  /* result-bar — haku (vasen, flex-grow) + lajittelu (oikea) */
+  .result-bar { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 24px; }
+  .result-search { flex: 1; min-width: 240px; position: relative; }
+  .result-search .ic { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--c-text-muted); font-size: 14px; pointer-events: none; }
+  .result-search input { width: 100%; padding: 12px 14px 12px 38px; border: 1px solid var(--c-border-strong); border-radius: var(--r-sm); font: inherit; font-size: 15px; background: var(--c-bg); color: var(--c-text); }
+  .result-sort { display: inline-flex; align-items: center; gap: 8px; }
+  .result-sort label { font-size: 14px; color: var(--c-text-2); white-space: nowrap; }
+  .result-sort select { padding: 11px 12px; border: 1px solid var(--c-border-strong); border-radius: var(--r-sm); font: inherit; font-size: 14px; background: var(--c-bg); color: var(--c-text); cursor: pointer; }
+
+  /* ===== Kategoriapillerit — yksinkertainen vaakaselaus (korvaa sivupalkkinavin) ===== */
+  .cat-pills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+  .cat-pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--c-border-strong); background: var(--c-bg); color: var(--c-text); font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; white-space: nowrap; transition: border-color .15s, background .15s, color .15s; }
+  .cat-pill:hover { border-color: var(--c-accent-ink); color: var(--c-accent-ink); }
+  .cat-pill.is-active { background: var(--c-accent-soft); border-color: var(--c-suits-border); color: var(--c-accent-ink); }
+  .cat-pill:disabled { opacity: .45; cursor: not-allowed; border-color: var(--c-border); }
+  .cat-pill:disabled:hover { color: var(--c-text); }
+  .cat-pill .cat-count { font-size: 12px; font-weight: 700; color: var(--c-text-muted); font-variant-numeric: tabular-nums; }
+  .cat-pill.is-active .cat-count { color: var(--c-accent-ink); }
+
+  /* ===== S4b FASETTIRIVI (28.8.2026) — kategoriapillerien ALLA, ei sivupalkkia ===== */
+  .facet-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 12px; }
+  .facet { position: relative; }
+  .facet > summary { list-style: none; display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: var(--r-sm); border: 1px solid var(--c-border-strong); background: var(--c-bg); color: var(--c-text); font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .facet > summary::-webkit-details-marker { display: none; }
+  .facet > summary:hover { border-color: var(--c-accent-ink); color: var(--c-accent-ink); }
+  .facet > summary .chev { font-size: 11px; color: var(--c-text-muted); transition: transform .15s; }
+  .facet[open] > summary { border-color: var(--c-accent-ink); color: var(--c-accent-ink); }
+  .facet[open] > summary .chev { transform: rotate(180deg); }
+  .facet.has-sel > summary { background: var(--c-accent-soft); border-color: var(--c-suits-border); color: var(--c-accent-ink); }
+  .facet .f-badge { min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: var(--c-accent-ink); color: #fff; font-size: 11px; font-weight: 700; display: none; align-items: center; justify-content: center; font-variant-numeric: tabular-nums; }
+  .facet.has-sel .f-badge { display: inline-flex; }
+  .facet-panel { position: absolute; z-index: 40; top: calc(100% + 6px); left: 0; min-width: 250px; background: var(--c-bg); border: 1px solid var(--c-border-strong); border-radius: var(--r-md); box-shadow: 0 10px 28px rgba(10,79,114,.14); padding: 8px; }
+  .facet-opt { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--r-sm); font-size: 14px; cursor: pointer; }
+  .facet-opt:hover { background: var(--c-bg-soft); }
+  .facet-opt input { width: 16px; height: 16px; accent-color: var(--c-accent-ink); cursor: pointer; flex: none; }
+  .facet-opt .fo-count { margin-left: auto; font-size: 12px; font-weight: 700; color: var(--c-text-muted); font-variant-numeric: tabular-nums; }
+  .facet-opt.is-zero { opacity: .42; cursor: not-allowed; }
+  .facet-opt.is-zero input { cursor: not-allowed; }
+
+  /* Aktiiviset valinnat — poistettavat pillerit (Baymard: applied-filters overview) */
+  .active-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; }
+  .active-filters[hidden] { display: none; }
+  .af-lbl { font-size: 13px; color: var(--c-text-muted); font-weight: 600; }
+  .af-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 8px 6px 12px; border-radius: 999px; border: 1px solid var(--c-suits-border); background: var(--c-accent-soft); color: var(--c-accent-ink); font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; }
+  .af-pill .af-grp { font-weight: 400; opacity: .8; }
+  .af-pill i { font-size: 11px; }
+  .af-pill:hover { border-color: var(--c-accent-ink); }
+  .af-clear { background: none; border: 0; padding: 0 4px; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--c-accent-ink); cursor: pointer; text-decoration: underline; }
+
+  /* ===== Sesonkipikavalinnat (28.8.2026, tiivistetty) — heron alla, ennen hakua =====
+     Aiemmat 16:9-kuvakortit veivät ~450 px ennen hakukenttää → pillerit. */
+
+  /* ===== NOSTOSTRIPPI — nostettu resepti + kysytyimmät yhdellä matalalla rivillä =====
+     Korvaa aiemman ruudukon jälkeisen ison inspiraatiolohkon (~430 px → ~120 px). */
+  .inspo-strip { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 28px; align-items: stretch; border: 1px solid var(--c-border); border-radius: var(--r-md); background: var(--c-bg); padding: 14px 18px; margin-top: 20px; }
+  .is-eyebrow { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--c-accent-ink); }
+  .is-feat { display: flex; gap: 14px; align-items: center; text-decoration: none; color: inherit; min-width: 0; }
+  .is-thumb { flex: none; width: 104px; height: 74px; border-radius: var(--r-sm); font-size: 14px; }
+  .is-body { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .is-name { font-size: 16px; font-weight: 700; line-height: 1.25; }
+  .is-feat:hover .is-name { color: var(--c-accent-ink); text-decoration: underline; }
+  .is-meta { font-size: 13px; color: var(--c-text-2); }
+  .is-meta .sep { color: var(--c-border-strong); margin: 0 6px; }
+  .is-meta strong { color: var(--c-accent-ink); font-weight: 600; }
+
+  /* Kysytyimmät: kaksi saraketta pieniä numeroituja linkkejä — ei omaa korttiruudukkoa */
+  .is-trend { border-left: 1px solid var(--c-border); padding-left: 28px; min-width: 0; }
+  .is-trend-list { list-style: none; counter-reset: t; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 2px 20px; }
+  .is-trend-list li { counter-increment: t; min-width: 0; }
+  .is-trend-list a { display: flex; gap: 8px; align-items: baseline; text-decoration: none; color: var(--c-text); font-size: 13px; line-height: 1.5; padding: 2px 0; }
+  .is-trend-list a::before { content: counter(t); flex: none; width: 12px; font-weight: 700; color: var(--c-accent-ink); font-variant-numeric: tabular-nums; }
+  .is-trend-list a span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .is-trend-list a:hover span { color: var(--c-accent-ink); text-decoration: underline; }
+
+  .result-count { font-size: 14px; color: var(--c-text-2); margin: 24px 0 0; }
+  .result-count strong { color: var(--c-text); font-variant-numeric: tabular-nums; }
+
+  /* Reseptiruudukko */
+  .results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(248px, 1fr)); gap: 24px; margin-top: 16px; }
+
+  /* ===== Reseptikortti ===== */
+  .recipe-card { display: flex; flex-direction: column; text-decoration: none; color: inherit; border: 1px solid var(--c-border); border-radius: var(--r-md); background: var(--c-bg); overflow: hidden; transition: border-color .15s, transform .15s, box-shadow .15s; }
+  .recipe-card:hover { border-color: var(--c-suits-border); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(10,79,114,.08); }
+  .card-image { position: relative; aspect-ratio: 16 / 10; overflow: hidden; background: var(--c-ph-bg); }
+  .card-image-fallback { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; text-align: center; padding: 16px; border-bottom: 1px dashed var(--c-ph-border); gap: 6px; }
+  .card-image-fallback i { font-size: 22px; color: var(--c-text-2); opacity: .55; }
+  .card-image-fallback .label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--c-text-2); }
+  .card-body { padding: 16px 14px 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .card-category { font-size: 11px; text-transform: uppercase; letter-spacing: .07em; color: var(--c-text-muted); font-weight: 700; }
+  .card-name { font-size: 17px; font-weight: 700; margin: 0; line-height: 1.28; color: var(--c-text); }
+  .card-meta { list-style: none; display: flex; flex-wrap: nowrap; align-items: center; gap: 6px; margin: 0; padding: 0; font-size: 11px; color: var(--c-text-2); white-space: nowrap; }
+  .card-meta li { display: inline-flex; align-items: center; gap: 4px; }
+  .card-meta li i { color: var(--c-accent-ink); font-size: 10px; }
+  .card-diets { display: flex; flex-wrap: wrap; gap: 6px; }
+  .card-diet-chip { font-size: 11px; padding: 3px 9px; border-radius: 999px; background: var(--c-accent-soft); border: 1px solid var(--c-suits-border); color: var(--c-accent-ink); font-weight: 600; }
+  .card-go { margin-top: auto; padding-top: 10px; color: var(--c-accent-ink); font-size: 13px; font-weight: 600; display: inline-flex; gap: 6px; align-items: center; }
+
+  /* empty-state */
+  .empty-state { border: 1px solid var(--c-border); border-radius: var(--r-md); background: var(--c-bg-soft); padding: 40px 32px; text-align: center; margin-top: 20px; }
+  .empty-state .e-ic { width: 52px; height: 52px; border-radius: 50%; background: var(--c-accent-soft); color: var(--c-accent-ink); display: inline-flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 8px; }
+  .empty-state h2 { font-size: 20px; margin: 8px 0 0; }
+  .empty-state p { font-size: 15px; color: var(--c-text-2); margin: 10px auto 0; max-width: 48ch; }
+  .empty-clear { margin-top: 18px; padding: 11px 20px; border-radius: var(--r-sm); border: 1.5px solid var(--c-accent); background: var(--c-accent); color: var(--c-on-accent); font-weight: 700; font-size: 14px; cursor: pointer; font-family: inherit; }
+  .empty-paths { list-style: none; display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: center; margin: 22px 0 0; padding: 18px 0 0; border-top: 1px solid var(--c-border); }
+  .empty-paths a { font-size: 14px; font-weight: 600; color: var(--c-accent-ink); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+  .empty-paths a:hover { text-decoration: underline; }
+
+  /* ===== S5 MAKUPAJA-NOSTO (LIIDI) — tintattu band ===== */
+  .feature { display: grid; grid-template-columns: 1fr 1.05fr; gap: 48px; align-items: center; }
+  .feature .feature-media { order: 2; }
+  .feature .ph { border-radius: var(--r-lg); }
+  .feature-body h2 { margin-bottom: 0; }
+  .feature-body .intro { margin-top: 14px; }
+  .feature-ctas { margin: 24px 0 0; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .lead-flag { display: inline-flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--c-accent-ink); background: var(--c-bg); border: 1px solid var(--c-suits-border); padding: 5px 11px; border-radius: 999px; }
+  .lead-flag .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c-accent); }
+
+  /* ===== S6 LOPPU-CTA / RISTIINMYYNTI (avoin) ===== */
+  .end-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; justify-content: space-between; border: 1px solid var(--c-border); border-radius: var(--r-lg); padding: 28px 32px; background: var(--c-bg); }
+  .end-cta .end-copy { max-width: 52ch; }
+  .end-cta h2 { font-size: 22px; }
+  .end-cta p { margin: 8px 0 0; color: var(--c-text-2); font-size: 15px; }
+  .end-cta .end-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+
+  /* Footer */
+  .site-footer { background: var(--c-bg-soft); border-top: 1px solid var(--c-border); padding: 48px 0 32px; margin-top: 64px; }
+  .footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--c-border); }
+  .footer-grid h4 { font-size: 14px; text-transform: uppercase; letter-spacing: .06em; margin: 0 0 16px; }
+  .footer-grid ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .footer-grid a { text-decoration: none; color: var(--c-text-2); font-size: 14px; }
+  .footer-grid a:hover { color: var(--c-accent-ink); }
+  .footer-blurb { font-size: 14px; color: var(--c-text-2); margin: 16px 0 0; max-width: 30ch; }
+  .news { display: flex; gap: 8px; }
+  .news input { flex: 1; min-width: 0; padding: 10px 12px; border-radius: var(--r-sm); border: 1px solid var(--c-border-strong); background: var(--c-bg); color: var(--c-text); font: inherit; font-size: 14px; }
+  .news button { padding: 10px 16px; border-radius: var(--r-sm); border: 1.5px solid var(--c-accent); background: var(--c-accent); color: var(--c-on-accent); font-weight: 700; font-size: 14px; cursor: pointer; }
+  .footer-legal { display: flex; justify-content: space-between; gap: 24px; padding-top: 24px; flex-wrap: wrap; font-size: 12px; color: var(--c-text-muted); }
+  .footer-legal a { color: var(--c-text-muted); text-decoration: none; }
+  .footer-legal .legal-links { display: flex; gap: 24px; flex-wrap: wrap; }
+
+  /* ===== Responsiivisuus ===== */
+  @media (max-width: 1000px) {
+    .feature { grid-template-columns: 1fr; gap: 28px; }
+    .feature .feature-media { order: 0; }
+    .inspo-strip { grid-template-columns: 1fr; gap: 16px; }
+    .is-trend { border-left: 0; border-top: 1px solid var(--c-border); padding-left: 0; padding-top: 14px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 760px) {
+    h1 { font-size: 32px; }
+    h2 { font-size: 26px; }
+    .lede { font-size: 16px; }
+    .nav-main { display: none; }
+    .nav-toggle { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 1px solid var(--c-border-strong); border-radius: var(--r-sm); background: var(--c-bg); color: var(--c-text); cursor: pointer; }
+    .site-header.nav-open .nav-main { display: block; position: absolute; top: 100%; left: 0; right: 0; background: var(--c-bg); border-bottom: 1px solid var(--c-border); box-shadow: 0 8px 20px rgba(0,0,0,.06); padding: 8px 24px 16px; }
+    .site-header.nav-open .nav-list { flex-direction: column; gap: 0; }
+    .site-header.nav-open .nav-list a { display: block; padding: 13px 0; border-bottom: 1px solid var(--c-border); font-size: 15px; }
+    .site-header.nav-open .nav-list a[aria-current="page"]::after { display: none; }
+    /* CHROME-KORJAUS (sweepattu kampanjasivulta 28.8.2026): headerin oikea reuna
+       (kielivalitsin + Kirjaudu + hampurilainen) ylivuoti 375 px:llä ja työnsi koko
+       sivun vaakavieritykseen. Kavennetaan välit, Kirjaudu-napista teksti pois. */
+    .nav-inner { gap: 12px; padding: 0 16px; }
+    .nav-actions { gap: 10px; }
+    .lang a { padding: 3px 5px; font-size: 13px; }
+    .nav-actions .btn-sm { padding: 9px 12px; }
+    .nav-actions .btn-sm .lbl { display: none; }
+    /* Kategoriapillerit vaakavieritettävänä rivinä mobiilissa */
+    .cat-pills { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px; margin-left: -2px; padding-left: 2px; }
+    .cat-pill { flex: none; }
+    .facet-panel { left: 0; right: auto; min-width: min(300px, 84vw); }
+    .result-bar { flex-direction: column; align-items: stretch; }
+    .result-sort { justify-content: space-between; }
+    .is-trend-list { grid-template-columns: 1fr; }
+    .end-cta { flex-direction: column; align-items: flex-start; }
+    .footer-grid { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .recipe-card { transition: none; }
+  }
+</style>
+</head>
+<body>
+  <a class="skip" href="#main">Siirry sisältöön</a>
+
+  <!-- ===== HEADER (yhteinen chrome) ===== -->
+  <header class="site-header">
+    <div class="nav-inner">
+      <a href="/" class="logo" aria-label="Condite — etusivu">CONDITE</a>
+      <nav class="nav-main" id="primary-nav" aria-label="Päänavigaatio">
+        <ul class="nav-list">
+          <li><a href="/tuotteet/">Tuotteet</a></li>
+          <li><a href="/toimialat/">Toimialat</a></li>
+          <li><a href="/reseptit/" aria-current="page">Reseptit</a></li>
+          <li><a href="/tuotekehitys/">Tuotekehitys</a></li>
+          <li><a href="/yritys/">Yritys</a></li>
+          <li><a href="/yhteys/">Yhteys</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <span class="lang" role="group" aria-label="Kieli">
+          <a href="#" aria-current="true" lang="fi">FI</a>
+          <a href="#" lang="sv">SV</a>
+          <a href="#" lang="en">EN</a>
+        </span>
+        <a href="/kirjaudu/" class="btn btn-sm" aria-label="Kirjaudu verkkokauppaan"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> <span class="lbl">Kirjaudu</span></a>
+        <button class="nav-toggle" type="button" aria-label="Avaa valikko" aria-expanded="false" aria-controls="primary-nav"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== S1 MURUPOLKU (avoin) — Etusivu › Reseptit ===== -->
+  <nav class="crumbs" aria-label="Murupolku">
+    <ol>
+      <li><a href="/">Etusivu</a></li>
+      <li class="sep" aria-hidden="true">›</li>
+      <li aria-current="page">Reseptit</li>
+    </ol>
+  </nav>
+
+  <main id="main">
+
+    <!-- ============================================================================= -->
+    <!-- S2 HAKUPINTA (avoin) — hero + haku + suodatus + tulokset SAMASSA lohkossa.      -->
+    <!-- TIIVISTYS 28.8.2026 (Olli: "liikaa tilaa ennen varsinaista reseptihakua"):      -->
+    <!--  · nostettu resepti + trendilista siirretty ruudukon ALLE (S3 Inspiraatio)      -->
+    <!--  · sesonkikokoelmat kutistettu kuvakorteista pikapillereiksi heron alle         -->
+    <!--  · oma "Selaa reseptejä" -väliotsikko poistettu (H1 kertoo sen jo)              -->
+    <!-- → hakukenttä + kategoriat + suodattimet mahtuvat ensimmäiseen näkymään.         -->
+    <!-- ============================================================================= -->
+    <section class="block first last" aria-labelledby="hero-h1">
+      <div class="section-head">
+        <p class="eyebrow"><i class="fa-solid fa-book-open" aria-hidden="true"></i> Reseptipankki</p>
+        <h1 id="hero-h1">Reseptit ja sovellukset ammattikeittiöön ja leipomoon</h1>
+        <p class="lede">Hae, selaa kategorioittain tai rajaa ruokavaliolla, segmentillä, brändillä ja sesongilla. Jokainen resepti linkittää käytettyihin Condite-tuotteisiin.</p>
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- NOSTOSTRIPPI (avoin) — nostettu resepti + "Nyt kysytyimmät" YHDELLÄ rivillä. -->
+      <!-- Olli 28.8.: nostettu HAUN YLÄPUOLELLE — sisääntulonosto on ensimmäinen asia     -->
+      <!-- otsikon jälkeen, haku ja suodattimet heti sen alla.                            -->
+      <!-- Baymard (autocomplete/suggestions): nostot toimivat, mutta ne eivät saa       -->
+      <!-- visuaalisesti jyrätä hakua → yksi matala strippi, ei korttiruudukkoa.         -->
+      <!-- PIILOTETAAN heti kun käyttäjä ilmaisee aikeen (haku / fasetti / kategoria):   -->
+      <!-- silloin tulokset ovat tärkeämmät kuin sisääntulonostot.                       -->
+      <!-- ========================================================================= -->
+      <div class="inspo-strip" id="inspo-strip" hidden>
+        <a class="is-feat" id="is-feat" href="#">
+          <span class="is-thumb ph"><i class="fa-regular fa-image" aria-hidden="true"></i></span>
+          <span class="is-body">
+            <span class="is-eyebrow"><i class="fa-solid fa-star" aria-hidden="true"></i> <span id="is-feat-eyebrow"></span></span>
+            <span class="is-name" id="is-feat-name"></span>
+            <span class="is-meta" id="is-feat-meta"></span>
+          </span>
+        </a>
+        <div class="is-trend" id="is-trend">
+          <span class="is-eyebrow"><i class="fa-solid fa-arrow-trend-up" aria-hidden="true"></i> <span id="is-trend-title"></span></span>
+          <ol class="is-trend-list" id="is-trend-list"></ol>
+        </div>
+      </div>
+
+      <!-- result-bar: haku (vasen) + lajittelu (oikea) -->
+      <div class="result-bar">
+        <div class="result-search">
+          <i class="fa-solid fa-magnifying-glass ic" aria-hidden="true"></i>
+          <input type="search" id="recipe-search" placeholder="Hae reseptejä, sovelluksia, tuotteita tai brändejä…" aria-label="Hae reseptejä">
+        </div>
+        <div class="result-sort">
+          <label for="sort-select">Järjestä:</label>
+          <select id="sort-select">
+            <option value="uusimmat">Uusimmat</option>
+            <option value="nopein">Nopein ensin</option>
+            <option value="nimi">Nimi A–Ö</option>
+            <option value="suosittu" disabled>Suosituimmat (pian)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Kategoriapillerit — yksinkertainen vaakaselaus (korvaa sivupalkkinavin) -->
+      <nav class="cat-pills" id="cat-pills" aria-label="Reseptikategoriat"></nav>
+
+      <!-- Fasettirivi — kategoriapillerien ALLA omana rivinään (ei sivupalkkia).
+           Ryhmän sisällä TAI, ryhmien välillä JA. Laskurit elävät (ignore-self). -->
+      <div class="facet-row" id="facet-row" role="group" aria-label="Rajaa reseptejä"></div>
+
+      <!-- Aktiiviset valinnat — poistettavat pillerit + tyhjennys -->
+      <div class="active-filters" id="active-filters" hidden></div>
+
+      <p class="result-count" id="result-count" aria-live="polite"></p>
+
+      <div class="results-grid" id="results-grid"></div>
+
+      <!-- "Näytä lisää" — näkyy vain kun tuloksia enemmän kuin sivukoko (skaalautuvuus) -->
+      <div class="load-more-wrap" id="load-more-wrap" hidden>
+        <button class="btn btn-outline" type="button" id="load-more-btn">Näytä lisää reseptejä</button>
+        <span class="load-more-note" id="load-more-note"></span>
+      </div>
+
+      <!-- empty-state (Tila C) — selittää + tarjoaa polut, ei umpikujaa -->
+      <div class="empty-state" id="empty-state" hidden>
+        <span class="e-ic"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></span>
+        <h2>Ei reseptejä näillä valinnoilla</h2>
+        <p>Kokeile toista kategoriaa, väljennä suodattimia tai muuta hakusanaa. Jos etsimääsi sovellusta ei vielä löydy, kehitetään se yhdessä Makupajassa.</p>
+        <button class="empty-clear" type="button" id="empty-clear-btn">Näytä kaikki reseptit</button>
+        <ul class="empty-paths">
+          <li><a href="/yhteys/?aihe=makupaja"><i class="fa-solid fa-flask" aria-hidden="true"></i> Varaa Makupaja</a></li>
+          <li><a href="/yhteys/?aihe=resepti"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i> Ehdota reseptiä</a></li>
+          <li><a href="/tuotteet/"><i class="fa-solid fa-grip" aria-hidden="true"></i> Selaa tuotteet</a></li>
+        </ul>
+      </div>
+
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- S5 MAKUPAJA-NOSTO — AINOA LIIDI-LOHKO (nosto + linkki,         -->
+    <!-- ei upotettua lomaketta; lomake on Makupaja-sivulla → Dynamics) -->
+    <!-- ============================================================= -->
+    <section class="band" aria-labelledby="makupaja-h2">
+      <div class="block">
+        <div class="feature">
+          <div class="feature-media">
+            <div class="ph ph-16-10"><i class="fa-regular fa-image" aria-hidden="true"></i>Makupaja-kuva 16:10</div>
+          </div>
+          <div class="feature-body">
+            <p class="eyebrow">Erottautujamme</p>
+            <h2 id="makupaja-h2">Etkö löytänyt sopivaa? Kehitetään se yhdessä.</h2>
+            <p class="intro">Tuo briiffi Makupajaan — testikeittiössämme ideasta koesarjaan ja tuotantoon. Säädetään makuprofiili, koostumus ja säilyvyys juuri sinun tuotteeseesi sopivaksi.</p>
+            <div class="feature-ctas">
+              <a class="btn btn-primary" href="/yhteys/?aihe=makupaja">Varaa Makupaja</a>
+              <span class="lead-flag"><span class="dot"></span>Liidi · varaus yhteystiedoilla</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== S6 LOPPU-CTA / RISTIINMYYNTI (avoin) — ei umpikujaa ===== -->
+    <section class="block last" aria-labelledby="end-h2">
+      <div class="end-cta">
+        <div class="end-copy">
+          <h2 id="end-h2">Reseptistä raaka-aineisiin</h2>
+          <p>Jokainen resepti rakentuu Condite-tuotteiden ympärille. Selaa koko valikoima tai ehdota meille reseptiä, jonka haluaisit nähdä pankissa.</p>
+        </div>
+        <div class="end-actions">
+          <a class="btn btn-outline" href="/tuotteet/">Selaa tuotteet</a>
+          <a class="btn-link" href="/yhteys/?aihe=resepti">Ehdota reseptiä / ota yhteyttä <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER (yhteinen chrome) ===== -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <a href="/" class="logo" aria-label="Condite — etusivu">CONDITE</a>
+          <p class="footer-blurb">Elintarvikealan raaka-aineiden maahantuoja ja kehityskumppani. Osa Orkla Food Ingredientsia.</p>
+        </div>
+        <div>
+          <h4>Sivusto</h4>
+          <ul>
+            <li><a href="/tuotteet/">Tuotteet</a></li>
+            <li><a href="/toimialat/">Toimialat</a></li>
+            <li><a href="/reseptit/">Reseptit</a></li>
+            <li><a href="/tuotekehitys/">Tuotekehitys</a></li>
+            <li><a href="/yritys/">Yritys</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Asiakkaalle</h4>
+          <ul>
+            <li><a href="/kirjaudu/">Kirjaudu verkkokauppaan</a></li>
+            <li><a href="/tuotekehitys/#makupaja">Makupaja</a></li>
+            <li><a href="/yhteys/">Ota yhteyttä</a></li>
+            <li><a href="/yhteys/">Yhteyshenkilöt</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Uutiskirje</h4>
+          <label for="news-email" style="display:block;font-size:14px;color:var(--c-text-2);margin-bottom:8px">Tilaa ajankohtaiset uutiset ja reseptit.</label>
+          <div class="news">
+            <input id="news-email" type="email" placeholder="sähköposti@yritys.fi" aria-label="Sähköpostiosoite">
+            <button type="button">Tilaa</button>
+          </div>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <span>© 2026 Condite Oy · Osa Orkla Food Ingredientsia</span>
+        <div class="legal-links">
+          <a href="/tietosuoja/">Tietosuoja</a>
+          <a href="/evasteet/">Evästeet</a>
+          <a href="/saavutettavuus/">Saavutettavuusseloste</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== Rakenteinen data (SEO) =====
+       Listalla rakenteinen data on kevyt: yksittäisen reseptin Recipe-schema on Reseptisivulla.
+       TODO (WP-vaihe): ItemList-schema reseptikorteista.  -->
+  <script type="application/ld+json" id="ld-json"></script>
+
+  <!-- ===== Sisältökonfiguraatio + render (config-driven, ei buildia) ===== -->
+  <script>
+  (function () {
+    "use strict";
+
+    // ============================================================
+    // KAIKKI sivun sisältö täällä. Pankki on TEMPLATE.
+    // LAUNCH-YKSINKERTAISTUS: ei fasetteja, ei sivupalkkia. Selaus = kategoriapillerit + haku.
+    // K (DATARIIPPUVUUS): reseptidataa ei ole → 12 kovakoodattua placeholder-reseptiä,
+    // jotta kategoriat, haku, lajittelu ja tilat näkyvät. Skaalautuu pieneen ja suureen N:ään.
+    // ============================================================
+    var PAGE = {
+
+      // Yksitasoinen kategorialista (litistetty kaksiportaisesta makea/suolainen-mallista
+      // yhdeksi pilleririviksi). label = pillerin teksti, fullLabel = kortin yläotsikko.
+      categories: [
+        { id: "taytteet",               label: "Täytteet",     fullLabel: "Täytteet" },
+        { id: "pohjat",                 label: "Pohjat",       fullLabel: "Pohjat ja taikinat" },
+        { id: "kuorrutukset",           label: "Kuorrutukset", fullLabel: "Kuorrutukset ja koristelu" },
+        { id: "jalkiruoat",             label: "Jälkiruoat",   fullLabel: "Jälkiruoat" },
+        { id: "suolaiset-leivonnaiset", label: "Suolaiset",    fullLabel: "Suolaiset leivonnaiset" },
+        { id: "kastikkeet",             label: "Kastikkeet",   fullLabel: "Kastikkeet ja maustaminen" }
+      ],
+
+      // ---- FASETIT (28.8.2026) — prioriteettijärjestys: ruokavalio > segmentti > brändi > sesonki.
+      // field = reseptin kenttä (merkkijono tai taulukko); option.id = kentässä esiintyvä arvo.
+      // Ryhmän sisällä TAI, ryhmien välillä JA. Uuden ryhmän lisääminen = yksi olio tähän.
+      facetGroups: [
+        { id: "ruokavalio", label: "Ruokavalio", field: "diets", options: [
+          { id: "Gluteeniton", label: "Gluteeniton" },
+          { id: "Vegaaninen",  label: "Vegaaninen" },
+          { id: "Laktoositon", label: "Laktoositon" }
+        ]},
+        { id: "segmentti", label: "Segmentti", field: "segments", options: [
+          { id: "leipomo",      label: "Leipomo" },
+          { id: "foodservice",  label: "Food service" },
+          { id: "teollisuus",   label: "Elintarviketeollisuus" }
+        ]},
+        // Käänteisrekommendaattori suodattimena: "näytä reseptit, joissa on Credin-tuote".
+        // EI asiakkaan filtterikartalla → pidetään toistaiseksi, poistettavissa poistamalla
+        // pelkästään tämä olio (state, laskurit, pillerit ja haku ovat geneerisiä).
+        { id: "brandi", label: "Condite-brändi", field: "brand", options: [
+          { id: "Credin",    label: "Credin" },
+          { id: "Promix",    label: "Promix" },
+          { id: "Dobla",     label: "Dobla" },
+          { id: "Capsi",     label: "Capsi" },
+          { id: "Sonneveld", label: "Sonneveld" }
+        ]},
+        { id: "sesonki", label: "Sesonki", field: "seasons", options: [
+          { id: "joulu",       label: "Joulu" },
+          { id: "paasiainen",  label: "Pääsiäinen" },
+          { id: "kesa",        label: "Kesä" },
+          { id: "syksy",       label: "Syksy ja talvi" }
+        ]}
+      ],
+
+      // OPTIONAL (D-inspiraatio): nostettu resepti. show=false piilottaa koko lohkon.
+      featured: {
+        show: true,
+        eyebrow: "Nostettu resepti",
+        category: "Täytteet",
+        name: "Suolainen kinuskitäyte täytekakkuun",
+        why: "Notkea, hyvin pursotettava ja säilyvä — skaalattavissa yksittäisestä kakusta tuotantoeräksi. Hyvä esimerkki siitä, miten yksi Condite-täyte taipuu moneen sovellukseen.",
+        time: "35 min", yield: "n. 12 palaa", difficulty: "Keskitaso",
+        product: "Credin Suolakinuski-täyte",
+        href: "condite_reseptisivu_wireframe.html"
+      },
+
+      // ---- S3b TRENDIT — K (DATA): nyt käsin kuratoitu nimilista. WP-vaihe: GA4:n
+      // katsotuimmat tai toimituksellinen nosto. Siksi lajittelun "Suosituimmat" on yhä disabloitu.
+      trending: {
+        show: true,
+        title: "Nyt kysytyimmät",
+        lead: "Katsotuimmat reseptit viimeisen 30 päivän ajalta.",
+        items: [
+          "Suolainen kinuskitäyte täytekakkuun",
+          "Gluteeniton täytekakkupohja",
+          "Kasvipohjainen kermavaahto",
+          "Doblan suklaakoristeet kakkuun",
+          "Vegaaninen suklaamousse"
+        ]
+      },
+
+      // 12 placeholder-reseptiä. catId = kategoria-avain. category = kortin yläotsikko.
+      // product = käänteisrekommendaattorin relaatio (datassa myöhempää käyttöä varten).
+      // diets = VAIN positiiviset (näytetään kortilla chipeinä, ei suodatin).
+      recipes: [
+        { name: "Suolainen kinuskitäyte täytekakkuun", catId: "taytteet", category: "Täytteet",
+          href: "condite_reseptisivu_wireframe.html", time: "35 min", yield: "n. 12 palaa", difficulty: "Keskitaso",
+          diets: ["Gluteeniton", "Laktoositon"], product: "Credin Suolakinuski-täyte",
+          brand: "Credin", segments: ["leipomo", "foodservice"], seasons: [] },
+        { name: "Gluteeniton täytekakkupohja", catId: "pohjat", category: "Pohjat ja taikinat",
+          href: "/reseptit/gluteeniton-taytekakkupohja/", time: "25 min", yield: "2 pohjaa", difficulty: "Keskitaso",
+          diets: ["Gluteeniton"], product: "Promix Gluteeniton jauhoseos",
+          brand: "Promix", segments: ["leipomo", "foodservice"], seasons: [] },
+        { name: "Suklaaganache leivoksiin", catId: "taytteet", category: "Täytteet",
+          href: "/reseptit/suklaaganache-leivoksiin/", time: "20 min", yield: "n. 1 kg", difficulty: "Helppo",
+          diets: [], product: "Credin Tumma suklaa 56 %",
+          brand: "Credin", segments: ["leipomo", "teollisuus"], seasons: ["joulu"] },
+        { name: "Kasvipohjainen kermavaahto", catId: "kuorrutukset", category: "Kuorrutukset ja koristelu",
+          href: "/reseptit/kasvipohjainen-kermavaahto/", time: "10 min", yield: "5 dl", difficulty: "Helppo",
+          diets: ["Vegaaninen", "Laktoositon"], product: "Promix Kasvikermajauhe",
+          brand: "Promix", segments: ["foodservice", "leipomo"], seasons: ["kesa"] },
+        { name: "Vadelmatäyte leivontaan", catId: "taytteet", category: "Täytteet",
+          href: "/reseptit/vadelmatayte-leivontaan/", time: "15 min", yield: "800 g", difficulty: "Helppo",
+          diets: ["Gluteeniton", "Vegaaninen", "Laktoositon"], product: "Credin Vadelmatäyte",
+          brand: "Credin", segments: ["leipomo", "teollisuus"], seasons: ["kesa"] },
+        { name: "Doblan suklaakoristeet kakkuun", catId: "kuorrutukset", category: "Kuorrutukset ja koristelu",
+          href: "/reseptit/doblan-suklaakoristeet/", time: "5 min", yield: "koristelu", difficulty: "Helppo",
+          diets: ["Gluteeniton"], product: "Dobla-suklaakoristeet",
+          brand: "Dobla", segments: ["leipomo", "foodservice"], seasons: ["joulu", "paasiainen"] },
+        { name: "Mausteinen chilimajoneesi", catId: "kastikkeet", category: "Kastikkeet ja maustaminen",
+          href: "/reseptit/mausteinen-chilimajoneesi/", time: "10 min", yield: "5 dl", difficulty: "Helppo",
+          diets: ["Gluteeniton", "Laktoositon"], product: "Capsi Chilijauhe",
+          brand: "Capsi", segments: ["foodservice", "teollisuus"], seasons: ["kesa"] },
+        { name: "Voitaikinapasteijat", catId: "suolaiset-leivonnaiset", category: "Suolaiset leivonnaiset",
+          href: "/reseptit/voitaikinapasteijat/", time: "40 min", yield: "30 kpl", difficulty: "Vaativa",
+          diets: [], product: "Sonneveld Taikinaparannin",
+          brand: "Sonneveld", segments: ["leipomo", "foodservice"], seasons: ["joulu"] },
+        { name: "Vaniljakreemi täytteeksi", catId: "taytteet", category: "Täytteet",
+          href: "/reseptit/vaniljakreemi-taytteeksi/", time: "15 min", yield: "1 kg", difficulty: "Helppo",
+          diets: ["Gluteeniton", "Laktoositon"], product: "Promix Vaniljakreemijauhe",
+          brand: "Promix", segments: ["leipomo", "teollisuus"], seasons: ["paasiainen"] },
+        { name: "Suolainen piirakkapohja", catId: "suolaiset-leivonnaiset", category: "Suolaiset leivonnaiset",
+          href: "/reseptit/suolainen-piirakkapohja/", time: "30 min", yield: "2 piirakkaa", difficulty: "Keskitaso",
+          diets: [], product: "Sonneveld Leivontaparannin",
+          brand: "Sonneveld", segments: ["leipomo", "foodservice"], seasons: ["syksy"] },
+        { name: "Kinuskikastike jälkiruokiin", catId: "jalkiruoat", category: "Jälkiruoat",
+          href: "/reseptit/kinuskikastike-jalkiruokiin/", time: "10 min", yield: "5 dl", difficulty: "Helppo",
+          diets: ["Gluteeniton"], product: "Credin Kinuskikastike",
+          brand: "Credin", segments: ["foodservice", "leipomo"], seasons: ["syksy"] },
+        { name: "Vegaaninen suklaamousse", catId: "jalkiruoat", category: "Jälkiruoat",
+          href: "/reseptit/vegaaninen-suklaamousse/", time: "20 min", yield: "10 annosta", difficulty: "Keskitaso",
+          diets: ["Vegaaninen", "Gluteeniton", "Laktoositon"], product: "Dobla Tumma suklaa",
+          brand: "Dobla", segments: ["foodservice", "leipomo"], seasons: ["paasiainen"] }
+      ]
+    };
+
+    // ---------- Helpers ----------
+    function el(html) { var t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstChild; }
+    function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]; }); }
+    function timeMinutes(r) { var m = parseInt(r.time, 10); return isNaN(m) ? 9999 : m; }
+
+    // ---------- Tila ----------
+    var PAGE_SIZE = 8;                  // "Näytä lisää" -sivukoko (skaalautuvuus)
+    var state = {
+      category: "kaikki",              // "kaikki" | catId
+      facets: {},                      // { ryhmäId: [valintaId, …] } — alustetaan alla
+      search: "",
+      sort: "uusimmat",
+      shown: PAGE_SIZE
+    };
+    PAGE.facetGroups.forEach(function (g) { state.facets[g.id] = []; });
+
+    // valintaId → näyttönimi (haku + aktiiviset pillerit)
+    var OPT_LABEL = {};
+    PAGE.facetGroups.forEach(function (g) {
+      g.options.forEach(function (o) { OPT_LABEL[g.id + ":" + o.id] = o.label; });
+    });
+
+    // Reseptin arvot ryhmän kentästä aina taulukkona (kenttä voi olla merkkijono tai taulukko).
+    function fieldValues(r, g) {
+      var v = r[g.field];
+      if (v === null || v === undefined) return [];
+      return Array.isArray(v) ? v : [v];
+    }
+
+    // Hakuheinäsuova: nimi + kategoria + tuote + brändi + ruokavaliot + segmentti- ja sesonkinimet.
+    function haystack(r) {
+      if (r._hay) return r._hay;
+      var parts = [r.name, r.category, r.product, r.brand || ""].concat(r.diets || []);
+      PAGE.facetGroups.forEach(function (g) {
+        fieldValues(r, g).forEach(function (id) {
+          var l = OPT_LABEL[g.id + ":" + id];
+          if (l) parts.push(l);
+        });
+      });
+      r._hay = parts.join(" ").toLowerCase();
+      return r._hay;
+    }
+
+    // Vastaako resepti nykyiseen valintaan (kategoria + haku + fasetit).
+    // opts.ignore ohittaa kategoria-/hakudimension, opts.ignoreGroup yhden fasettiryhmän
+    // (ignore-self → laskuri kertoo, montako tulosta valinta TOISI, ei mitä se on jo rajannut).
+    function recipeMatches(r, opts) {
+      opts = opts || {};
+      if (opts.ignore !== "category" && state.category !== "kaikki" && r.catId !== state.category) return false;
+      if (opts.ignore !== "search" && state.search) {
+        if (haystack(r).indexOf(state.search.toLowerCase()) < 0) return false;
+      }
+      for (var i = 0; i < PAGE.facetGroups.length; i++) {
+        var g = PAGE.facetGroups[i];
+        if (opts.ignoreGroup === g.id) continue;
+        var sel = state.facets[g.id];
+        if (!sel.length) continue;                       // tyhjä ryhmä ei rajaa
+        var vals = fieldValues(r, g);
+        var hit = sel.some(function (id) { return vals.indexOf(id) >= 0; });
+        if (!hit) return false;                          // ryhmän sisällä TAI, ryhmien välillä JA
+      }
+      return true;
+    }
+
+    // ---------- Render: kategoriapillerit ----------
+    var pillsEl = document.getElementById("cat-pills");
+    function categoryCount(catId) {
+      return PAGE.recipes.filter(function (r) {
+        if (!recipeMatches(r, { ignore: "category" })) return false;
+        if (catId === "kaikki") return true;
+        return r.catId === catId;
+      }).length;
+    }
+    function buildPills() {
+      var cats = [{ id: "kaikki", label: "Kaikki reseptit" }].concat(PAGE.categories);
+      cats.forEach(function (c) {
+        pillsEl.appendChild(el(
+          '<button class="cat-pill" type="button" data-cat="' + esc(c.id) + '">' +
+            '<span>' + esc(c.label) + '</span>' +
+            '<span class="cat-count" data-count-cat="' + esc(c.id) + '"></span>' +
+          '</button>'
+        ));
+      });
+      pillsEl.addEventListener("click", function (e) {
+        var btn = e.target.closest("[data-cat]");
+        if (!btn) return;
+        var cat = btn.getAttribute("data-cat");
+        state.category = (state.category === cat && cat !== "kaikki") ? "kaikki" : cat;
+        render();
+      });
+    }
+    function renderPillsActive() {
+      pillsEl.querySelectorAll("[data-cat]").forEach(function (btn) {
+        var cat = btn.getAttribute("data-cat");
+        btn.classList.toggle("is-active", state.category === cat);
+        btn.setAttribute("aria-pressed", state.category === cat ? "true" : "false");
+        var c = btn.querySelector(".cat-count");
+        var n = categoryCount(cat);
+        if (c) c.textContent = n;
+        // 0 tulosta nykyisillä fasetti-/hakuvalinnoilla → ei valittavissa (ei umpikujaa)
+        btn.disabled = (n === 0 && state.category !== cat);
+      });
+    }
+
+    // ---------- Fasettirivi: rakennus, laskurit, render ----------
+    var facetRow = document.getElementById("facet-row");
+
+    function buildFacets() {
+      PAGE.facetGroups.forEach(function (g) {
+        var opts = g.options.map(function (o) {
+          var domId = "f-" + g.id + "-" + o.id.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+          return '<label class="facet-opt" data-opt="' + esc(o.id) + '" for="' + domId + '">' +
+                   '<input type="checkbox" id="' + domId + '" data-group="' + esc(g.id) + '" value="' + esc(o.id) + '">' +
+                   '<span>' + esc(o.label) + '</span>' +
+                   '<span class="fo-count"></span>' +
+                 '</label>';
+        }).join("");
+        facetRow.appendChild(el(
+          '<details class="facet" data-group="' + esc(g.id) + '">' +
+            '<summary>' +
+              '<span>' + esc(g.label) + '</span>' +
+              '<span class="f-badge">0</span>' +
+              '<i class="fa-solid fa-chevron-down chev" aria-hidden="true"></i>' +
+            '</summary>' +
+            '<div class="facet-panel">' + opts + '</div>' +
+          '</details>'
+        ));
+      });
+
+      facetRow.addEventListener("change", function (e) {
+        var cb = e.target.closest("input[type=checkbox]");
+        if (!cb) return;
+        var sel = state.facets[cb.getAttribute("data-group")];
+        var i = sel.indexOf(cb.value);
+        if (cb.checked && i < 0) sel.push(cb.value);
+        if (!cb.checked && i >= 0) sel.splice(i, 1);
+        render();
+      });
+
+      // Vain yksi paneeli auki kerrallaan (toggle ei kupli → kuuntelu capture-vaiheessa).
+      // Samalla pidetään paneeli näkyviissä: jos se valuisi ikkunan oikean reunan yli
+      // (viimeiset ryhmät, kapea näyttö), ankkuroidaan se oikeaan reunaan.
+      facetRow.addEventListener("toggle", function (e) {
+        var d = e.target;
+        if (!d.open) return;
+        facetRow.querySelectorAll("details.facet[open]").forEach(function (o) { if (o !== d) o.open = false; });
+        var panel = d.querySelector(".facet-panel");
+        panel.style.left = "0px"; panel.style.maxWidth = "";
+        var vw = document.documentElement.clientWidth;
+        var dRect = d.getBoundingClientRect();
+        var pw = panel.getBoundingClientRect().width;
+        if (pw > vw - 16) { panel.style.maxWidth = (vw - 16) + "px"; pw = vw - 16; }
+        // pidä paneeli aina näkyvissä: [8, vw-8] — siirto suhteessa avaajaan
+        var wantLeft = Math.min(Math.max(8, dRect.left), vw - 8 - pw);
+        panel.style.left = (wantLeft - dRect.left) + "px";
+      }, true);
+
+      function closeAllPanels() {
+        facetRow.querySelectorAll("details.facet[open]").forEach(function (o) { o.open = false; });
+      }
+      document.addEventListener("click", function (e) { if (!facetRow.contains(e.target)) closeAllPanels(); });
+      document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeAllPanels(); });
+    }
+
+    // Montako tulosta valinta antaisi nykyisillä MUILLA valinnoilla (ignore-self).
+    function facetCount(g, optId) {
+      return PAGE.recipes.filter(function (r) {
+        if (!recipeMatches(r, { ignoreGroup: g.id })) return false;
+        return fieldValues(r, g).indexOf(optId) >= 0;
+      }).length;
+    }
+
+    function renderFacets() {
+      PAGE.facetGroups.forEach(function (g) {
+        var d = facetRow.querySelector('details.facet[data-group="' + g.id + '"]');
+        if (!d) return;
+        var sel = state.facets[g.id];
+        d.classList.toggle("has-sel", sel.length > 0);
+        d.querySelector(".f-badge").textContent = sel.length;
+        g.options.forEach(function (o) {
+          var lab = d.querySelector('.facet-opt[data-opt="' + o.id + '"]');
+          if (!lab) return;
+          var cb = lab.querySelector("input");
+          var checked = sel.indexOf(o.id) >= 0;
+          var n = facetCount(g, o.id);
+          cb.checked = checked;
+          cb.disabled = (n === 0 && !checked);           // 0 tulosta = ei valittavissa
+          lab.classList.toggle("is-zero", cb.disabled);
+          lab.querySelector(".fo-count").textContent = n;
+        });
+      });
+    }
+
+    function syncFacetCheckboxes() {
+      facetRow.querySelectorAll("input[type=checkbox]").forEach(function (cb) {
+        cb.checked = state.facets[cb.getAttribute("data-group")].indexOf(cb.value) >= 0;
+      });
+    }
+
+    // ---------- Aktiiviset valinnat: poistettavat pillerit + tyhjennys ----------
+    var activeWrap = document.getElementById("active-filters");
+
+    function renderActiveFilters() {
+      activeWrap.innerHTML = "";
+      var items = [];
+      PAGE.facetGroups.forEach(function (g) {
+        state.facets[g.id].forEach(function (id) {
+          items.push({ kind: "facet", grp: g.label, label: OPT_LABEL[g.id + ":" + id] || id, gid: g.id, val: id });
+        });
+      });
+      if (state.search) items.push({ kind: "search", grp: "Haku", label: state.search });
+      if (!items.length) { activeWrap.hidden = true; return; }
+      activeWrap.hidden = false;
+      activeWrap.appendChild(el('<span class="af-lbl">Valinnat:</span>'));
+      items.forEach(function (it) {
+        var pill = el(
+          '<button class="af-pill" type="button">' +
+            '<span><span class="af-grp">' + esc(it.grp) + ':</span> ' + esc(it.label) + '</span>' +
+            '<i class="fa-solid fa-xmark" aria-hidden="true"></i>' +
+            '<span class="visually-hidden">Poista valinta</span>' +
+          '</button>'
+        );
+        pill.addEventListener("click", function () {
+          if (it.kind === "search") {
+            state.search = "";
+            document.getElementById("recipe-search").value = "";
+          } else {
+            var sel = state.facets[it.gid];
+            var i = sel.indexOf(it.val);
+            if (i >= 0) sel.splice(i, 1);
+            syncFacetCheckboxes();
+          }
+          render();
+        });
+        activeWrap.appendChild(pill);
+      });
+      var clear = el('<button class="af-clear" type="button">Tyhjennä suodattimet</button>');
+      clear.addEventListener("click", function () { clearFilters(); });
+      activeWrap.appendChild(clear);
+    }
+
+    // Tyhjentää fasetit + haun (kategoria on navigaatiota → jää voimaan; empty-state nollaa kaiken).
+    function clearFilters() {
+      PAGE.facetGroups.forEach(function (g) { state.facets[g.id] = []; });
+      state.search = "";
+      document.getElementById("recipe-search").value = "";
+      syncFacetCheckboxes();
+      render();
+    }
+
+    // ---------- Render: nostostrippi (nostettu resepti + kysytyimmät) ----------
+    // Molemmat mahtuvat yhdelle riville suodattimien alle → näkyvät ENNEN listausta
+    // ilman että haku painuu alas (vrt. K-Ruoka /reseptit: haku → trendaavat → listaus).
+    var stripEl = document.getElementById("inspo-strip");
+    var hasFeatured = false, hasTrend = false;
+
+    (function renderStripFeatured() {
+      var f = PAGE.featured;
+      if (!f || f.show === false) { document.getElementById("is-feat").hidden = true; return; }
+      hasFeatured = true;
+      var a = document.getElementById("is-feat");
+      a.setAttribute("href", f.href);
+      document.getElementById("is-feat-eyebrow").textContent = f.eyebrow;
+      document.getElementById("is-feat-name").textContent = f.name;
+      document.getElementById("is-feat-meta").innerHTML =
+        esc(f.category) + '<span class="sep">·</span>' + esc(f.time) +
+        '<span class="sep">·</span>Sisältää: <strong>' + esc(f.product) + '</strong>';
+    })();
+
+    (function renderStripTrend() {
+      var tr = PAGE.trending;
+      var box = document.getElementById("is-trend");
+      if (!tr || tr.show === false || !tr.items || !tr.items.length) { box.hidden = true; return; }
+      hasTrend = true;
+      document.getElementById("is-trend-title").textContent = tr.title;
+      var list = document.getElementById("is-trend-list");
+      tr.items.forEach(function (name) {
+        var r = PAGE.recipes.filter(function (x) { return x.name === name; })[0];
+        if (!r) return;                       // tuntematon nimi jätetään pois hiljaisesti
+        list.appendChild(el('<li><a href="' + esc(r.href) + '" title="' + esc(r.name) + '"><span>' + esc(r.name) + '</span></a></li>'));
+      });
+    })();
+
+    // Strippi on SISÄÄNTULONOSTO: piilotetaan heti kun käyttäjä ilmaisee aikeen
+    // (haku, fasetti tai kategoria) — silloin tulokset ovat tärkeämpiä kuin nostot.
+    function renderStrip() {
+      if (!hasFeatured && !hasTrend) { stripEl.hidden = true; return; }
+      var narrowed = !!state.search || state.category !== "kaikki" ||
+        PAGE.facetGroups.some(function (g) { return state.facets[g.id].length > 0; });
+      stripEl.hidden = narrowed;
+    }
+
+    // ---------- Render: sesonkipikavalinnat + inspiraatiolohko (OPTIONAL) ----------
+    // Sesonkipilleri EI ole oma sivunsa vaan sama suodatin kuin Sesonki-fasetti: klikkaus
+    // rajaa tulokset heti saman näkymän sisällä, ja rajausta voi jatkaa fasettiriviltä.
+    // ---------- Render: tulosruudukko + tulosmäärä + tyhjä tila ----------
+    var grid = document.getElementById("results-grid");
+    var emptyState = document.getElementById("empty-state");
+    var resultCount = document.getElementById("result-count");
+    var loadMoreWrap = document.getElementById("load-more-wrap");
+    var loadMoreNote = document.getElementById("load-more-note");
+
+    function sortRecipes(list) {
+      var arr = list.slice();
+      if (state.sort === "nimi") arr.sort(function (a, b) { return a.name.localeCompare(b.name, "fi"); });
+      else if (state.sort === "nopein") arr.sort(function (a, b) { return timeMinutes(a) - timeMinutes(b); });
+      return arr;
+    }
+
+    function recipeCard(r) {
+      var meta =
+        '<ul class="card-meta">' +
+          '<li><i class="fa-solid fa-cake-candles" aria-hidden="true"></i>' + esc(r.yield) + '</li>' +
+          '<li><i class="fa-regular fa-clock" aria-hidden="true"></i>' + esc(r.time) + '</li>' +
+          '<li><i class="fa-solid fa-gauge-simple-high" aria-hidden="true"></i>' + esc(r.difficulty) + '</li>' +
+        '</ul>';
+      var diets = r.diets.length
+        ? '<div class="card-diets">' + r.diets.map(function (d) { return '<span class="card-diet-chip">' + esc(d) + '</span>'; }).join("") + '</div>'
+        : "";
+      return el(
+        '<a class="recipe-card" href="' + esc(r.href) + '">' +
+          '<div class="card-image"><div class="card-image-fallback">' +
+            '<i class="fa-regular fa-image" aria-hidden="true"></i><span class="label">Reseptikuva</span>' +
+          '</div></div>' +
+          '<div class="card-body">' +
+            '<span class="card-category">' + esc(r.category) + '</span>' +
+            '<h3 class="card-name">' + esc(r.name) + '</h3>' +
+            meta + diets +
+            '<span class="card-go">Katso resepti <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>' +
+          '</div>' +
+        '</a>'
+      );
+    }
+
+    function renderGrid() {
+      var matched = sortRecipes(PAGE.recipes.filter(function (r) { return recipeMatches(r); }));
+      grid.innerHTML = "";
+      if (matched.length === 0) {
+        grid.hidden = true;
+        emptyState.hidden = false;
+        loadMoreWrap.hidden = true;
+      } else {
+        grid.hidden = false;
+        emptyState.hidden = true;
+        var visible = matched.slice(0, state.shown);
+        visible.forEach(function (r) { grid.appendChild(recipeCard(r)); });
+        if (matched.length > state.shown) {
+          loadMoreWrap.hidden = false;
+          loadMoreNote.textContent = "Näytetään " + visible.length + " / " + matched.length;
+        } else {
+          loadMoreWrap.hidden = true;
+        }
+      }
+      var total = PAGE.recipes.length;
+      if (matched.length === total) {
+        resultCount.innerHTML = '<strong>' + total + '</strong> reseptiä';
+      } else {
+        resultCount.innerHTML = '<strong>' + matched.length + '</strong> reseptiä &middot; ' + total + ':sta';
+      }
+    }
+    document.getElementById("load-more-btn").addEventListener("click", function () {
+      state.shown += PAGE_SIZE;
+      renderGrid();
+    });
+
+    // ---------- Näytä kaikki (tyhjästä tilasta) — nollaa kategorian, fasetit JA haun ----------
+    function showAll() {
+      state.category = "kaikki";
+      PAGE.facetGroups.forEach(function (g) { state.facets[g.id] = []; });
+      state.search = "";
+      document.getElementById("recipe-search").value = "";
+      syncFacetCheckboxes();
+      render();
+    }
+    document.getElementById("empty-clear-btn").addEventListener("click", showAll);
+
+    // ---------- Haku + lajittelu ----------
+    document.getElementById("recipe-search").addEventListener("input", function (e) {
+      state.search = e.target.value.trim();
+      render();
+    });
+    document.getElementById("sort-select").addEventListener("change", function (e) {
+      state.sort = e.target.value;
+      render();
+    });
+
+    // ---------- Mobiilinavi (yhteinen chrome) ----------
+    var navToggle = document.querySelector(".nav-toggle");
+    var header = document.querySelector(".site-header");
+    navToggle.addEventListener("click", function () {
+      var open = header.classList.toggle("nav-open");
+      navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+
+    // ---------- Yhdistetty render ----------
+    function render() {
+      state.shown = PAGE_SIZE;     // nollaa sivutus aina valinnan muuttuessa
+      renderPillsActive();
+      renderFacets();
+      renderStrip();
+      renderActiveFilters();
+      renderGrid();
+    }
+
+    // ---------- Init ----------
+    buildPills();
+    buildFacets();
+    render();
+  })();
+  </script>
+</body>
+</html>

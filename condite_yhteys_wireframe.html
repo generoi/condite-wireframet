@@ -1,0 +1,845 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yhteys — ota yhteyttä, reklamaatio, myyjät ja laskutus | Condite</title>
+<meta name="description" content="Condite yhteystiedot: ota yhteyttä lomakkeella, tee reklamaatio, löydä oman toimialasi myyjä, katso toimipisteet ja laskutustiedot. Asiakaspalvelu auttaa.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!--
+  CONDITE.FI — YHTEYS (YKSI SIVU, EI ALASIVUJA) · KIILLOTETTU WIREFRAME (FI)
+  Pohja: approved design system (condite_design_system.html) — softened tonal blue.
+  ITSENÄINEN tiedosto: oma header/footer tämän tiedoston sisällä — EI kosketa sisartiedostoihin, EI propagointia.
+
+  PALETTI: hyväksytty DS-paletti (--c-accent #7fc8ec / --c-accent-ink #0a6e9b) = kanoninen.
+
+  RAKENNE (LUKITTU): yksi sivu, kaikki yhteydenpito sektioina. Ei alasivuja, ei Yhteys-dropdownia.
+  Sektiot järjestyksessä: Hero+ankkurinavi · Pikakontaktit · Ota yhteyttä -lomake · Yhteyshenkilöt ·
+           Toimipisteet · Laskutustiedot · Reklamaatio-lomake.
+  Avoimet työpaikat = vain tämän sivun footer-linkki (ulkoinen ura.condite.fi).
+
+  PÄÄSYTASOT: koko sivu AVOIN. Molemmat lomakkeet = LIIDITAPAHTUMA lähetyksessä
+  (Ota yhteyttä → Dynamics 365 / myynti; Reklamaatio → laatu / asiakaspalvelu).
+  Lomakkeet eivät lähetä prototyypissä — submit näyttää Kiitos-tilan (ei erillistä sivua).
+
+  AVOIMET TIETOPYYNNÖT ([TBD — Conditelta]):
+  · asiakaspalvelun puhelin/sähköposti/aukiolot/vastausaika
+  · myyjät segmenteittäin (Anders Borg / Leipomot vahva ankkuri; muut placeholder)
+  · toimipisteet + osoitteet (Naantali tiedossa) · laskutustiedot (OVT, operaattori, Y-tunnus, ALV, laskutusnimi/-osoite)
+  · reklamaation reititys (laatupostilaatikko vai Dynamics service) + liitetiedostorajat
+-->
+<style>
+  :root {
+    /* Taustat */
+    --c-bg:#ffffff; --c-bg-soft:#f7f7f7; --c-bg-tint:#eef6fb;
+    /* Teksti */
+    --c-text:#1d1d1f; --c-text-2:#555555; --c-text-muted:#6f6f6f;
+    /* Viivat */
+    --c-border:#e3e3e3; --c-border-strong:#cfcfcf; --c-divider:#d8d8d8;
+    /* Kuvapaikat */
+    --c-ph-bg:#ececec; --c-ph-border:#c8c8c8;
+    /* Korostus — pehmeä sininen (DS) */
+    --c-accent:#7fc8ec; --c-accent-ink:#0a6e9b; --c-on-accent:#0a4f72;
+    --c-accent-soft:#e3f2fb; --c-suits-border:#b7def4;
+    /* Tila */
+    --c-in-bg:#e7efe9; --c-in-text:#2f5a40; --c-warn:#c0451c;
+    /* Pyöristykset */
+    --r-sm:4px; --r-md:8px; --r-lg:12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--c-bg); color: var(--c-text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+    font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased;
+  }
+  /* Shell-gotcha: author-display:flex ohittaa UA-säännön — pidä tämä mukana */
+  [hidden] { display: none !important; }
+  a { color: var(--c-accent-ink); }
+  img { max-width: 100%; }
+
+  /* Saavutettavuus */
+  .skip { position: absolute; left: 8px; top: -48px; z-index: 100; background: var(--c-accent); color: var(--c-on-accent); font-weight: 700; padding: 10px 16px; border-radius: var(--r-sm); text-decoration: none; transition: top .15s; }
+  .skip:focus { top: 8px; }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 2.5px solid var(--c-accent); outline-offset: 2px; border-radius: var(--r-sm); }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+  /* Layout */
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  .block { max-width: 1200px; margin: 0 auto; padding: 64px 24px 0; }
+  .block.first { padding-top: 40px; }
+  .block.last { padding-bottom: 64px; }
+  .block.narrow { max-width: 860px; }
+  .band { border-top: 1px solid var(--c-suits-border); border-bottom: 1px solid var(--c-suits-border); background: var(--c-bg-tint); margin-top: 64px; }
+  .band .block { padding-top: 64px; padding-bottom: 64px; }
+
+  /* Tyypit */
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--c-accent-ink); margin: 0 0 8px; }
+  h1 { font-size: 44px; line-height: 1.12; letter-spacing: -.01em; margin: 0 0 20px; font-weight: 700; }
+  h2 { font-size: 30px; line-height: 1.18; margin: 0; font-weight: 700; }
+  .intro { margin: 16px 0 0; color: var(--c-text-2); }
+  .section-head { max-width: 760px; }
+
+  /* Painikkeet */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: var(--r-sm); font-weight: 600; font-size: 16px; text-decoration: none; line-height: 1.2; cursor: pointer; padding: 13px 22px; border: 1.5px solid transparent; }
+  .btn-primary { border-color: var(--c-accent); background: var(--c-accent); color: var(--c-on-accent); }
+  .btn-outline { border-color: var(--c-accent-ink); background: var(--c-bg); color: var(--c-accent-ink); }
+  .btn-sm { padding: 9px 16px; font-size: 14px; border-color: var(--c-accent-ink); background: var(--c-bg); color: var(--c-accent-ink); }
+  .btn-link { color: var(--c-accent-ink); text-decoration: none; font-weight: 600; font-size: 14px; display: inline-flex; gap: 6px; align-items: center; white-space: nowrap; background: none; border: 0; cursor: pointer; font-family: inherit; padding: 0; }
+  .btn-link:hover { text-decoration: underline; }
+  .btn[disabled] { opacity: .55; cursor: not-allowed; }
+
+  /* Header */
+  .site-header { border-bottom: 1px solid var(--c-border); background: var(--c-bg); position: sticky; top: 0; z-index: 50; }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; min-height: 64px; gap: 32px; }
+  .logo { flex: none; width: 110px; height: 34px; background: var(--c-ph-bg); border: 1px dashed var(--c-ph-border); display: flex; align-items: center; justify-content: center; color: var(--c-text-2); font-size: 12px; border-radius: var(--r-sm); letter-spacing: .5px; font-weight: 700; text-decoration: none; }
+  .nav-main { display: flex; align-items: center; justify-content: center; flex: 1; }
+  .nav-list { list-style: none; margin: 0; padding: 0; display: flex; gap: 2px; }
+  .nav-list a { text-decoration: none; padding: 8px 12px; border-radius: var(--r-sm); font-weight: 500; color: var(--c-text); font-size: 14px; white-space: nowrap; position: relative; }
+  .nav-list a:hover { color: var(--c-accent-ink); }
+  .nav-list a[aria-current="page"] { color: var(--c-accent-ink); font-weight: 700; }
+  .nav-list a[aria-current="page"]::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: 0; height: 2px; background: var(--c-accent); border-radius: 2px; }
+  .nav-actions { flex: none; display: inline-flex; align-items: center; gap: 16px; }
+  .lang { display: inline-flex; align-items: center; gap: 2px; font-size: 14px; }
+  .lang a { text-decoration: none; padding: 3px 7px; border-radius: var(--r-sm); color: var(--c-text-muted); }
+  .lang a[aria-current="true"] { background: var(--c-bg-soft); color: var(--c-text); font-weight: 700; }
+  .nav-toggle { display: none; }
+  /* Pudotusvalikot (Tuotteet, Toimialat) — Yhteys on litteä linkki */
+  .nav-list > li.has-dropdown { position: relative; }
+  .nav-list .caret { font-size: 9px; margin-left: 4px; color: var(--c-text-muted); }
+  .nav-dropdown { position: absolute; top: 100%; left: 0; min-width: 220px; background: var(--c-bg); border: 1px solid var(--c-border); border-radius: var(--r-md); box-shadow: 0 10px 26px rgba(10,79,114,.12); padding: 6px 0; margin-top: 4px; list-style: none; display: none; z-index: 60; }
+  .nav-list > li.has-dropdown:hover > .nav-dropdown,
+  .nav-list > li.has-dropdown:focus-within > .nav-dropdown,
+  .nav-list > li.has-dropdown.open > .nav-dropdown { display: block; }
+  .nav-dropdown a { display: block; padding: 9px 16px; font-size: 14px; color: var(--c-text); font-weight: 500; white-space: nowrap; }
+  .nav-dropdown a::after { display: none !important; }
+  .nav-dropdown a:hover { background: var(--c-bg-soft); color: var(--c-accent-ink); }
+  .ext-ico { font-size: 10px; margin-left: 5px; opacity: .7; vertical-align: baseline; }
+
+  /* Ankkurilinkkien siirtymä sticky-headerin alta */
+  [id] { scroll-margin-top: 96px; }
+
+  /* Murupolku */
+  .crumbs { max-width: 1200px; margin: 0 auto; padding: 14px 24px 0; font-size: 13px; color: var(--c-text-muted); }
+  .crumbs ol { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; }
+  .crumbs a { color: var(--c-text-2); text-decoration: none; }
+  .crumbs a:hover { color: var(--c-accent-ink); }
+  .crumbs li[aria-current="page"] { color: var(--c-text); font-weight: 600; }
+  .crumbs .sep { color: var(--c-border-strong); }
+
+  /* Yleinen kuvapaikka */
+  .ph { background: var(--c-ph-bg); border: 1px dashed var(--c-ph-border); display: flex; align-items: center; justify-content: center; color: var(--c-text-2); font-size: 13px; gap: 6px; text-align: center; padding: 16px; }
+  .ph i { opacity: .6; }
+
+  /* ===== S1 Hero + ankkurinavi (band) ===== */
+  .hero-band { background: var(--c-bg-tint); border-bottom: 1px solid var(--c-suits-border); }
+  .hero-band .block { padding-top: 48px; padding-bottom: 36px; }
+  .hero-band .intro { font-size: 18px; max-width: 62ch; }
+  .hero-meta { display: flex; gap: 10px 24px; flex-wrap: wrap; margin: 20px 0 0; }
+  .hero-meta .mi { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--c-text-2); font-weight: 600; }
+  .hero-meta .mi i { color: var(--c-accent-ink); }
+  .anchor-nav { margin-top: 28px; }
+  .anchor-nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+  .anchor-nav a { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--c-suits-border); background: var(--c-bg); color: var(--c-accent-ink); font-size: 14px; font-weight: 600; text-decoration: none; }
+  .anchor-nav a:hover { background: var(--c-accent-soft); }
+  .anchor-nav a i { font-size: 12px; }
+
+  /* ===== S2 Pikakontaktit (grid-3) ===== */
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .qc { border: 1px solid var(--c-border); border-radius: var(--r-lg); background: var(--c-bg); padding: 26px; display: flex; flex-direction: column; gap: 6px; }
+  .qc .ic { width: 46px; height: 46px; border-radius: var(--r-md); background: var(--c-accent-soft); color: var(--c-accent-ink); display: flex; align-items: center; justify-content: center; font-size: 19px; margin-bottom: 8px; }
+  .qc .qc-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--c-text-muted); }
+  .qc .qc-val { font-size: 20px; font-weight: 700; color: var(--c-accent-ink); text-decoration: none; word-break: break-word; }
+  a.qc-val:hover { text-decoration: underline; }
+  .qc .qc-sub { font-size: 14px; color: var(--c-text-2); margin: 2px 0 0; }
+
+  /* ===== Lomakkeet ===== */
+  .form-panel { background: var(--c-bg); border: 1px solid var(--c-border); border-radius: var(--r-lg); padding: 28px; display: grid; gap: 16px; }
+  .form-panel.complaint { border-color: var(--c-suits-border); background: var(--c-bg-soft); }
+  .form-legend { display: flex; align-items: center; gap: 12px; margin: 0 0 4px; }
+  .form-legend .fi-ic { flex: none; width: 40px; height: 40px; border-radius: var(--r-md); background: var(--c-accent-soft); color: var(--c-accent-ink); display: flex; align-items: center; justify-content: center; font-size: 17px; }
+  .form-legend h3 { font-size: 19px; margin: 0; }
+  .form-sub { font-size: 14px; color: var(--c-text-2); margin: 0 0 4px; }
+  .fieldset-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--c-text-muted); margin: 8px 0 -4px; border-top: 1px solid var(--c-border); padding-top: 16px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field.full { grid-column: 1 / -1; }
+  .field label { font-size: 14px; font-weight: 600; }
+  .field .req { color: var(--c-warn); }
+  .field input, .field select, .field textarea { padding: 11px 13px; border: 1px solid var(--c-border-strong); border-radius: var(--r-sm); font: inherit; font-size: 15px; background: var(--c-bg); color: var(--c-text); width: 100%; }
+  .field textarea { min-height: 120px; resize: vertical; }
+  .field input[type="file"] { padding: 9px 11px; background: var(--c-bg); cursor: pointer; }
+  .field .hint { font-size: 12px; color: var(--c-text-muted); }
+  .consent { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--c-text-2); }
+  .consent input { width: 18px; height: 18px; flex: none; margin-top: 2px; accent-color: var(--c-accent-ink); }
+  .form-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 4px; }
+  .form-note { font-size: 12px; color: var(--c-text-muted); margin: 0; }
+
+  /* Kiitos / onnistumistila */
+  .success-panel { background: var(--c-bg); border: 1px solid var(--c-suits-border); border-radius: var(--r-lg); padding: 40px 28px; text-align: center; }
+  .success-panel .check { width: 64px; height: 64px; border-radius: 50%; background: var(--c-in-bg); color: var(--c-in-text); display: inline-flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 16px; }
+  .success-panel h3 { font-size: 24px; margin: 0 0 10px; }
+  .success-panel p { font-size: 15px; color: var(--c-text-2); margin: 0 auto 8px; max-width: 50ch; }
+  .success-panel .ref { display: inline-block; margin: 4px 0 8px; padding: 8px 16px; border-radius: var(--r-sm); background: var(--c-accent-soft); color: var(--c-on-accent); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .success-routes { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+
+  /* ===== Yhteyshenkilöt ===== */
+  .seller-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .seller { border: 1px solid var(--c-border); border-radius: var(--r-md); background: var(--c-bg); overflow: hidden; display: flex; flex-direction: column; }
+  .seller .ph { border: 0; border-bottom: 1px dashed var(--c-ph-border); aspect-ratio: 1 / 1; }
+  .seller .s-body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .seller .seg-tag { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--c-accent-ink); }
+  .seller h3 { font-size: 17px; margin: 2px 0 0; }
+  .seller .role { font-size: 14px; color: var(--c-text-2); }
+  .seller .s-contact { margin-top: 10px; display: grid; gap: 4px; font-size: 14px; }
+  .seller .s-contact a { color: var(--c-accent-ink); text-decoration: none; word-break: break-word; }
+  .seller .s-contact a:hover { text-decoration: underline; }
+  .seller.placeholder { border-style: dashed; background: var(--c-bg-soft); }
+
+  /* ===== Toimipisteet ===== */
+  .loc-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 32px; align-items: stretch; }
+  .loc-list { display: grid; gap: 20px; align-content: start; }
+  .loc-card { border: 1px solid var(--c-border); border-radius: var(--r-md); background: var(--c-bg); padding: 22px 24px; }
+  .loc-card h3 { font-size: 17px; margin: 0 0 4px; display: flex; align-items: center; gap: 8px; }
+  .loc-card h3 i { color: var(--c-accent-ink); font-size: 15px; }
+  .loc-card .addr { font-size: 14px; color: var(--c-text-2); margin: 0; line-height: 1.5; }
+  .loc-card .loc-tag { display: inline-block; margin-top: 8px; font-size: 12px; font-weight: 600; color: var(--c-accent-ink); }
+  .loc-card .loc-links { margin-top: 12px; display: flex; gap: 16px; flex-wrap: wrap; }
+  .loc-map .ph { height: 100%; min-height: 300px; border-radius: var(--r-lg); }
+
+  /* ===== Laskutustiedot — kopioitava teksti ===== */
+  .panel { background: var(--c-bg); border: 1px solid var(--c-border); border-radius: var(--r-lg); padding: 8px 28px; }
+  .data-row { display: grid; grid-template-columns: 230px 1fr auto; gap: 16px; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--c-border); }
+  .data-row:last-child { border-bottom: 0; }
+  .data-row .dt { font-size: 14px; color: var(--c-text-2); font-weight: 600; }
+  .data-row .dd { font-size: 16px; font-weight: 600; color: var(--c-text); font-variant-numeric: tabular-nums; word-break: break-word; }
+  .data-row .dd .ph-val { color: var(--c-text-muted); font-weight: 500; font-style: italic; }
+  .copy-btn { flex: none; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; padding: 7px 12px; border: 1px solid var(--c-border-strong); border-radius: var(--r-sm); background: var(--c-bg); color: var(--c-accent-ink); cursor: pointer; font-family: inherit; }
+  .copy-btn:hover { border-color: var(--c-accent-ink); }
+  .copy-btn.copied { background: var(--c-in-bg); color: var(--c-in-text); border-color: var(--c-in-bg); }
+
+  /* ===== Responsiivisuus ===== */
+  @media (max-width: 1000px) {
+    .grid-3, .seller-grid { grid-template-columns: repeat(2, 1fr); }
+    .loc-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 760px) {
+    h1 { font-size: 34px; }
+    h2 { font-size: 26px; }
+    .nav-main { display: none; }
+    .nav-toggle { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 1px solid var(--c-border-strong); border-radius: var(--r-sm); background: var(--c-bg); color: var(--c-text); cursor: pointer; }
+    .site-header.nav-open .nav-main { display: block; position: absolute; top: 100%; left: 0; right: 0; background: var(--c-bg); border-bottom: 1px solid var(--c-border); box-shadow: 0 8px 20px rgba(0,0,0,.06); padding: 8px 24px 16px; }
+    .site-header.nav-open .nav-list { flex-direction: column; gap: 0; }
+    .site-header.nav-open .nav-list a { display: block; padding: 13px 0; border-bottom: 1px solid var(--c-border); font-size: 15px; }
+    .site-header.nav-open .nav-list a[aria-current="page"]::after { display: none; }
+    .site-header.nav-open .nav-dropdown { position: static; display: block; box-shadow: none; border: 0; padding: 0 0 6px 14px; margin: 0; min-width: 0; }
+    .site-header.nav-open .nav-dropdown a { padding: 10px 0; font-size: 14px; color: var(--c-text-2); }
+    .nav-list .caret { display: none; }
+    .form-row { grid-template-columns: 1fr; }
+    .grid-3, .seller-grid { grid-template-columns: 1fr; }
+    .data-row { grid-template-columns: 1fr; gap: 6px; align-items: start; }
+    .data-row .copy-btn { justify-self: start; }
+    .footer-grid { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  /* Footer */
+  .site-footer { background: var(--c-bg-soft); border-top: 1px solid var(--c-border); padding: 48px 0 32px; margin-top: 64px; }
+  .footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--c-border); }
+  .footer-grid h4 { font-size: 14px; text-transform: uppercase; letter-spacing: .06em; margin: 0 0 16px; }
+  .footer-grid ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .footer-grid a { text-decoration: none; color: var(--c-text-2); font-size: 14px; }
+  .footer-grid a:hover { color: var(--c-accent-ink); }
+  .footer-blurb { font-size: 14px; color: var(--c-text-2); margin: 16px 0 0; max-width: 30ch; }
+  .news { display: flex; gap: 8px; }
+  .news input { flex: 1; min-width: 0; padding: 10px 12px; border-radius: var(--r-sm); border: 1px solid var(--c-border-strong); background: var(--c-bg); color: var(--c-text); font: inherit; font-size: 14px; }
+  .news button { padding: 10px 16px; border-radius: var(--r-sm); border: 1.5px solid var(--c-accent); background: var(--c-accent); color: var(--c-on-accent); font-weight: 700; font-size: 14px; cursor: pointer; }
+  .footer-legal { display: flex; justify-content: space-between; gap: 24px; padding-top: 24px; flex-wrap: wrap; font-size: 12px; color: var(--c-text-muted); }
+  .footer-legal a { color: var(--c-text-muted); text-decoration: none; }
+  .footer-legal .legal-links { display: flex; gap: 24px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+  <a class="skip" href="#main">Siirry sisältöön</a>
+
+  <!-- ===== HEADER (tämän tiedoston oma chrome) — Yhteys = LITTEÄ linkki, ei dropdownia ===== -->
+  <header class="site-header">
+    <div class="nav-inner">
+      <a href="/" class="logo" aria-label="Condite — etusivu">CONDITE</a>
+      <nav class="nav-main" id="primary-nav" aria-label="Päänavigaatio">
+        <ul class="nav-list">
+          <li class="has-dropdown">
+            <a href="/tuotteet/" aria-haspopup="true" aria-expanded="false">Tuotteet <span class="caret" aria-hidden="true">▾</span></a>
+            <ul class="nav-dropdown">
+              <li><a href="/tuotteet/mausteet/">Mausteet</a></li>
+              <li><a href="/tuotteet/taytteet-koristeet/">Täytteet ja koristeet</a></li>
+              <li><a href="/tuotteet/suklaa/">Suklaa ja kaakao</a></li>
+              <li><a href="/tuotteet/">Kaikki tuotteet</a></li>
+            </ul>
+          </li>
+          <li class="has-dropdown">
+            <a href="/toimialat/" aria-haspopup="true" aria-expanded="false">Toimialat <span class="caret" aria-hidden="true">▾</span></a>
+            <ul class="nav-dropdown">
+              <li><a href="/toimialat/leipomot/">Leipomot</a></li>
+              <li><a href="/toimialat/food-service/">Food Service</a></li>
+              <li><a href="/toimialat/food-industry/">Food Industry</a></li>
+              <li><a href="/toimialat/private-label/">Private Label</a></li>
+            </ul>
+          </li>
+          <li><a href="/reseptit/">Reseptit</a></li>
+          <li><a href="/tuotekehitys/">Tuotekehitys</a></li>
+          <li><a href="/yritys/">Yritys</a></li>
+          <li><a href="/yhteys/" aria-current="page">Yhteys</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <span class="lang" role="group" aria-label="Kieli">
+          <a href="#" aria-current="true" lang="fi">FI</a>
+          <a href="#" lang="sv">SV</a>
+          <a href="#" lang="en">EN</a>
+        </span>
+        <a href="/kirjaudu/" class="btn btn-sm"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Kirjaudu</a>
+        <button class="nav-toggle" type="button" aria-label="Avaa valikko" aria-expanded="false" aria-controls="primary-nav"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Murupolku -->
+  <nav class="crumbs" aria-label="Murupolku">
+    <ol>
+      <li><a href="/">Etusivu</a></li>
+      <li class="sep" aria-hidden="true">›</li>
+      <li aria-current="page">Yhteys</li>
+    </ol>
+  </nav>
+
+  <main id="main">
+
+    <!-- ===== S1 HERO + ANKKURINAVI (avoin) ===== -->
+    <section class="hero-band" aria-labelledby="hero-h1">
+      <div class="block first">
+        <div class="section-head">
+          <p class="eyebrow">Yhteys</p>
+          <h1 id="hero-h1">Miten voimme auttaa?</h1>
+          <p class="intro">Kaikki yhteydenpito yhdessä paikassa: jätä viesti, löydä oman toimialasi myyjä, katso toimipisteet ja laskutustiedot tai tee reklamaatio. Vastaamme yhteydenottoihin yleensä yhden arkipäivän kuluessa.</p>
+        </div>
+        <div class="hero-meta">
+          <span class="mi"><i class="fa-solid fa-clock" aria-hidden="true"></i> Vastausaika [TBD] · yleensä 1 arkipäivä</span>
+          <span class="mi"><i class="fa-solid fa-headset" aria-hidden="true"></i> Asiakaspalvelu ma–pe [TBD]</span>
+        </div>
+        <nav class="anchor-nav" aria-label="Sivun sektiot">
+          <ul>
+            <li><a href="#ota-yhteytta"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Ota yhteyttä</a></li>
+            <li><a href="#myyjat"><i class="fa-solid fa-user-tie" aria-hidden="true"></i> Yhteyshenkilöt</a></li>
+            <li><a href="#toimipisteet"><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Toimipisteet</a></li>
+            <li><a href="#laskutus"><i class="fa-solid fa-file-invoice" aria-hidden="true"></i> Laskutustiedot</a></li>
+            <li><a href="#reklamaatio"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Reklamaatio</a></li>
+          </ul>
+        </nav>
+      </div>
+    </section>
+
+    <!-- ===== S2 PIKAKONTAKTIT — lomakkeeton reitti (avoin) ===== -->
+    <section class="block" id="pikakontaktit" aria-labelledby="qc-h2">
+      <div class="section-head" style="margin-bottom:28px">
+        <p class="eyebrow">Pikakontaktit</p>
+        <h2 id="qc-h2">Soita tai sähköpostita suoraan</h2>
+        <p class="intro">Et tarvitse lomaketta — tavoitat asiakaspalvelumme suoraan puhelimitse tai sähköpostilla.</p>
+      </div>
+      <div class="grid-3" id="quick-grid"></div>
+    </section>
+
+    <!-- ===== S3 OTA YHTEYTTÄ -LOMAKE (liidi) ===== -->
+    <section class="block narrow" id="ota-yhteytta" aria-labelledby="contact-h2">
+      <div class="section-head" style="margin-bottom:24px">
+        <p class="eyebrow">Ota yhteyttä</p>
+        <h2 id="contact-h2">Jätä viesti — kerro tarpeesi</h2>
+        <p class="intro">Pyydä näyte tai tarjous, varaa Makupaja-sessio tai kysy mitä tahansa valikoimasta. Kentät, joissa on tähti (*), ovat pakollisia.</p>
+      </div>
+
+      <!-- Lomaketila -->
+      <form class="form-panel" id="contact-form" novalidate aria-describedby="contact-privacy">
+        <div class="form-legend">
+          <span class="fi-ic" aria-hidden="true"><i class="fa-solid fa-paper-plane"></i></span>
+          <h3>Yhteydenottolomake</h3>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="c-name">Nimi <span class="req" aria-hidden="true">*</span></label>
+            <input id="c-name" name="name" type="text" autocomplete="name" placeholder="Etunimi Sukunimi" required>
+          </div>
+          <div class="field">
+            <label for="c-company">Yritys <span class="req" aria-hidden="true">*</span></label>
+            <input id="c-company" name="company" type="text" autocomplete="organization" placeholder="Yrityksen nimi" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="c-email">Sähköposti <span class="req" aria-hidden="true">*</span></label>
+            <input id="c-email" name="email" type="email" autocomplete="email" placeholder="nimi@yritys.fi" required>
+          </div>
+          <div class="field">
+            <label for="c-phone">Puhelin</label>
+            <input id="c-phone" name="phone" type="tel" autocomplete="tel" placeholder="+358 40 123 4567">
+          </div>
+        </div>
+        <div class="field full">
+          <label for="c-topic">Aihe / toimiala <span class="req" aria-hidden="true">*</span></label>
+          <select id="c-topic" name="topic" required>
+            <option value="" selected disabled>Valitse aihe…</option>
+            <option value="leipomot">Leipomot</option>
+            <option value="food-service">Food Service</option>
+            <option value="food-industry">Food Industry</option>
+            <option value="private-label">Private Label</option>
+            <option value="makupaja">Makupaja / tuotekehitys</option>
+            <option value="muu">Muu</option>
+          </select>
+          <span class="hint">Ohjaa viestin oikealle asiantuntijalle.</span>
+        </div>
+        <div class="field full">
+          <label for="c-message">Viesti <span class="req" aria-hidden="true">*</span></label>
+          <textarea id="c-message" name="message" placeholder="Kerro lyhyesti tarpeestasi — esim. tuote, näyte, tarjous tai kehitysidea." required></textarea>
+        </div>
+        <label class="consent" for="c-consent">
+          <input id="c-consent" name="consent" type="checkbox" required>
+          <span id="contact-privacy">Hyväksyn, että yhteystietojani käsitellään yhteydenottoa varten <a href="/tietosuoja/">tietosuojaselosteen</a> mukaisesti. <span class="req" aria-hidden="true">*</span></span>
+        </label>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Lähetä viesti</button>
+          <p class="form-note">Lähetys luo liidin (Dynamics 365 / myynti). Prototyypissä ei lähetä.</p>
+        </div>
+      </form>
+
+      <!-- Onnistumistila (Kiitos) -->
+      <div class="success-panel" id="contact-success" role="status" hidden>
+        <span class="check" aria-hidden="true"><i class="fa-solid fa-check"></i></span>
+        <h3>Kiitos viestistäsi!</h3>
+        <p>Olemme vastaanottaneet yhteydenottosi ja oikea asiantuntija on sinuun yhteydessä yleensä yhden arkipäivän kuluessa. Saat vahvistuksen antamaasi sähköpostiin.</p>
+        <div class="success-routes">
+          <a class="btn btn-outline" href="/toimialat/">Tutustu toimialaratkaisuihin</a>
+          <button type="button" class="btn-link" data-reset="contact-form">Lähetä uusi viesti</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== S4 YHTEYSHENKILÖT SEGMENTEITTÄIN (avoin) ===== -->
+    <section class="block" id="myyjat" aria-labelledby="sellers-h2">
+      <div class="section-head" style="margin-bottom:32px">
+        <p class="eyebrow">Yhteyshenkilöt</p>
+        <h2 id="sellers-h2">Löydä oman toimialasi myyjä</h2>
+        <p class="intro">Jokaisella toimialalla on oma yhteyshenkilönsä, joka tuntee alasi tarpeet. Ota yhteyttä suoraan tai valitse toimiala yhteydenottolomakkeen aihevalikosta.</p>
+      </div>
+      <div class="seller-grid" id="seller-grid"></div>
+    </section>
+
+    <!-- ===== S5 TOIMIPISTEET (avoin) ===== -->
+    <section class="block" id="toimipisteet" aria-labelledby="loc-h2">
+      <div class="section-head" style="margin-bottom:32px">
+        <p class="eyebrow">Toimipisteet</p>
+        <h2 id="loc-h2">Missä meidät tapaa</h2>
+      </div>
+      <div class="loc-grid">
+        <div class="loc-list" id="loc-list"></div>
+        <div class="loc-map">
+          <div class="ph"><i class="fa-solid fa-map-location-dot" aria-hidden="true"></i> Karttapaikka — toimipisteiden sijainnit (interaktiivinen kartta TBD)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== S6 LASKUTUSTIEDOT — kopioitava teksti (avoin) ===== -->
+    <section class="band" aria-labelledby="bill-h2">
+      <div class="block" id="laskutus">
+        <div class="section-head" style="margin-bottom:24px">
+          <p class="eyebrow">Laskutus</p>
+          <h2 id="bill-h2">Laskutustiedot</h2>
+          <p class="intro">Ohjeet Conditelle lähetettäviä laskuja varten. Tiedot ovat tekstimuodossa ja kopioitavissa — eivät kuvina. Arvot [TBD — Conditelta].</p>
+        </div>
+        <div class="panel" id="billing-panel"></div>
+      </div>
+    </section>
+
+    <!-- ===== S7 REKLAMAATIO-LOMAKE (liidi) ===== -->
+    <section class="block narrow last" id="reklamaatio" aria-labelledby="complaint-h2">
+      <div class="section-head" style="margin-bottom:24px">
+        <p class="eyebrow">Reklamaatio</p>
+        <h2 id="complaint-h2">Tee reklamaatio</h2>
+        <p class="intro">Anna jäljitettävyystiedot kerralla, niin käsittelemme tapauksen nopeammin. Reklamaatio ohjautuu laatu- ja asiakaspalvelutiimillemme — tämä on eri lomake kuin yleinen yhteydenotto.</p>
+      </div>
+
+      <!-- Lomaketila -->
+      <form class="form-panel complaint" id="complaint-form" novalidate aria-describedby="complaint-privacy">
+        <div class="form-legend">
+          <span class="fi-ic" aria-hidden="true"><i class="fa-solid fa-triangle-exclamation"></i></span>
+          <h3>Reklamaatiolomake</h3>
+        </div>
+
+        <p class="fieldset-label" style="border-top:0;padding-top:0;margin-top:0">Yhteystiedot</p>
+        <div class="form-row">
+          <div class="field">
+            <label for="r-name">Nimi <span class="req" aria-hidden="true">*</span></label>
+            <input id="r-name" name="name" type="text" autocomplete="name" placeholder="Etunimi Sukunimi" required>
+          </div>
+          <div class="field">
+            <label for="r-company">Yritys <span class="req" aria-hidden="true">*</span></label>
+            <input id="r-company" name="company" type="text" autocomplete="organization" placeholder="Yrityksen nimi" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="r-email">Sähköposti <span class="req" aria-hidden="true">*</span></label>
+            <input id="r-email" name="email" type="email" autocomplete="email" placeholder="nimi@yritys.fi" required>
+          </div>
+          <div class="field">
+            <label for="r-phone">Puhelin</label>
+            <input id="r-phone" name="phone" type="tel" autocomplete="tel" placeholder="+358 40 123 4567">
+          </div>
+        </div>
+
+        <p class="fieldset-label">Tuote ja tilaus</p>
+        <div class="form-row">
+          <div class="field">
+            <label for="r-product">Tuote <span class="req" aria-hidden="true">*</span></label>
+            <input id="r-product" name="product" type="text" placeholder="Tuotteen nimi" required>
+          </div>
+          <div class="field">
+            <label for="r-code">Tuotenumero</label>
+            <input id="r-code" name="code" type="text" placeholder="esim. 12345">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="r-batch">Eränumero / parasta ennen</label>
+            <input id="r-batch" name="batch" type="text" placeholder="Erä tai PE-päivä">
+            <span class="hint">Jos et löydä eränumeroa, voit jättää tyhjäksi.</span>
+          </div>
+          <div class="field">
+            <label for="r-order">Ostotilaus- / toimitusviite</label>
+            <input id="r-order" name="order" type="text" placeholder="Tilaus- tai lähetenumero">
+          </div>
+        </div>
+
+        <p class="fieldset-label">Reklamaation tiedot</p>
+        <div class="form-row">
+          <div class="field">
+            <label for="r-type">Ongelmatyyppi <span class="req" aria-hidden="true">*</span></label>
+            <select id="r-type" name="type" required>
+              <option value="" selected disabled>Valitse tyyppi…</option>
+              <option value="laatu">Laatu</option>
+              <option value="vieras-esine">Vieras esine</option>
+              <option value="pakkaus">Pakkaus</option>
+              <option value="aistinvarainen">Aistinvarainen</option>
+              <option value="toimitus">Toimitus tai kuljetusvaurio</option>
+              <option value="maara">Määrä tai puute</option>
+              <option value="muu">Muu</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="r-qty">Reklamoitava määrä</label>
+            <input id="r-qty" name="qty" type="text" placeholder="esim. 2 ltk / 10 kg">
+          </div>
+        </div>
+        <div class="field full">
+          <label for="r-desc">Kuvaus <span class="req" aria-hidden="true">*</span></label>
+          <textarea id="r-desc" name="desc" placeholder="Kuvaa havaittu ongelma mahdollisimman tarkasti." required></textarea>
+        </div>
+        <div class="field full">
+          <label for="r-files">Kuvaliite</label>
+          <input id="r-files" name="files" type="file" accept="image/*" multiple>
+          <span class="hint">Voit lisätä useita kuvia (esim. tuotteesta, erämerkinnästä, pakkauksesta). Sallitut tiedostotyypit ja koko: [TBD — Conditelta].</span>
+        </div>
+        <label class="consent" for="r-consent">
+          <input id="r-consent" name="consent" type="checkbox" required>
+          <span id="complaint-privacy">Hyväksyn, että antamiani tietoja käsitellään reklamaation selvittämiseksi <a href="/tietosuoja/">tietosuojaselosteen</a> mukaisesti. <span class="req" aria-hidden="true">*</span></span>
+        </label>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Lähetä reklamaatio</button>
+          <p class="form-note">Ohjautuu laatu- ja asiakaspalvelutiimille. Prototyypissä ei lähetä.</p>
+        </div>
+      </form>
+
+      <!-- Onnistumistila (Kiitos + viitenumero) -->
+      <div class="success-panel" id="complaint-success" role="status" hidden>
+        <span class="check" aria-hidden="true"><i class="fa-solid fa-check"></i></span>
+        <h3>Reklamaatio vastaanotettu</h3>
+        <p>Kiitos — käsittelemme reklamaatiosi ja olemme yhteydessä yleensä [TBD] arkipäivän kuluessa. Säilytä viitenumero mahdollista yhteydenpitoa varten.</p>
+        <span class="ref" aria-label="Viitenumero">Viite: REK-2026-0000 <span style="font-weight:500">[TBD]</span></span>
+        <div class="success-routes">
+          <button type="button" class="btn-link" data-reset="complaint-form">Tee uusi reklamaatio</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER (tämän tiedoston oma chrome) ===== -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <a href="/" class="logo" aria-label="Condite — etusivu">CONDITE</a>
+          <p class="footer-blurb">Elintarvikealan raaka-aineiden maahantuoja ja kehityskumppani. Osa Orkla Food Ingredientsia.</p>
+        </div>
+        <div>
+          <h4>Sivusto</h4>
+          <ul>
+            <li><a href="/tuotteet/">Tuotteet</a></li>
+            <li><a href="/toimialat/">Toimialat</a></li>
+            <li><a href="/reseptit/">Reseptit</a></li>
+            <li><a href="/tuotekehitys/">Tuotekehitys</a></li>
+            <li><a href="/yritys/">Yritys</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Yhteys</h4>
+          <ul>
+            <li><a href="/yhteys/">Ota yhteyttä</a></li>
+            <li><a href="/yhteys/#myyjat">Yhteyshenkilöt</a></li>
+            <li><a href="/yhteys/#laskutus">Laskutustiedot</a></li>
+            <li><a href="https://ura.condite.fi" target="_blank" rel="noopener" aria-label="Avoimet työpaikat (avautuu uuteen välilehteen, ura.condite.fi)">Avoimet työpaikat <i class="fa-solid fa-arrow-up-right-from-square ext-ico" aria-hidden="true"></i></a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Uutiskirje</h4>
+          <label for="news-email" style="display:block;font-size:14px;color:var(--c-text-2);margin-bottom:8px">Tilaa ajankohtaiset uutiset ja sovellukset.</label>
+          <div class="news">
+            <input id="news-email" type="email" placeholder="sähköposti@yritys.fi" aria-label="Sähköpostiosoite">
+            <button type="button">Tilaa</button>
+          </div>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <span>© 2026 Condite Oy · Osa Orkla Food Ingredientsia</span>
+        <div class="legal-links">
+          <a href="/tietosuoja/">Tietosuoja</a>
+          <a href="/evasteet/">Evästeet</a>
+          <a href="/saavutettavuus/">Saavutettavuusseloste</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== Rakenteinen data (SEO): ContactPage + Organization + ContactPoint + BreadcrumbList ===== -->
+  <script type="application/ld+json" id="ld-json"></script>
+
+  <!-- ===== Sisältökonfiguraatio + render (config-driven, ei buildia) ===== -->
+  <script>
+  (function () {
+    "use strict";
+
+    var PAGE = {
+      // S2 — pikakontaktit (asiakaspalvelun suorat reitit). [TBD] varmistetaan Conditelta.
+      quick: [
+        { icon: "fa-solid fa-phone", label: "Asiakaspalvelu", value: "+358 2 436 5900", href: "tel:+35824365900", sub: "ma–pe klo [TBD]" },
+        { icon: "fa-solid fa-envelope", label: "Sähköposti", value: "asiakaspalvelu@condite.fi", href: "mailto:asiakaspalvelu@condite.fi", sub: "Vastaamme yleensä 1 arkipäivässä" },
+        { icon: "fa-solid fa-clock", label: "Aukioloajat", value: "ma–pe [TBD]", href: null, sub: "Pyhäpäivinä suljettu" }
+      ],
+
+      // S4 — yhteyshenkilöt: segmentin vastuuhenkilö. Anders Borg / Leipomot = vahva ankkuri (brief).
+      //       Muut segmentit prototyypin paikkatiedoilla — Condite vahvistaa nimet/yhteystiedot.
+      sellers: [
+        { segment: "Leipomot", name: "Anders Borg", role: "Bakery Sales Manager", email: "anders.borg@condite.fi", phone: "+358 40 558 2578", placeholder: false },
+        { segment: "Food Service", name: "[Yhteyshenkilö — TBD]", role: "Myyntipäällikkö, Food Service", email: "[etunimi.sukunimi@condite.fi]", phone: "[+358 — TBD]", placeholder: true },
+        { segment: "Food Industry", name: "[Yhteyshenkilö — TBD]", role: "Key Account Manager, Food Industry", email: "[etunimi.sukunimi@condite.fi]", phone: "[+358 — TBD]", placeholder: true },
+        { segment: "Private Label", name: "[Yhteyshenkilö — TBD]", role: "Business Development, Private Label", email: "[etunimi.sukunimi@condite.fi]", phone: "[+358 — TBD]", placeholder: true }
+      ],
+
+      // S5 — toimipisteet. Naantali tiedossa; osoitteet [TBD — Conditelta].
+      locations: [
+        { name: "Naantali", addr: "[Katuosoite — TBD]<br>21100 Naantali", tag: "Pääkonttori / logistiikka", map: "https://maps.google.com/?q=Condite+Naantali" },
+        { name: "[Muu toimipiste — TBD]", addr: "[Osoite — TBD, jos useita toimipisteitä]", tag: "", map: null }
+      ],
+
+      // S6 — laskutus: kopioitavat tiedot. value = [TBD]; copy = leikepöydälle kopioitava teksti.
+      billing: [
+        { dt: "Laskutusnimi", value: "Condite Oy", copy: "Condite Oy", placeholder: false },
+        { dt: "Y-tunnus", value: "[TBD — Conditelta]", copy: "TBD", placeholder: true },
+        { dt: "ALV-tunnus", value: "[TBD — esim. FIxxxxxxxx]", copy: "TBD", placeholder: true },
+        { dt: "Verkkolaskuosoite (OVT)", value: "[TBD — esim. 0037xxxxxxxx]", copy: "TBD", placeholder: true },
+        { dt: "Operaattori", value: "[TBD — esim. Apix / Basware]", copy: "TBD", placeholder: true },
+        { dt: "Välittäjätunnus", value: "[TBD — operaattorin tunnus]", copy: "TBD", placeholder: true },
+        { dt: "Laskutusosoite (PDF/paperi)", value: "[TBD — postiosoite / laskut@condite.fi]", copy: "TBD", placeholder: true }
+      ]
+    };
+
+    function el(html) { var t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstChild; }
+    function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]; }); }
+
+    // S2 Pikakontaktit
+    var qg = document.getElementById("quick-grid");
+    PAGE.quick.forEach(function (q) {
+      var valHtml = q.href
+        ? '<a class="qc-val" href="' + esc(q.href) + '">' + esc(q.value) + '</a>'
+        : '<span class="qc-val">' + esc(q.value) + '</span>';
+      qg.appendChild(el(
+        '<div class="qc">' +
+          '<span class="ic" aria-hidden="true"><i class="' + esc(q.icon) + '"></i></span>' +
+          '<span class="qc-label">' + esc(q.label) + '</span>' +
+          valHtml +
+          '<p class="qc-sub">' + esc(q.sub) + '</p>' +
+        '</div>'
+      ));
+    });
+
+    // S4 Yhteyshenkilöt
+    var sellerGrid = document.getElementById("seller-grid");
+    PAGE.sellers.forEach(function (s) {
+      var contact = s.placeholder
+        ? '<div class="s-contact"><span style="color:var(--c-text-muted)">' + esc(s.email) + '</span><span style="color:var(--c-text-muted)">' + esc(s.phone) + '</span></div>'
+        : '<div class="s-contact"><a href="mailto:' + esc(s.email) + '">' + esc(s.email) + '</a><a href="tel:' + esc(s.phone).replace(/\s/g, "") + '">' + esc(s.phone) + '</a></div>';
+      sellerGrid.appendChild(el(
+        '<div class="seller' + (s.placeholder ? " placeholder" : "") + '">' +
+          '<div class="ph"><i class="fa-regular fa-user" aria-hidden="true"></i>Henkilökuva 1:1</div>' +
+          '<div class="s-body">' +
+            '<span class="seg-tag">' + esc(s.segment) + '</span>' +
+            '<h3>' + esc(s.name) + '</h3>' +
+            '<div class="role">' + esc(s.role) + '</div>' +
+            contact +
+          '</div>' +
+        '</div>'
+      ));
+    });
+
+    // S5 Toimipisteet
+    var locList = document.getElementById("loc-list");
+    PAGE.locations.forEach(function (l) {
+      var links = l.map
+        ? '<div class="loc-links"><a class="btn-link" href="' + esc(l.map) + '" target="_blank" rel="noopener">Näytä kartalla <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true" style="font-size:11px"></i></a></div>'
+        : '';
+      locList.appendChild(el(
+        '<div class="loc-card">' +
+          '<h3><i class="fa-solid fa-location-dot" aria-hidden="true"></i>' + esc(l.name) + '</h3>' +
+          '<p class="addr">' + l.addr + '</p>' +
+          (l.tag ? '<span class="loc-tag">' + esc(l.tag) + '</span>' : "") +
+          links +
+        '</div>'
+      ));
+    });
+
+    // S6 Laskutus — kopioitavat tiedot
+    var bp = document.getElementById("billing-panel");
+    PAGE.billing.forEach(function (r) {
+      var valHtml = r.placeholder ? '<span class="ph-val">' + esc(r.value) + '</span>' : esc(r.value);
+      bp.appendChild(el(
+        '<div class="data-row">' +
+          '<span class="dt">' + esc(r.dt) + '</span>' +
+          '<span class="dd">' + valHtml + '</span>' +
+          '<button type="button" class="copy-btn" data-copy="' + esc(r.copy) + '"><i class="fa-regular fa-copy" aria-hidden="true"></i> Kopioi</button>' +
+        '</div>'
+      ));
+    });
+
+    // Kopioi-painikkeet
+    document.querySelectorAll(".copy-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var text = btn.getAttribute("data-copy");
+        var done = function () {
+          var orig = btn.innerHTML;
+          btn.classList.add("copied");
+          btn.innerHTML = '<i class="fa-solid fa-check" aria-hidden="true"></i> Kopioitu';
+          setTimeout(function () { btn.classList.remove("copied"); btn.innerHTML = orig; }, 1600);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done).catch(done);
+        } else { done(); }
+      });
+    });
+
+    // SEO — ContactPage + Organization + ContactPoint + BreadcrumbList
+    var origin = "https://www.condite.fi";
+    var ld = {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "ContactPage",
+          "name": "Yhteys — Condite",
+          "description": "Ota yhteyttä, löydä myyjä, katso toimipisteet ja laskutustiedot tai tee reklamaatio.",
+          "url": origin + "/yhteys/"
+        },
+        {
+          "@type": "Organization",
+          "name": "Condite Oy",
+          "url": origin + "/",
+          "parentOrganization": { "@type": "Organization", "name": "Orkla Food Ingredients" },
+          "contactPoint": [{
+            "@type": "ContactPoint",
+            "contactType": "customer service",
+            "email": "asiakaspalvelu@condite.fi",
+            "telephone": "+358 2 436 5900",
+            "areaServed": "FI",
+            "availableLanguage": ["fi", "sv", "en"]
+          }]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Etusivu", "item": origin + "/" },
+            { "@type": "ListItem", "position": 2, "name": "Yhteys", "item": origin + "/yhteys/" }
+          ]
+        }
+      ]
+    };
+    document.getElementById("ld-json").textContent = JSON.stringify(ld);
+
+    // --- Lomakkeiden lähetys → onnistumistila (Kiitos). Ei oikeaa lähetystä prototyypissä. ---
+    function wireForm(formId, successId) {
+      var form = document.getElementById(formId);
+      var success = document.getElementById(successId);
+      if (!form || !success) return;
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        form.hidden = true;
+        success.hidden = false;
+        success.setAttribute("tabindex", "-1");
+        success.focus({ preventScroll: true });
+        window.scrollTo({ top: success.getBoundingClientRect().top + window.scrollY - 110, behavior: "smooth" });
+      });
+    }
+    wireForm("contact-form", "contact-success");
+    wireForm("complaint-form", "complaint-success");
+
+    // "Lähetä uusi viesti" / "Tee uusi reklamaatio" → palauta lomaketila (helpottaa wireframen tarkastelua)
+    document.querySelectorAll("[data-reset]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var form = document.getElementById(btn.getAttribute("data-reset"));
+        var success = btn.closest(".success-panel");
+        if (form) { form.reset(); form.hidden = false; }
+        if (success) success.hidden = true;
+        if (form) window.scrollTo({ top: form.getBoundingClientRect().top + window.scrollY - 110, behavior: "smooth" });
+      });
+    });
+
+    // --- Mobiilivalikko + dropdownit (Tuotteet/Toimialat) ---
+    var navToggle = document.querySelector(".nav-toggle");
+    var header = document.querySelector(".site-header");
+    if (navToggle && header) {
+      navToggle.addEventListener("click", function () {
+        var open = header.classList.toggle("nav-open");
+        navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+        navToggle.setAttribute("aria-label", open ? "Sulje valikko" : "Avaa valikko");
+      });
+    }
+    document.querySelectorAll(".nav-list > li.has-dropdown > a[aria-haspopup]").forEach(function (a) {
+      a.addEventListener("click", function (e) {
+        if (window.matchMedia("(max-width: 760px)").matches) {
+          e.preventDefault();
+          var li = a.parentElement;
+          var open = li.classList.toggle("open");
+          a.setAttribute("aria-expanded", open ? "true" : "false");
+        }
+      });
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+        document.querySelectorAll(".nav-list > li.has-dropdown.open").forEach(function (li) {
+          li.classList.remove("open");
+          var a = li.querySelector("a[aria-haspopup]");
+          if (a) a.setAttribute("aria-expanded", "false");
+        });
+      }
+    });
+  })();
+  </script>
+</body>
+</html>
