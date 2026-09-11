@@ -15,3 +15,6 @@ vanhat/
 
 # Työkalukonfiguraatio
 .claude/
+
+# Word-export-tulokset: sisältävät sisäisiä KYSYMYS-muistiinpanoja
+/word-export/
